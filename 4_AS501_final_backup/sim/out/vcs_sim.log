@@ -1,0 +1,129 @@
+Info: [VCS_SAVE_RESTORE_INFO] ASLR (Address Space Layout Randomization) is detected on the machine. To enable $save functionality, ASLR will be switched off and simv re-executed.
+Please use '-no_save' simv switch to avoid re-execution or '-suppress=ASLR_DETECTED_INFO' to suppress this message.
+Chronologic VCS simulator copyright 1991-2023
+Contains Synopsys proprietary information.
+Compiler version V-2023.12-1_Full64; Runtime version V-2023.12-1_Full64;  May  1 20:06 2026
+
+Warning-[STASKW_CO1] Cannot open file
+  The file '../../program/out/eval_int_riscv_imem.hex' could not be opened. No
+  such file or directory.
+  Please ensure that the file exists with proper permissions.
+
+
+Warning-[STASKW_RMCOF] Cannot open file
+/home/AS501_G3/2_AS501_final_syj/sim/../rtl/memory/I_memory.sv, 118
+  Cannot open file '../../program/out/eval_int_riscv_imem.hex' passed as 
+  argument to $readmem.
+  Please verify that the first argument to $readmem is a file that exists with
+  proper permissions.
+
+
+Warning-[STASKW_CO1] Cannot open file
+  The file '../../program/out/eval_int_riscv_dmem.hex' could not be opened. No
+  such file or directory.
+  Please ensure that the file exists with proper permissions.
+
+
+Warning-[STASKW_RMCOF] Cannot open file
+/home/AS501_G3/2_AS501_final_syj/sim/../rtl/memory/D_memory.sv, 145
+  Cannot open file '../../program/out/eval_int_riscv_dmem.hex' passed as 
+  argument to $readmem.
+  Please verify that the first argument to $readmem is a file that exists with
+  proper permissions.
+
+
+Warning-[STASKW_CO1] Cannot open file
+  The file '../../program/out/eval_int_riscv_input.hex' could not be opened. 
+  No such file or directory.
+  Please ensure that the file exists with proper permissions.
+
+
+Warning-[STASKW_RMCOF] Cannot open file
+/home/AS501_G3/2_AS501_final_syj/sim/../rtl/memory/IO_memory.sv, 144
+  Cannot open file '../../program/out/eval_int_riscv_input.hex' passed as 
+  argument to $readmem.
+  Please verify that the first argument to $readmem is a file that exists with
+  proper permissions.
+
+
+Warning-[STASKW_CO1] Cannot open file
+  The file '../../program/out/eval_int_riscv_result.hex' could not be opened. 
+  No such file or directory.
+  Please ensure that the file exists with proper permissions.
+
+
+Warning-[STASKW_RMCOF] Cannot open file
+/home/AS501_G3/2_AS501_final_syj/sim/../rtl/memory/IO_memory.sv, 145
+  Cannot open file '../../program/out/eval_int_riscv_result.hex' passed as 
+  argument to $readmem.
+  Please verify that the first argument to $readmem is a file that exists with
+  proper permissions.
+
+	Warning CORE_TB.DUT.ICACHE.ICACHE_SRAM.SRAM : input CEB unknown/high-Z at simulation time 5.0
+
+[TB] partial result saved: sent_cnt=0 used_u32=0 file=lstm_result_summary.txt
+[TESTBENCH] Wall-clock start (epoch sec): 1777633592
+[TB] partial result saved: sent_cnt=0 used_u32=0 file=lstm_result_summary.txt
+[TB] IMEM[0..7] = xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx
+	Warning CORE_TB.DUT.ICACHE.ICACHE_SRAM.SRAM : input D unknown/high-Z in write cycle at simulation time 5205.0
+
+	Warning CORE_TB.DUT.ICACHE.ICACHE_SRAM.SRAM : input D unknown/high-Z in write cycle at simulation time 5275.0
+
+	Warning CORE_TB.DUT.ICACHE.ICACHE_SRAM.SRAM : input D unknown/high-Z in write cycle at simulation time 5345.0
+
+	Warning CORE_TB.DUT.ICACHE.ICACHE_SRAM.SRAM : input D unknown/high-Z in write cycle at simulation time 5415.0
+
+	Warning CORE_TB.DUT.ICACHE.ICACHE_SRAM.SRAM : input D unknown/high-Z in write cycle at simulation time 5485.0
+
+	Warning CORE_TB.DUT.ICACHE.ICACHE_SRAM.SRAM : input D unknown/high-Z in write cycle at simulation time 5555.0
+
+	Warning CORE_TB.DUT.ICACHE.ICACHE_SRAM.SRAM : input D unknown/high-Z in write cycle at simulation time 5625.0
+
+	Warning CORE_TB.DUT.ICACHE.ICACHE_SRAM.SRAM : input D unknown/high-Z in write cycle at simulation time 5695.0
+
+	Warning CORE_TB.DUT.ICACHE.ICACHE_SRAM.SRAM : input D unknown/high-Z in write cycle at simulation time 5765.0
+
+	Warning CORE_TB.DUT.ICACHE.ICACHE_SRAM.SRAM : input D unknown/high-Z in write cycle at simulation time 5835.0
+
+	Warning CORE_TB.DUT.ICACHE.ICACHE_SRAM.SRAM : input D unknown/high-Z in write cycle at simulation time 5905.0
+
+	Warning CORE_TB.DUT.ICACHE.ICACHE_SRAM.SRAM : input D unknown/high-Z in write cycle at simulation time 5975.0
+
+	Warning CORE_TB.DUT.ICACHE.ICACHE_SRAM.SRAM : input D unknown/high-Z in write cycle at simulation time 6045.0
+
+[INFO] time=6115000 Hang loop reached at PC=0x00000034 (main returned).
+	Warning CORE_TB.DUT.ICACHE.ICACHE_SRAM.SRAM : input D unknown/high-Z in write cycle at simulation time 6115.0
+
+[TESTBENCH] Exit reason: main returned (hang loop).
+
+[TESTBENCH] Simulation finished.
+
+[1] Performance
+ * Total cycles = 610 (0.000B)
+ * Total instruction fetch requests = 14
+ * CPI = 43.571429
+ * Total lstm_step_int entries (PC-based) = 0
+
+[2] Memory Access
+ * Total IMEM accesses = 28
+ * Total DMEM accesses = 0
+ * Total IOMEM accesses = 0
+ * Total memory accesses = 28
+
+[3] Result Header
+ * result_status       = 0x00000000
+ * result_sentence_cnt = 0x00000000
+ * result_used_u32     = 0x00000000
+[TESTBENCH] Dumped result region to ./lstm_iomem_dump.txt
+
+[4] Wall-Clock Runtime
+ * wall_start_epoch_sec = 1777633592
+ * wall_end_epoch_sec   = 1777633592
+ * elapsed_sec          = 0
+ * elapsed_hour         = 0.0000
+$finish called from file "/home/AS501_G3/2_AS501_final_syj/sim/tb/lstm_tb.sv", line 475.
+$finish at simulation time              6126000
+           V C S   S i m u l a t i o n   R e p o r t 
+Time: 6126000 ps
+CPU Time:      0.300 seconds;       Data structure size:   1.1Mb
+Fri May  1 20:06:32 2026

@@ -1,0 +1,5 @@
+status=0
+sentence_count=1
+used=6
+sent[0].len=5
+sent[0].tok=2 4 38 12 30

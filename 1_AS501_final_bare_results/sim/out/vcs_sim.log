@@ -1,0 +1,66 @@
+Info: [VCS_SAVE_RESTORE_INFO] ASLR (Address Space Layout Randomization) is detected on the machine. To enable $save functionality, ASLR will be switched off and simv re-executed.
+Please use '-no_save' simv switch to avoid re-execution or '-suppress=ASLR_DETECTED_INFO' to suppress this message.
+Chronologic VCS simulator copyright 1991-2023
+Contains Synopsys proprietary information.
+Compiler version V-2023.12-1_Full64; Runtime version V-2023.12-1_Full64;  May  4 06:18 2026
+	Warning CORE_TB.DUT.ICACHE.ICACHE_SRAM.SRAM : input CEB unknown/high-Z at simulation time 5.0
+
+[TB] partial result saved: sent_cnt=0 used_u32=0 file=lstm_result_summary.txt
+[TESTBENCH] Wall-clock start (epoch sec): 1777843096
+[TB] partial result saved: sent_cnt=0 used_u32=0 file=lstm_result_summary.txt
+[TB] IMEM[0..7] = 01200137 00010113 00018193 00dab537 88850513 00deb5b7 8b458593 00000313
+[TB][func] time=8527185000 pc=0x00001694 main
+[TB][func] time=8527625000 pc=0x0000152c reset_result_buffer
+[TB][func] time=8530745000 pc=0x00000ce4 init_static_buffers
+[TB][func] time=8532285000 pc=0x000018f4 arena_reset
+[TB][func] time=8535185000 pc=0x00001918 arena_alloc
+[TB][func] time=8562755000 pc=0x00000fbc greedy_decode_int
+[TB][func] time=8832885000 pc=0x000007b0 embedding_lookup
+[TB][func] cycle=894344 (0.001B) time=8943465000 pc=0x0000086c lstm_step_int count=1
+[TB][func] cycle=151639598 (0.152B) time=1516396005000 pc=0x0000086c lstm_step_int count=2
+[TB][func] cycle=297356998 (0.297B) time=2973570005000 pc=0x0000086c lstm_step_int count=3
+[TB][func] cycle=461331184 (0.461B) time=4613311865000 pc=0x0000086c lstm_step_int count=4
+[TB][func] cycle=621388373 (0.621B) time=6213883755000 pc=0x0000086c lstm_step_int count=5
+[TB][func] cycle=786618860 (0.787B) time=7866188625000 pc=0x0000086c lstm_step_int count=6
+[TB][func] cycle=947911036 (0.948B) time=9479110385000 pc=0x0000086c lstm_step_int count=7
+[TB][func] cycle=1112730719 (1.113B) time=11127307215000 pc=0x0000086c lstm_step_int count=8
+[TB][func] cycle=1275160290 (1.275B) time=12751602925000 pc=0x0000086c lstm_step_int count=9
+[TB][func] cycle=1440353856 (1.440B) time=14403538585000 pc=0x0000086c lstm_step_int count=10
+[TB][func] cycle=1602986275 (1.603B) time=16029862775000 pc=0x0000086c lstm_step_int count=11
+[TB][func] cycle=1768094018 (1.768B) time=17680940205000 pc=0x0000086c lstm_step_int count=12
+[TB][func] cycle=1931187688 (1.931B) time=19311876905000 pc=0x0000086c lstm_step_int count=13
+[TB][func] cycle=2094928209 (2.095B) time=20949282115000 pc=0x0000086c lstm_step_int count=14
+[TB][func] cycle=2258344527 (2.258B) time=22583445295000 pc=0x0000086c lstm_step_int count=15
+[TB][func] cycle=2423441804 (2.423B) time=24234418065000 pc=0x0000086c lstm_step_int count=16
+[TB][func] cycle=2586814708 (2.587B) time=25868147105000 pc=0x0000086c lstm_step_int count=17
+[TB][func] cycle=2752257058 (2.752B) time=27522570605000 pc=0x0000086c lstm_step_int count=18
+[TB][func] cycle=2915373053 (2.915B) time=29153730555000 pc=0x0000086c lstm_step_int count=19
+[TB][func] cycle=3080680260 (3.081B) time=30806802625000 pc=0x0000086c lstm_step_int count=20
+[TB][func] cycle=3243802092 (3.244B) time=32438020945000 pc=0x0000086c lstm_step_int count=21
+[TB][func] cycle=3408392340 (3.408B) time=34083923425000 pc=0x0000086c lstm_step_int count=22
+[TB] partial result saved: sent_cnt=1 used_u32=0 file=lstm_result_summary.txt
+[TB] partial result saved: sent_cnt=1 used_u32=2 file=lstm_result_summary.txt
+[TB][func] time=35719458245000 pc=0x000007b0 embedding_lookup
+[TB][func] cycle=3571956635 (3.572B) time=35719566375000 pc=0x0000086c lstm_step_int count=23
+[TB][func] cycle=3737605718 (3.738B) time=37376057205000 pc=0x0000086c lstm_step_int count=24
+[TB][func] time=38970747195000 pc=0x00000c0c linear_out_argmax
+[TB] partial result saved: sent_cnt=1 used_u32=3 file=lstm_result_summary.txt
+[TB][func] time=48506365625000 pc=0x000007b0 embedding_lookup
+[TB][func] cycle=4850647338 (4.851B) time=48506473405000 pc=0x0000086c lstm_step_int count=25
+[TB][func] cycle=5012082254 (5.012B) time=50120822565000 pc=0x0000086c lstm_step_int count=26
+[TB][func] time=51712453845000 pc=0x00000c0c linear_out_argmax
+[TB] partial result saved: sent_cnt=1 used_u32=4 file=lstm_result_summary.txt
+[TB][func] time=61127407215000 pc=0x000007b0 embedding_lookup
+[TB][func] cycle=6112751497 (6.113B) time=61127514995000 pc=0x0000086c lstm_step_int count=27
+[TB][func] cycle=6274141463 (6.274B) time=62741414655000 pc=0x0000086c lstm_step_int count=28
+[TB][func] time=64330853735000 pc=0x00000c0c linear_out_argmax
+[TB] partial result saved: sent_cnt=1 used_u32=5 file=lstm_result_summary.txt
+[TB][func] time=73717705585000 pc=0x000007b0 embedding_lookup
+[TB][func] cycle=7371781334 (7.372B) time=73717813365000 pc=0x0000086c lstm_step_int count=29
+[TB][func] cycle=7534214571 (7.534B) time=75342145735000 pc=0x0000086c lstm_step_int count=30
+[TB][func] time=76918492755000 pc=0x00000c0c linear_out_argmax
+[TB] partial result saved: sent_cnt=1 used_u32=6 file=lstm_result_summary.txt
+[TB][func] time=86332362045000 pc=0x000007b0 embedding_lookup
+[TB][func] cycle=8633246980 (8.633B) time=86332469825000 pc=0x0000086c lstm_step_int count=31
+[TB][func] cycle=8794028134 (8.794B) time=87940281365000 pc=0x0000086c lstm_step_int count=32
+[TB][func] time=89501154475000 pc=0x00000c0c linear_out_argmax
