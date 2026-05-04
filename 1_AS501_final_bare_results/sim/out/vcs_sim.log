@@ -78,3 +78,4 @@ Compiler version V-2023.12-1_Full64; Runtime version V-2023.12-1_Full64;  May  4
 [TB][func] time=123928065535000 pc=0x000007b0 embedding_lookup
 [TB][func] cycle=12392817329 (12.393B) time=123928173315000 pc=0x0000086c lstm_step_int count=37
 [TB][func] cycle=12551925394 (12.552B) time=125519253965000 pc=0x0000086c lstm_step_int count=38
+[TB][func] time=127082722785000 pc=0x00000c0c linear_out_argmax
