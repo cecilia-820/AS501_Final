@@ -68,3 +68,13 @@ Compiler version V-2023.12-1_Full64; Runtime version V-2023.12-1_Full64;  May  4
 [TB][func] time=98896076525000 pc=0x000007b0 embedding_lookup
 [TB][func] cycle=9889618428 (9.890B) time=98896184305000 pc=0x0000086c lstm_step_int count=33
 [TB][func] cycle=10049033967 (10.049B) time=100490339695000 pc=0x0000086c lstm_step_int count=34
+[TB][func] time=102063734105000 pc=0x00000c0c linear_out_argmax
+[TB] partial result saved: sent_cnt=1 used_u32=8 file=lstm_result_summary.txt
+[TB][func] time=111391498125000 pc=0x000007b0 embedding_lookup
+[TB][func] cycle=11139160588 (11.139B) time=111391605905000 pc=0x0000086c lstm_step_int count=35
+[TB][func] cycle=11298570751 (11.299B) time=112985707535000 pc=0x0000086c lstm_step_int count=36
+[TB][func] time=114550244085000 pc=0x00000c0c linear_out_argmax
+[TB] partial result saved: sent_cnt=1 used_u32=9 file=lstm_result_summary.txt
+[TB][func] time=123928065535000 pc=0x000007b0 embedding_lookup
+[TB][func] cycle=12392817329 (12.393B) time=123928173315000 pc=0x0000086c lstm_step_int count=37
+[TB][func] cycle=12551925394 (12.552B) time=125519253965000 pc=0x0000086c lstm_step_int count=38

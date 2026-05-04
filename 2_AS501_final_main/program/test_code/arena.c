@@ -28,3 +28,4 @@ void *arena_alloc(uint32_t size, uint32_t align_pow2) {
     g_arena_off = next;
     return (void *)(g_arena_buf + off);
 }
+ddd
