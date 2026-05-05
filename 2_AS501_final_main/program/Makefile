@@ -212,7 +212,7 @@ check_elf2hex:
 riscv: sync_tb_addrs
 
 riscv_build: check_riscv_tools | $(OUT_DIR)
-	$(RISCV_CC) -march=rv32i_zicsr -mabi=ilp32 -DRISCV -DMAX_SENTENCES_OVERRIDE=$(MAX_SENTENCES) -Wl,-Bstatic,-T$(COMMON_DIR)/sections_tb.lds,-Map=$(OUT_DIR)/mem.map -ffreestanding -nostartfiles \
+	$(RISCV_CC) -march=rv32im_zicsr -mabi=ilp32 -DRISCV -DMAX_SENTENCES_OVERRIDE=$(MAX_SENTENCES) -Wl,-Bstatic,-T$(COMMON_DIR)/sections_tb.lds,-Map=$(OUT_DIR)/mem.map -ffreestanding -nostartfiles \
 		-o $(RISCV_ELF) \
 		$(COMMON_DIR)/start.s \
 		$(TEST_CODE_DIR)/eval_int_c.c \

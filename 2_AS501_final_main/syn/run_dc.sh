@@ -56,7 +56,8 @@
                $RTL_DIR/scalar_core/decoder.sv        \
                $RTL_DIR/scalar_core/regfile.sv        \
                $RTL_DIR/scalar_core/scalar_core.sv    \
-               $RTL_DIR/cpu_top.sv")
+               $RTL_DIR/cpu_top.sv
+               $RTL_DIR/accel/gemv_accel.sv")
 
     # Clock period in ns
     CLOCK_PERIOD="10.0"

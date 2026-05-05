@@ -22,6 +22,9 @@ module MCU #(
 
     parameter IOMEM_START_W = 32'h0800_0000,
     parameter IOMEM_DEPTH_W = 32'h0010_0000
+
+    parameter int unsigned ACCEL_START_W = 32'h0810_0000,
+    parameter int unsigned ACCEL_DEPTH_W = 32'h0000_0010
 )(
     // Clock & reset
     input  logic                   clk_i,
@@ -64,6 +67,15 @@ module MCU #(
     output logic[DWidth-1:0]       iomem_wdata_o,
 
     input  logic[DWidth-1:0]       iomem_rdata_i
+
+    // ACCEL control port
+    output logic                 accel_req_o,
+    output logic                 accel_write_o,
+    output logic [DWidth-1:0]    accel_addr_o,
+    output logic [DWidth-1:0]    accel_wdata_o,
+    input  logic [DWidth-1:0]    accel_rdata_i,
+    input  logic                 accel_ready_i
+
 );
 
     // Latency for memory access
@@ -81,6 +93,9 @@ module MCU #(
     // remembers if the target was IOMEM
     logic is_iomem_q; 
 
+    // read-phase tracking
+    logic is_accel_q;
+
     // states for IMEM
     logic imem_busy_q, imem_busy_d;
     logic [1:0] i_latency_cnt_q, i_latency_cnt_d;
@@ -90,6 +105,12 @@ module MCU #(
     assign dmem_addr_is_io =
         (dmem_addr_i >= (IOMEM_START_W << 2)) &&
         (dmem_addr_i <  ((IOMEM_START_W + IOMEM_DEPTH_W) << 2));
+
+    //ACCEL address decode logic
+    logic dmem_addr_is_accel;
+    assign dmem_addr_is_accel =
+        (dmem_addr_i >= (ACCEL_START_W << 2)) &&
+        (dmem_addr_i <  ((ACCEL_START_W + ACCEL_DEPTH_W) << 2));    
         
     // DMEM & IOMEM state logic
     // [NOTE] Parallel access to DMEM and IOMEM is prohibited, as we assume these two are single external memory. 
@@ -100,19 +121,30 @@ module MCU #(
         dmem_req_o      = 1'b0;
         iomem_req_o     = 1'b0;
         dmem_ready_o    = 1'b0;
+        accel_req_o     = 1'b0;
+        accel_write_o   = 1'b0;
+        accel_addr_o    = '0;
+        accel_wdata_o   = '0;
 
         case (d_state_q)
             // D_IDLE: free to access 
             D_IDLE: begin
                 // check for a request
                 if (dmem_req_i) begin
-                    d_state_d       = D_WAIT;
-                    d_latency_cnt_d = '0;
-                    // routing (dmem or iomem)
-                    if (dmem_addr_is_io) begin
-                        iomem_req_o = 1'b1;
+                    if (dmem_addr_is_accel) begin
+                        accel_req_o   = 1'b1;
+                        accel_write_o = dmem_write_i;
+                        accel_addr_o  = (dmem_addr_i - (ACCEL_START_W << 2)) >> 2;
+                        accel_wdata_o = dmem_wdata_i;
+                        dmem_ready_o  = 1'b1;
+                    end else if (dmem_addr_is_io) begin
+                        d_state_d       = D_WAIT;
+                        d_latency_cnt_d = '0;
+                        iomem_req_o     = 1'b1;
                     end else begin
-                        dmem_req_o  = 1'b1;
+                        d_state_d       = D_WAIT;
+                        d_latency_cnt_d = '0;
+                        dmem_req_o      = 1'b1;
                     end
                 end
             end
@@ -138,6 +170,7 @@ module MCU #(
             d_state_q       <= D_IDLE;
             d_latency_cnt_q <= '0;
             is_iomem_q      <= 1'b0;
+            is_accel_q      <= 1'b0;
         // update state every clk cycle
         end else begin
             d_state_q       <= d_state_d;
@@ -147,6 +180,7 @@ module MCU #(
             if (d_state_q == D_IDLE && dmem_req_i) begin
                 // destination determined by address 
                 is_iomem_q <= dmem_addr_is_io;
+                is_accel_q <= dmem_addr_is_accel;
             end
         end
     end
@@ -205,6 +239,6 @@ module MCU #(
     assign iomem_write_o= dmem_write_i;
 
     // mux read data based on the latched request type
-    assign dmem_rdata_o = is_iomem_q ? iomem_rdata_i : dmem_rdata_i;
+    assign dmem_rdata_o = is_iomem_q ? iomem_rdata_i : is_accel_q ? accel_rdata_i : dmem_rdata_i;
 
 endmodule
