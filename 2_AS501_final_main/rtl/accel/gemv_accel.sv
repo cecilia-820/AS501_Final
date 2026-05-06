@@ -208,7 +208,7 @@ module gemv_accel #(
           // D_MEMORY's hold-time check (50 ps after posedge dmem_req_i) is met.
           dma_write_d = 1'b1;
           dma_addr_d  = out_addr_q + {row_cnt_q, 2'b00};
-          dma_wdata_d = acc_q[DWidth-1:0];
+          dma_wdata_d = acc_q[DWidth-1+Q_BITS:Q_BITS];
         end else begin
           col_cnt_d = col_cnt_q + 1;
         end
@@ -221,7 +221,7 @@ module gemv_accel #(
         dma_req_d   = 1'b1;
         dma_write_d = 1'b1;
         dma_addr_d  = out_addr_q + {row_cnt_q, 2'b00};
-        dma_wdata_d = acc_q[DWidth-1:0];
+        dma_wdata_d = acc_q[DWidth-1+Q_BITS:Q_BITS];
         if (dma_ready_i) begin
           if (row_cnt_q == rows_q[$clog2(MAX_DIM)-1:0] - 1) begin
             state_d = StDone;
@@ -306,15 +306,15 @@ module gemv_accel #(
         row_buf[col_cnt_q] <= dma_rdata_i;
       end
 
-      // MAC accumulation during COMPUTE
+      // MAC accumulation during COMPUTE (late Q12 shift: accumulate full
+      // 64-bit products, apply >>> Q_BITS only at store to match software's
+      // dot_shift_q which shifts the final sum rather than each product)
       if (state_q == StCompute) begin
         if (col_cnt_q == '0) begin
-          // First element: initialize accumulator
-          acc_q <= (signed'(row_buf[0]) * signed'(vec_buf[0])) >>> Q_BITS;
+          acc_q <= signed'(row_buf[0]) * signed'(vec_buf[0]);
         end else if (col_cnt_q < cols_q[$clog2(MAX_DIM)-1:0]) begin
           acc_q <= acc_q
-                   + ((signed'(row_buf[col_cnt_q]) * signed'(vec_buf[col_cnt_q]))
-                      >>> Q_BITS);
+                   + (signed'(row_buf[col_cnt_q]) * signed'(vec_buf[col_cnt_q]));
         end
       end
 

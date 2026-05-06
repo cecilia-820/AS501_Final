@@ -22,7 +22,9 @@
 #include "input_data.h"
 #include "arena.h"
 #include "result.h"
+#ifdef RISCV
 #include "gemv_accel.h"
+#endif
 
 #if !defined(SERVER) && !defined(RISCV)
 #define SERVER
@@ -103,7 +105,7 @@ static int parse_args(int argc, char **argv, Args *args) {
     args->out_hyp = DEFAULT_OUT_HYP;
     args->out_result_txt = DEFAULT_OUT_RESULT_TXT;
     args->out_result_summary = DEFAULT_OUT_RESULT_SUMMARY;
-    args->max_sentences = 0;
+    args->max_sentences = 1;
 
     for (int i = 1; i < argc; ++i) {
         const char *a = argv[i];
@@ -324,7 +326,9 @@ static int lstm_step_int(
 #ifdef RISCV
     // HW GEMV: w_ih * x -> g_gates, w_hh * h -> g_gates_hh
     static int32_t g_gates_hh[4 * MODEL_HID_SIZE];
+    //gemv input-hidden
     gemv_hw(w_ih, x, g_gates, gate_dim, in_dim);
+    //gemv hidden-hidden
     gemv_hw(w_hh, h, g_gates_hh, gate_dim, hid);
     for (int g = 0; g < gate_dim; ++g) {
         g_gates[g] = b[g] + g_gates[g] + g_gates_hh[g];
