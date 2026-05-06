@@ -172,7 +172,7 @@ module gemv_accel #(
         dma_write_d = 1'b0;
         dma_addr_d = vec_addr_q + {col_cnt_q, 2'b00};  // byte address
         if (dma_ready_i) begin
-          if (col_cnt_q == cols_q[$clog2(MAX_DIM)-1:0] - 1) begin
+          if (col_cnt_q + 1'b1 == cols_q[$clog2(MAX_DIM)-1:0]) begin
             state_d   = StLoadRow;
             col_cnt_d = '0;
           end else begin
@@ -190,7 +190,7 @@ module gemv_accel #(
                      + ({row_cnt_q, 2'b00} * cols_q)
                      + {col_cnt_q, 2'b00};
         if (dma_ready_i) begin
-          if (col_cnt_q == cols_q[$clog2(MAX_DIM)-1:0] - 1) begin
+          if (col_cnt_q + 1'b1 == cols_q[$clog2(MAX_DIM)-1:0]) begin
             state_d   = StCompute;
             col_cnt_d = '0;
           end else begin
@@ -223,7 +223,7 @@ module gemv_accel #(
         dma_addr_d  = out_addr_q + {row_cnt_q, 2'b00};
         dma_wdata_d = acc_q[DWidth-1+Q_BITS:Q_BITS];
         if (dma_ready_i) begin
-          if (row_cnt_q == rows_q[$clog2(MAX_DIM)-1:0] - 1) begin
+          if (row_cnt_q + 1'b1 == rows_q[$clog2(MAX_DIM)-1:0]) begin
             state_d = StDone;
           end else begin
             row_cnt_d = row_cnt_q + 1;
@@ -273,6 +273,19 @@ module gemv_accel #(
       dma_addr_o  <= dma_addr_d;
       dma_wdata_o <= dma_wdata_d;
 
+      // Debug: trace FSM milestones
+      if (start_pulse)
+        $display("[ACCEL] %0t: START rows=%0d cols=%0d mat=%0h vec=%0h out=%0h",
+                 $time, rows_q, cols_q, mat_addr_q, vec_addr_q, out_addr_q);
+      if (state_q == StLoadVec && state_d == StLoadRow)
+        $display("[ACCEL] %0t: LOAD_VEC done -> LOAD_ROW row=0", $time);
+      if (state_q == StStore && dma_ready_i) begin
+        if (row_cnt_q[6:0] == 7'd0)
+          $display("[ACCEL] %0t: STORE row=%0d done", $time, row_cnt_q);
+      end
+      if (state_d == StDone && state_q != StDone)
+        $display("[ACCEL] %0t: DONE! (all %0d rows)", $time, rows_q);
+
       // Status flags
       unique case (state_d)
         StIdle: begin
@@ -320,7 +333,7 @@ module gemv_accel #(
 
       // Reset accumulator before each new row
       if (state_q == StStore && dma_ready_i
-          && row_cnt_q != rows_q[$clog2(MAX_DIM)-1:0] - 1) begin
+          && (row_cnt_q + 1'b1) != rows_q[$clog2(MAX_DIM)-1:0]) begin
         acc_q <= '0;
       end
     end

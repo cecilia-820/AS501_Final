@@ -108,18 +108,21 @@ module CPU_TOP #(
     logic [DWidth-1:0]    mcu_ext_dmem_addr;
     logic [DWidth-1:0]    mcu_ext_dmem_wdata;
 
-    // Arbiter: DMA has priority when dma_req is asserted.
+    // D-cache memory-side signals (drive the DMEM arbiter)
+    logic                 dcache_mem_req;
+    logic                 dcache_mem_write;
+    logic [DWidth-1:0]    dcache_mem_addr;
+    logic [DWidth-1:0]    dcache_mem_wdata;
+
+    // Arbiter: D-cache (DMA path) has priority over MCU (CPU path) on DMEM bus.
     // During ACCEL operation, CPU polls STATUS via ACCEL control port (separate
     // path), so no DMEM contention arises in normal operation.
-    assign dmem_req_o   = dma_req ? 1'b1      : mcu_ext_dmem_req;
-    assign dmem_write_o = dma_req ? dma_write  : mcu_ext_dmem_write;
-    assign dmem_addr_o  = dma_req ? (dma_addr - (DMEM_START_W << 2)) : mcu_ext_dmem_addr;
-    // dma_write is pre-asserted 1 cycle before dma_req; pre-routes wdata to avoid D_MEMORY $hold violation
-    assign dmem_wdata_o = dma_write ? dma_wdata  : mcu_ext_dmem_wdata;
-    
-    // Route rdata/ready back to the correct requester
-    assign dma_rdata = dmem_rdata_i;
-    assign dma_ready = dma_req ? 1'b1 : 1'b0;
+    assign dmem_req_o   = dcache_mem_req   ? 1'b1             : mcu_ext_dmem_req;
+    assign dmem_write_o = dcache_mem_req   ? dcache_mem_write : mcu_ext_dmem_write;
+    assign dmem_addr_o  = dcache_mem_req   ? dcache_mem_addr  : mcu_ext_dmem_addr;
+    // dcache_mem_write pre-asserted 1 cycle before dcache_mem_req (DATA_CACHE
+    // StIdle write path) keeps dmem_wdata_o stable at the posedge of dmem_req_i.
+    assign dmem_wdata_o = dcache_mem_write ? dcache_mem_wdata : mcu_ext_dmem_wdata;
 
 
     
@@ -223,6 +226,24 @@ module CPU_TOP #(
         .dma_wdata_o   (dma_wdata),
         .dma_rdata_i   (dma_rdata),
         .dma_ready_i   (dma_ready)
+    );
+
+    DATA_CACHE #(
+        .DWidth(DWidth)
+    ) u_data_cache (
+        .clk_i       (clk_i),
+        .rst_ni      (rst_ni),
+        .dma_req_i   (dma_req),
+        .dma_write_i (dma_write),
+        .dma_addr_i  (dma_addr - (DMEM_START_W << 2)),
+        .dma_wdata_i (dma_wdata),
+        .dma_rdata_o (dma_rdata),
+        .dma_ready_o (dma_ready),
+        .mem_req_o   (dcache_mem_req),
+        .mem_write_o (dcache_mem_write),
+        .mem_addr_o  (dcache_mem_addr),
+        .mem_wdata_o (dcache_mem_wdata),
+        .mem_rdata_i (dmem_rdata_i)
     );
 
 
