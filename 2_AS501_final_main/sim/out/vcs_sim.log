@@ -2,18 +2,148 @@ Info: [VCS_SAVE_RESTORE_INFO] ASLR (Address Space Layout Randomization) is detec
 Please use '-no_save' simv switch to avoid re-execution or '-suppress=ASLR_DETECTED_INFO' to suppress this message.
 Chronologic VCS simulator copyright 1991-2023
 Contains Synopsys proprietary information.
-Compiler version V-2023.12-1_Full64; Runtime version V-2023.12-1_Full64;  May  5 21:04 2026
+Compiler version V-2023.12-1_Full64; Runtime version V-2023.12-1_Full64;  May  7 06:40 2026
 	Warning CORE_TB.DUT.ICACHE.ICACHE_SRAM.SRAM : input CEB unknown/high-Z at simulation time 5.0
 
 [TB] partial result saved: sent_cnt=0 used_u32=0 file=lstm_result_summary.txt
-[TESTBENCH] Wall-clock start (epoch sec): 1777982695
+[TESTBENCH] Wall-clock start (epoch sec): 1778103609
 [TB] partial result saved: sent_cnt=0 used_u32=0 file=lstm_result_summary.txt
-[TB] IMEM[0..7] = 01200137 00010113 00018193 00dab537 88850513 00deb5b7 8b458593 00000313
-[TB][func] time=8527185000 pc=0x00001600 main
-[TB][func] time=8527625000 pc=0x00001498 reset_result_buffer
-[TB][func] time=8530745000 pc=0x00000ca4 init_static_buffers
-[TB][func] time=8532285000 pc=0x00001860 arena_reset
-[TB][func] time=8533625000 pc=0x00001884 arena_alloc
-[TB][func] time=8560135000 pc=0x00000f74 greedy_decode_int
-[TB][func] time=8827935000 pc=0x0000079c embedding_lookup
-[TB][func] cycle=893452 (0.001B) time=8934545000 pc=0x00000844 lstm_step_int count=1
+[TB] IMEM[0..7] = 01200137 00010113 00018193 00dab537 88850513 00deb5b7 0b458593 00000313
+[TB][func] time=8593745000 pc=0x00001694 main
+[TB][func] time=8594185000 pc=0x0000152c reset_result_buffer
+[TB][func] time=8597305000 pc=0x00000d38 init_static_buffers
+[TB][func] time=8598845000 pc=0x000018f4 arena_reset
+[TB][func] time=8600185000 pc=0x00001918 arena_alloc
+[TB][func] time=8626945000 pc=0x00001008 greedy_decode_int
+[TB][func] time=8894745000 pc=0x00000844 embedding_lookup
+[TB][func] cycle=900133 (0.001B) time=9001355000 pc=0x000008ec lstm_step_int count=1
+[TB][func] cycle=900599 time=9006015000 pc=0x00000038 gemv_hw count=1
+[ACCEL] 9008635000: START rows=512 cols=128 mat=8b9a5c vec=dab8b0 out=dabeb0
+[ACCEL] 9017555000: LOAD_VEC done -> LOAD_ROW row=0
+[ACCEL] 9027875000: STORE row=0 done
+[ACCEL] 10347555000: STORE row=128 done
+[ACCEL] 11667235000: STORE row=256 done
+[ACCEL] 12986915000: STORE row=384 done
+[ACCEL] 14296285000: DONE! (all 512 rows)
+[ACCEL] 14298565000: START rows=512 cols=128 mat=939a5c vec=dab0b0 out=daa8b0
+[ACCEL] 14307485000: LOAD_VEC done -> LOAD_ROW row=0
+[ACCEL] 14317805000: STORE row=0 done
+[ACCEL] 15637485000: STORE row=128 done
+[ACCEL] 16957165000: STORE row=256 done
+[ACCEL] 18276845000: STORE row=384 done
+[ACCEL] 19586215000: DONE! (all 512 rows)
+[TB][func] cycle=4249232 (0.004B) time=42492345000 pc=0x000008ec lstm_step_int count=2
+[TB][func] cycle=4249698 time=42497005000 pc=0x00000038 gemv_hw count=2
+[ACCEL] 42498425000: START rows=512 cols=128 mat=8f9a5c vec=dab8b0 out=dabeb0
+[ACCEL] 42507345000: LOAD_VEC done -> LOAD_ROW row=0
+[ACCEL] 42517665000: STORE row=0 done
+[ACCEL] 43837345000: STORE row=128 done
+[ACCEL] 45157025000: STORE row=256 done
+[ACCEL] 46476705000: STORE row=384 done
+[ACCEL] 47786075000: DONE! (all 512 rows)
+[ACCEL] 47788355000: START rows=512 cols=128 mat=979a5c vec=dab2b0 out=daa8b0
+[ACCEL] 47797275000: LOAD_VEC done -> LOAD_ROW row=0
+[ACCEL] 47807595000: STORE row=0 done
+[ACCEL] 49127275000: STORE row=128 done
+[ACCEL] 50446955000: STORE row=256 done
+[ACCEL] 51766635000: STORE row=384 done
+[ACCEL] 53076005000: DONE! (all 512 rows)
+[TB][func] time=75997265000 pc=0x00000844 embedding_lookup
+[TB][func] cycle=7610225 (0.008B) time=76102275000 pc=0x000008ec lstm_step_int count=3
+[TB][func] cycle=7610691 time=76106935000 pc=0x00000038 gemv_hw count=3
+[ACCEL] 76109455000: START rows=512 cols=128 mat=8b9a5c vec=dab8b0 out=dabeb0
+[ACCEL] 76118375000: LOAD_VEC done -> LOAD_ROW row=0
+[ACCEL] 76128695000: STORE row=0 done
+[ACCEL] 77448375000: STORE row=128 done
+[ACCEL] 78768055000: STORE row=256 done
+[ACCEL] 80087735000: STORE row=384 done
+[ACCEL] 81397105000: DONE! (all 512 rows)
+[ACCEL] 81399385000: START rows=512 cols=128 mat=939a5c vec=dab0b0 out=daa8b0
+[ACCEL] 81408305000: LOAD_VEC done -> LOAD_ROW row=0
+[ACCEL] 81418625000: STORE row=0 done
+[ACCEL] 82738305000: STORE row=128 done
+[ACCEL] 84057985000: STORE row=256 done
+[ACCEL] 85377665000: STORE row=384 done
+[ACCEL] 86687035000: DONE! (all 512 rows)
+[TB][func] cycle=10980873 (0.011B) time=109808755000 pc=0x000008ec lstm_step_int count=4
+[TB][func] cycle=10981339 time=109813415000 pc=0x00000038 gemv_hw count=4
+[ACCEL] 109814835000: START rows=512 cols=128 mat=8f9a5c vec=dab8b0 out=dabeb0
+[ACCEL] 109823755000: LOAD_VEC done -> LOAD_ROW row=0
+[ACCEL] 109834075000: STORE row=0 done
+[ACCEL] 111153755000: STORE row=128 done
+[ACCEL] 112473435000: STORE row=256 done
+[ACCEL] 113793115000: STORE row=384 done
+[ACCEL] 115102485000: DONE! (all 512 rows)
+[ACCEL] 115104765000: START rows=512 cols=128 mat=979a5c vec=dab2b0 out=daa8b0
+[ACCEL] 115113685000: LOAD_VEC done -> LOAD_ROW row=0
+[ACCEL] 115124005000: STORE row=0 done
+[ACCEL] 116443685000: STORE row=128 done
+[ACCEL] 117763365000: STORE row=256 done
+[ACCEL] 119083045000: STORE row=384 done
+[ACCEL] 120392415000: DONE! (all 512 rows)
+[TB][func] time=143396545000 pc=0x00000844 embedding_lookup
+[TB][func] cycle=14350153 (0.014B) time=143501555000 pc=0x000008ec lstm_step_int count=5
+[TB][func] cycle=14350619 time=143506215000 pc=0x00000038 gemv_hw count=5
+[ACCEL] 143508735000: START rows=512 cols=128 mat=8b9a5c vec=dab8b0 out=dabeb0
+[ACCEL] 143517655000: LOAD_VEC done -> LOAD_ROW row=0
+[ACCEL] 143527975000: STORE row=0 done
+[ACCEL] 144847655000: STORE row=128 done
+[ACCEL] 146167335000: STORE row=256 done
+[ACCEL] 147487015000: STORE row=384 done
+[ACCEL] 148796385000: DONE! (all 512 rows)
+[ACCEL] 148798665000: START rows=512 cols=128 mat=939a5c vec=dab0b0 out=daa8b0
+[ACCEL] 148807585000: LOAD_VEC done -> LOAD_ROW row=0
+[ACCEL] 148817905000: STORE row=0 done
+[ACCEL] 150137585000: STORE row=128 done
+[ACCEL] 151457265000: STORE row=256 done
+[ACCEL] 152776945000: STORE row=384 done
+[ACCEL] 154086315000: DONE! (all 512 rows)
+[TB][func] cycle=17719573 (0.018B) time=177195755000 pc=0x000008ec lstm_step_int count=6
+[TB][func] cycle=17720039 time=177200415000 pc=0x00000038 gemv_hw count=6
+[ACCEL] 177201835000: START rows=512 cols=128 mat=8f9a5c vec=dab8b0 out=dabeb0
+[ACCEL] 177210755000: LOAD_VEC done -> LOAD_ROW row=0
+[ACCEL] 177221075000: STORE row=0 done
+[ACCEL] 178540755000: STORE row=128 done
+[ACCEL] 179860435000: STORE row=256 done
+[ACCEL] 181180115000: STORE row=384 done
+[ACCEL] 182489485000: DONE! (all 512 rows)
+[ACCEL] 182491765000: START rows=512 cols=128 mat=979a5c vec=dab2b0 out=daa8b0
+[ACCEL] 182500685000: LOAD_VEC done -> LOAD_ROW row=0
+[ACCEL] 182511005000: STORE row=0 done
+[ACCEL] 183830685000: STORE row=128 done
+[ACCEL] 185150365000: STORE row=256 done
+[ACCEL] 186470045000: STORE row=384 done
+[ACCEL] 187779415000: DONE! (all 512 rows)
+[TB][func] time=210738545000 pc=0x00000844 embedding_lookup
+[TB][func] cycle=21084353 (0.021B) time=210843555000 pc=0x000008ec lstm_step_int count=7
+[TB][func] cycle=21084819 time=210848215000 pc=0x00000038 gemv_hw count=7
+[ACCEL] 210850735000: START rows=512 cols=128 mat=8b9a5c vec=dab8b0 out=dabeb0
+[ACCEL] 210859655000: LOAD_VEC done -> LOAD_ROW row=0
+[ACCEL] 210869975000: STORE row=0 done
+[ACCEL] 212189655000: STORE row=128 done
+[ACCEL] 213509335000: STORE row=256 done
+[ACCEL] 214829015000: STORE row=384 done
+[ACCEL] 216138385000: DONE! (all 512 rows)
+[ACCEL] 216140665000: START rows=512 cols=128 mat=939a5c vec=dab0b0 out=daa8b0
+[ACCEL] 216149585000: LOAD_VEC done -> LOAD_ROW row=0
+[ACCEL] 216159905000: STORE row=0 done
+[ACCEL] 217479585000: STORE row=128 done
+[ACCEL] 218799265000: STORE row=256 done
+[ACCEL] 220118945000: STORE row=384 done
+[ACCEL] 221428315000: DONE! (all 512 rows)
+[TB][func] cycle=24449507 (0.024B) time=244495095000 pc=0x000008ec lstm_step_int count=8
+[TB][func] cycle=24449973 time=244499755000 pc=0x00000038 gemv_hw count=8
+[ACCEL] 244501175000: START rows=512 cols=128 mat=8f9a5c vec=dab8b0 out=dabeb0
+[ACCEL] 244510095000: LOAD_VEC done -> LOAD_ROW row=0
+[ACCEL] 244520415000: STORE row=0 done
+[ACCEL] 245840095000: STORE row=128 done
+[ACCEL] 247159775000: STORE row=256 done
+[ACCEL] 248479455000: STORE row=384 done
+[ACCEL] 249788825000: DONE! (all 512 rows)
+[ACCEL] 249791105000: START rows=512 cols=128 mat=979a5c vec=dab2b0 out=daa8b0
+[ACCEL] 249800025000: LOAD_VEC done -> LOAD_ROW row=0
+[ACCEL] 249810345000: STORE row=0 done
+[ACCEL] 251130025000: STORE row=128 done
+[ACCEL] 252449705000: STORE row=256 done
+[ACCEL] 253769385000: STORE row=384 done
+[ACCEL] 255078755000: DONE! (all 512 rows)
