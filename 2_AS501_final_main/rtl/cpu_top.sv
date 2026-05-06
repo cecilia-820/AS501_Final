@@ -113,8 +113,9 @@ module CPU_TOP #(
     // path), so no DMEM contention arises in normal operation.
     assign dmem_req_o   = dma_req ? 1'b1      : mcu_ext_dmem_req;
     assign dmem_write_o = dma_req ? dma_write  : mcu_ext_dmem_write;
-    assign dmem_addr_o  = dma_req ? dma_addr   : mcu_ext_dmem_addr;
-    assign dmem_wdata_o = dma_req ? dma_wdata  : mcu_ext_dmem_wdata;
+    assign dmem_addr_o  = dma_req ? (dma_addr - (DMEM_START_W << 2)) : mcu_ext_dmem_addr;
+    // dma_write is pre-asserted 1 cycle before dma_req; pre-routes wdata to avoid D_MEMORY $hold violation
+    assign dmem_wdata_o = dma_write ? dma_wdata  : mcu_ext_dmem_wdata;
     
     // Route rdata/ready back to the correct requester
     assign dma_rdata = dmem_rdata_i;
