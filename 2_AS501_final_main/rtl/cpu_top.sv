@@ -21,11 +21,11 @@ module CPU_TOP #(
     parameter DMEM_DEPTH_W  = 32'h07f8_0000,
 
     parameter IOMEM_START_W = 32'h0800_0000,
-    parameter IOMEM_DEPTH_W = 32'h0010_0000
+    parameter IOMEM_DEPTH_W = 32'h0010_0000,
 
     //accelerator
-    parameter int unsigned ACCEL_START_W = 32'h0810_0000,
-    parameter int unsigned ACCEL_DEPTH_W = 32'h0000_0010
+    parameter ACCEL_START_W = 32'h0810_0000,
+    parameter ACCEL_DEPTH_W = 32'h0000_0010
     
 )(
     // Basic signals
@@ -156,7 +156,7 @@ module CPU_TOP #(
         .DMEM_START_W  (DMEM_START_W),
         .DMEM_DEPTH_W  (DMEM_DEPTH_W),
         .IOMEM_START_W (IOMEM_START_W),
-        .IOMEM_DEPTH_W (IOMEM_DEPTH_W)
+        .IOMEM_DEPTH_W (IOMEM_DEPTH_W),
         .ACCEL_START_W (ACCEL_START_W),       
         .ACCEL_DEPTH_W (ACCEL_DEPTH_W)        
     ) MCU_INST (
@@ -194,7 +194,7 @@ module CPU_TOP #(
         .iomem_write_o (iomem_write_o),
         .iomem_addr_o  (iomem_addr_o),
         .iomem_wdata_o (iomem_wdata_o),
-        .iomem_rdata_i (iomem_rdata_i)
+        .iomem_rdata_i (iomem_rdata_i),
 
         // ACCEL control port
         .accel_req_o   (accel_req),           

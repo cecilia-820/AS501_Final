@@ -201,22 +201,27 @@ module gemv_accel #(
 
       // StCompute: MAC over buffered row and vector (sequential MAC)
       StCompute: begin
-        // MAC one element per cycle from row_buf and vec_buf
-        // This state transitions through col_cnt
         if (col_cnt_q == cols_q[$clog2(MAX_DIM)-1:0]) begin
           state_d   = StStore;
           col_cnt_d = '0;
+          // Pre-load write/addr/wdata one cycle before req goes high so that
+          // D_MEMORY's hold-time check (50 ps after posedge dmem_req_i) is met.
+          dma_write_d = 1'b1;
+          dma_addr_d  = out_addr_q + {row_cnt_q, 2'b00};
+          dma_wdata_d = acc_q[DWidth-1:0];
         end else begin
           col_cnt_d = col_cnt_q + 1;
         end
       end
 
       // StStore: DMA write result to output
+      // req goes high here; write/addr/wdata were pre-loaded in StCompute's
+      // last cycle so they are already stable at the posedge of dma_req_o.
       StStore: begin
         dma_req_d   = 1'b1;
         dma_write_d = 1'b1;
         dma_addr_d  = out_addr_q + {row_cnt_q, 2'b00};
-        dma_wdata_d = acc_q[DWidth-1:0];  // truncated to 32-bit
+        dma_wdata_d = acc_q[DWidth-1:0];
         if (dma_ready_i) begin
           if (row_cnt_q == rows_q[$clog2(MAX_DIM)-1:0] - 1) begin
             state_d = StDone;
