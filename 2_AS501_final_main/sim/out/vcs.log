@@ -6,14 +6,15 @@ Command: vcs -fgp -full64 -sverilog /home/AS501_G3/2_AS501_final_main/sim/tb/lst
 /home/AS501_G3/2_AS501_final_main/sim/../rtl/memory/D_memory.sv /home/AS501_G3/2_AS501_final_main/sim/../rtl/memory/IO_memory.sv \
 /technology/TSMC_28nm_HPC_RF/SRAM/tsn28hpcpd127spsram_20120200_180a/TSMCHOME/sram/Output/ts5n28hpcphvta512x54m4f_tt1v25c/ts5n28hpcphvta512x54m4f_tt1v25c.v \
 /home/AS501_G3/2_AS501_final_main/sim/../rtl/cache/submodule/cache_sram.sv /home/AS501_G3/2_AS501_final_main/sim/../rtl/cache/instr_cache.sv \
-/home/AS501_G3/2_AS501_final_main/sim/../rtl/scalar_core/alu.sv /home/AS501_G3/2_AS501_final_main/sim/../rtl/scalar_core/csr.sv \
-/home/AS501_G3/2_AS501_final_main/sim/../rtl/scalar_core/decoder.sv /home/AS501_G3/2_AS501_final_main/sim/../rtl/scalar_core/regfile.sv \
-/home/AS501_G3/2_AS501_final_main/sim/../rtl/scalar_core/mcu.sv /home/AS501_G3/2_AS501_final_main/sim/../rtl/scalar_core/scalar_core.sv \
-/home/AS501_G3/2_AS501_final_main/sim/../rtl/cpu_top.sv /home/AS501_G3/2_AS501_final_main/sim/../rtl/accel/gemv_accel.sv \
--timescale=1ns/1ps +incdir+/tools/Synopsys/dc/V-2023.12-SP5-1/dw/sim_ver +define+SIM \
--debug_access+all -kdb -pcmakeprof -l vcs.log
+/home/AS501_G3/2_AS501_final_main/sim/../rtl/cache/data_cache.sv /home/AS501_G3/2_AS501_final_main/sim/../rtl/scalar_core/alu.sv \
+/home/AS501_G3/2_AS501_final_main/sim/../rtl/scalar_core/csr.sv /home/AS501_G3/2_AS501_final_main/sim/../rtl/scalar_core/decoder.sv \
+/home/AS501_G3/2_AS501_final_main/sim/../rtl/scalar_core/regfile.sv /home/AS501_G3/2_AS501_final_main/sim/../rtl/scalar_core/mcu.sv \
+/home/AS501_G3/2_AS501_final_main/sim/../rtl/scalar_core/scalar_core.sv /home/AS501_G3/2_AS501_final_main/sim/../rtl/cpu_top.sv \
+/home/AS501_G3/2_AS501_final_main/sim/../rtl/accel/gemv_accel.sv -timescale=1ns/1ps \
++incdir+/tools/Synopsys/dc/V-2023.12-SP5-1/dw/sim_ver +define+SIM -debug_access+all \
+-kdb -pcmakeprof -l vcs.log
                          Chronologic VCS (TM)
-        Version V-2023.12-1_Full64 -- Tue May  5 21:04:52 2026
+        Version V-2023.12-1_Full64 -- Thu May  7 12:10:44 2026
 
                     Copyright (c) 1991 - 2024 Synopsys, Inc.
    This software and the associated documentation are proprietary to Synopsys,
@@ -45,6 +46,7 @@ Parsing design file '/home/AS501_G3/2_AS501_final_main/sim/../rtl/memory/IO_memo
 Parsing design file '/technology/TSMC_28nm_HPC_RF/SRAM/tsn28hpcpd127spsram_20120200_180a/TSMCHOME/sram/Output/ts5n28hpcphvta512x54m4f_tt1v25c/ts5n28hpcphvta512x54m4f_tt1v25c.v'
 Parsing design file '/home/AS501_G3/2_AS501_final_main/sim/../rtl/cache/submodule/cache_sram.sv'
 Parsing design file '/home/AS501_G3/2_AS501_final_main/sim/../rtl/cache/instr_cache.sv'
+Parsing design file '/home/AS501_G3/2_AS501_final_main/sim/../rtl/cache/data_cache.sv'
 Parsing design file '/home/AS501_G3/2_AS501_final_main/sim/../rtl/scalar_core/alu.sv'
 Parsing included file '/tools/Synopsys/dc/V-2023.12-SP5-1/dw/sim_ver/DW_dp_mult_comb_function.inc'.
 Back to file '/home/AS501_G3/2_AS501_final_main/sim/../rtl/scalar_core/alu.sv'.
@@ -73,7 +75,7 @@ Warning-[IWNF] Implicit wire has no fanin
 
 Starting vcs inline pass...
 
-12 modules and 0 UDP read.
+13 modules and 0 UDP read.
 recompiling module CORE_TB
 recompiling package pkg_bool
 recompiling package pkg_rw
@@ -83,36 +85,37 @@ recompiling module I_MEMORY
 recompiling module D_MEMORY
 recompiling module IO_MEMORY
 recompiling module TS5N28HPCPHVTA512X54M4F
+recompiling module DATA_CACHE
 recompiling module MCU
 recompiling module SCALAR_CORE
 recompiling module gemv_accel
-All of 12 modules done
+All of 13 modules done
 =>MAKEPROF@link
 rm -f _cuarc*.so _csrc*.so pre_vcsobj_*.so share_vcsobj_*.so
 if [ -x ../simv ]; then chmod a-x ../simv; fi
 g++  -o ../simv      -rdynamic  -Wl,-rpath='$ORIGIN'/simv.daidir -Wl,-rpath=./simv.daidir \
 -Wl,-rpath=/tools/Synopsys/vcs/V-2023.12-1/linux64/lib -L/tools/Synopsys/vcs/V-2023.12-1/linux64/lib \
--Wl,-rpath-link=./  /usr/lib64/libnuma.so.1   objs/amcQw_d.o   _391441_archive_1.so \
+-Wl,-rpath-link=./  /usr/lib64/libnuma.so.1   objs/amcQw_d.o   _301631_archive_1.so \
 SIM_l.o      rmapats_mop.o rmapats.o rmar.o rmar_nd.o  rmar_llvm_0_1.o rmar_llvm_0_0.o \
 -lvirsim -lerrorinf -lsnpsmalloc -lvfs    -lvcsnew -lsimprofile -luclinative /tools/Synopsys/vcs/V-2023.12-1/linux64/lib/vcs_tls.o \
 -Wl,-whole-archive  -lvcsucli    -Wl,-no-whole-archive        _vcs_pli_stub_.o   \
 /tools/Synopsys/vcs/V-2023.12-1/linux64/lib/vcs_save_restore_new.o /tools/Synopsys/verdi/V-2023.12-1/share/PLI/VCS/LINUX64/pli.a \
 -ldl  -lc -lm -lpthread -ldl 
 ../simv up to date
-<=MAKEPROF@link, Real: 0.25, User: 0.12, Sys: 0.07, CPU: 
-CPU time: .819 seconds to compile + .222 seconds to elab + .304 seconds to link
+<=MAKEPROF@link, Real: 0.26, User: 0.11, Sys: 0.06, CPU: 
+CPU time: .849 seconds to compile + .226 seconds to elab + .288 seconds to link
 +------------------------------------------+-----------+-----------+-----------+----------+----------+----------+----------+----------+
 |                 Activity                 |  Real(s)  |  User(s)  |   Sys(s)  | Virt(MB) |  Res(MB) |  Shr(MB) | Priv(MB) |   nFLT   |
 +------------------------------------------+-----------+-----------+-----------+----------+----------+----------+----------+----------+
-| Parsing                                  |      0.00 |      0.04 |      0.01 |    444.7 |     87.7 |      2.3 |     85.4 |        0 |
+| Parsing                                  |      0.00 |      0.04 |      0.01 |    444.9 |     93.8 |      2.5 |     91.3 |        0 |
 +------------------------------------------+-----------+-----------+-----------+----------+----------+----------+----------+----------+
-| _Elabcom                                 |      0.08 |      0.02 |      0.02 |    342.0 |      0.0 |      0.0 |      0.0 |        0 |
+| _Elabcom                                 |      0.13 |      0.03 |      0.03 |    342.0 |      0.0 |      0.0 |      0.0 |        0 |
 +------------------------------------------+-----------+-----------+-----------+----------+----------+----------+----------+----------+
-| Compiling                                |      0.71 |      0.48 |      0.19 |    444.7 |     87.7 |      2.3 |     85.4 |        0 |
+| Compiling                                |      0.78 |      0.49 |      0.20 |    444.9 |     93.8 |      2.5 |     91.3 |        0 |
 +------------------------------------------+-----------+-----------+-----------+----------+----------+----------+----------+----------+
-| Elaboration                              |      0.18 |      0.10 |      0.03 |    235.0 |     65.5 |      2.3 |     63.2 |        0 |
+| Elaboration                              |      0.23 |      0.11 |      0.03 |    235.0 |     79.7 |      2.5 |     77.2 |        0 |
 +------------------------------------------+-----------+-----------+-----------+----------+----------+----------+----------+----------+
-| Total_time                               |      1.00 |      1.02 |      0.77 |        / |        / |        / |        / |        / |
+| Total_time                               |      2.00 |      1.06 |      0.77 |        / |        / |        / |        / |        / |
 +------------------------------------------+-----------+-----------+-----------+----------+----------+----------+----------+----------+
 Real(Real Time) User(User Time) Sys(System Time) Virt(Virtual Memory) Res(Resident Set) Shr(Shared Memory) Priv(Private Memory) nFLT(Major Page Faults)
 Verdi KDB elaboration done and the database successfully generated: 0 error(s), 0 warning(s)
