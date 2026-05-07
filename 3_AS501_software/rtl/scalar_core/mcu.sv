@@ -24,7 +24,13 @@ module MCU #(
     parameter IOMEM_DEPTH_W = 32'h0010_0000,
 
     parameter ACCEL_START_W = 32'h0810_0000,
-    parameter ACCEL_DEPTH_W = 32'h0000_0010
+    parameter ACCEL_DEPTH_W = 32'h0000_0010,
+
+    parameter SPM_START_W   = 32'h0820_0000,
+    parameter SPM_DEPTH_W   = 32'h0000_4000,   // 16384 words = 64KB
+
+    parameter DMA_START_W   = 32'h0824_0000,
+    parameter DMA_DEPTH_W   = 32'h0000_0010
 )(
     // Clock & reset
     input  logic                   clk_i,
@@ -74,7 +80,22 @@ module MCU #(
     output logic [DWidth-1:0]    accel_addr_o,
     output logic [DWidth-1:0]    accel_wdata_o,
     input  logic [DWidth-1:0]    accel_rdata_i,
-    input  logic                 accel_ready_i
+    input  logic                 accel_ready_i,
+
+    // SPM port (directly connected to on-chip SPM - 1-cycle access)
+    output logic                 spm_req_o,
+    output logic                 spm_write_o,
+    output logic [DWidth-1:0]    spm_addr_o,      // byte offset relative to SPM base
+    output logic [DWidth-1:0]    spm_wdata_o,
+    input  logic [DWidth-1:0]    spm_rdata_i,
+
+    // DMA control port (same pattern as ACCEL)
+    output logic                 dma_req_o,
+    output logic                 dma_write_o,
+    output logic [DWidth-1:0]    dma_addr_o,      // byte offset from DMA base
+    output logic [DWidth-1:0]    dma_wdata_o,
+    input  logic [DWidth-1:0]    dma_rdata_i,
+    input  logic                 dma_ready_i
 
 );
 
@@ -95,10 +116,15 @@ module MCU #(
 
     // read-phase tracking
     logic is_accel_q;
+    logic is_spm_q;
+    logic is_dma_q;
 
     // latched ACCEL read data (needed because accel_rdata_o is only valid when
     // accel_req_o=1, which is only driven in D_IDLE; by D_WAIT we need to hold it)
     logic [DWidth-1:0] accel_rdata_q;
+
+    // latched DMA read data (same reason as ACCEL)
+    logic [DWidth-1:0] dma_rdata_q;
 
     // states for IMEM
     logic imem_busy_q, imem_busy_d;
@@ -114,8 +140,20 @@ module MCU #(
     logic dmem_addr_is_accel;
     assign dmem_addr_is_accel =
         (dmem_addr_i >= (ACCEL_START_W << 2)) &&
-        (dmem_addr_i <  ((ACCEL_START_W + ACCEL_DEPTH_W) << 2));    
-        
+        (dmem_addr_i <  ((ACCEL_START_W + ACCEL_DEPTH_W) << 2));
+
+    // SPM address decode logic
+    logic dmem_addr_is_spm;
+    assign dmem_addr_is_spm =
+        (dmem_addr_i >= (SPM_START_W << 2)) &&
+        (dmem_addr_i <  ((SPM_START_W + SPM_DEPTH_W) << 2));
+
+    // DMA address decode logic
+    logic dmem_addr_is_dma;
+    assign dmem_addr_is_dma =
+        (dmem_addr_i >= (DMA_START_W << 2)) &&
+        (dmem_addr_i <  ((DMA_START_W + DMA_DEPTH_W) << 2));
+
     // DMEM & IOMEM state logic
     // [NOTE] Parallel access to DMEM and IOMEM is prohibited, as we assume these two are single external memory. 
     always_comb begin
@@ -129,24 +167,37 @@ module MCU #(
         accel_write_o   = 1'b0;
         accel_addr_o    = '0;
         accel_wdata_o   = '0;
+        spm_req_o       = 1'b0;
+        spm_write_o     = 1'b0;
+        dma_req_o       = 1'b0;
+        dma_write_o     = 1'b0;
 
         case (d_state_q)
-            // D_IDLE: free to access 
+            // D_IDLE: free to access
             D_IDLE: begin
                 // check for a request
                 if (dmem_req_i) begin
                     if (dmem_addr_is_accel) begin
                         // Drive ACCEL control signals this cycle so the ACCEL
                         // latches write data / produces read data combinationally.
-                        // Do NOT assert dmem_ready_o here — doing so creates a
-                        // zero-delay combinational loop with the decoder's
-                        // dmem_req_o = !dmem_ready_i, hanging the simulation.
                         accel_req_o     = 1'b1;
                         accel_write_o   = dmem_write_i;
                         accel_addr_o    = (dmem_addr_i - (ACCEL_START_W << 2)) >> 2;
                         accel_wdata_o   = dmem_wdata_i;
                         d_state_d       = D_WAIT;
                         d_latency_cnt_d = LATENCY_CYCLES - 1; // ready on next cycle
+                    end else if (dmem_addr_is_dma) begin
+                        // DMA control registers — same 1-cycle pattern as ACCEL
+                        dma_req_o       = 1'b1;
+                        dma_write_o     = dmem_write_i;
+                        d_state_d       = D_WAIT;
+                        d_latency_cnt_d = LATENCY_CYCLES - 1; // ready on next cycle
+                    end else if (dmem_addr_is_spm) begin
+                        // SPM access — 1-cycle latency (registered read in SPM)
+                        spm_req_o       = 1'b1;
+                        spm_write_o     = dmem_write_i;
+                        d_state_d       = D_WAIT;
+                        d_latency_cnt_d = LATENCY_CYCLES - 2; // 1-cycle wait
                     end else if (dmem_addr_is_io) begin
                         d_state_d       = D_WAIT;
                         d_latency_cnt_d = '0;
@@ -181,7 +232,10 @@ module MCU #(
             d_latency_cnt_q <= '0;
             is_iomem_q      <= 1'b0;
             is_accel_q      <= 1'b0;
+            is_spm_q        <= 1'b0;
+            is_dma_q        <= 1'b0;
             accel_rdata_q   <= '0;
+            dma_rdata_q     <= '0;
         // update state every clk cycle
         end else begin
             d_state_q       <= d_state_d;
@@ -192,13 +246,20 @@ module MCU #(
                 // destination determined by address
                 is_iomem_q <= dmem_addr_is_io;
                 is_accel_q <= dmem_addr_is_accel;
+                is_spm_q   <= dmem_addr_is_spm;
+                is_dma_q   <= dmem_addr_is_dma;
             end
 
             // Capture ACCEL read data in D_IDLE while accel_req_o is valid.
-            // By D_WAIT (next cycle) accel_req_o is 0, so we must hold the value.
             if (d_state_q == D_IDLE && dmem_req_i
                     && dmem_addr_is_accel && !dmem_write_i) begin
                 accel_rdata_q <= accel_rdata_i;
+            end
+
+            // Capture DMA read data in D_IDLE while dma_req_o is valid.
+            if (d_state_q == D_IDLE && dmem_req_i
+                    && dmem_addr_is_dma && !dmem_write_i) begin
+                dma_rdata_q <= dma_rdata_i;
             end
         end
     end
@@ -256,7 +317,19 @@ module MCU #(
     assign iomem_wdata_o= dmem_wdata_i;
     assign iomem_write_o= dmem_write_i;
 
+    // SPM address path (byte offset relative to SPM base)
+    assign spm_addr_o  = dmem_addr_i - (SPM_START_W << 2);
+    assign spm_wdata_o = dmem_wdata_i;
+
+    // DMA address path (byte offset from DMA base)
+    assign dma_addr_o  = dmem_addr_i - (DMA_START_W << 2);
+    assign dma_wdata_o = dmem_wdata_i;
+
     // mux read data based on the latched request type
-    assign dmem_rdata_o = is_iomem_q ? iomem_rdata_i : is_accel_q ? accel_rdata_q : dmem_rdata_i;
+    assign dmem_rdata_o = is_spm_q   ? spm_rdata_i   :
+                          is_dma_q   ? dma_rdata_q    :
+                          is_iomem_q ? iomem_rdata_i  :
+                          is_accel_q ? accel_rdata_q   :
+                                       dmem_rdata_i;
 
 endmodule

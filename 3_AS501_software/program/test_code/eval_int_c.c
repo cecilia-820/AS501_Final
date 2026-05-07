@@ -211,6 +211,19 @@ static I64Pair i64_neg(I64Pair v) {
 }
 
 static I64Pair i64_mul_i32(int32_t a, int32_t b) {
+    I64Pair r;
+#ifdef RISCV
+    uint32_t lo;
+    int32_t  hi;
+    asm volatile (
+        "mul  %[lo], %[a], %[b]\n\t"
+        "mulh %[hi], %[a], %[b]\n\t"
+        : [lo] "=r"(lo), [hi] "=r"(hi)
+        : [a] "r"(a), [b] "r"(b)
+    );
+    r.lo = lo;
+    r.hi = (uint32_t)hi;
+#else
     int neg = 0;
     uint32_t ua;
     uint32_t ub;
@@ -251,12 +264,12 @@ static I64Pair i64_mul_i32(int32_t a, int32_t b) {
     lo += add2;
     if (lo < old) hi += 1u;
 
-    I64Pair r;
     r.lo = lo;
     r.hi = hi;
     if (neg) {
         r = i64_neg(r);
     }
+#endif
     return r;
 }
 

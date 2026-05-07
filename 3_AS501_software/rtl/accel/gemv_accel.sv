@@ -6,6 +6,9 @@
 //
 // FSM: IDLE -> LOAD_VEC -> LOAD_ROW -> COMPUTE -> STORE -> DONE
 // DMA interface shares the existing DMEM port via an arbiter in cpu_top.
+//
+// 8-way parallel MAC in StCompute: processes 8 elements per cycle
+// with an adder tree, giving ~8x speedup over the sequential version.
 
 module gemv_accel #(
   parameter int unsigned DWidth = 32
@@ -35,6 +38,7 @@ module gemv_accel #(
   // ---------------------------------------------------------------------------
   localparam int unsigned MAX_DIM    = 512;   // max rows or cols supported
   localparam int unsigned Q_BITS     = 12;    // Q12 fixed-point shift
+  localparam int unsigned N_PE       = 8;     // number of parallel MAC units
 
   // Control register word offsets
   localparam logic [DWidth-1:0] REG_MAT_ADDR = 32'd0;
@@ -76,13 +80,11 @@ module gemv_accel #(
   logic [$clog2(MAX_DIM)-1:0] col_cnt_q, col_cnt_d;
   logic [$clog2(MAX_DIM)-1:0] row_cnt_q, row_cnt_d;
 
-  // Internal vector buffer (stores input vector for reuse across rows)
+  // Internal buffers
   logic [DWidth-1:0] vec_buf [MAX_DIM];
+  logic [DWidth-1:0] row_buf [MAX_DIM];
 
-  // Row element latch (one element at a time from DMA)
-  logic [DWidth-1:0] row_elem_q;
-
-  // MAC accumulator
+  // MAC accumulator (64-bit to preserve precision)
   logic signed [63:0] acc_q, acc_d;
 
   // DMA request control
@@ -92,10 +94,44 @@ module gemv_accel #(
   logic [DWidth-1:0] dma_wdata_d;
 
   // ---------------------------------------------------------------------------
+  // 8-way parallel MAC: combinational products and adder tree
+  // ---------------------------------------------------------------------------
+  logic signed [63:0] product [N_PE];
+  logic signed [63:0] sum_s1 [4];
+  logic signed [63:0] sum_s2 [2];
+  logic signed [63:0] sum_s3;
+
+  // Remaining columns for this compute step
+  logic [$clog2(MAX_DIM)-1:0] cols_trunc;
+  assign cols_trunc = cols_q[$clog2(MAX_DIM)-1:0];
+
+  always_comb begin
+    // Compute products with masking for out-of-range elements
+    for (int i = 0; i < N_PE; i++) begin
+      if ((col_cnt_q + i[$clog2(MAX_DIM)-1:0]) < cols_trunc) begin
+        product[i] = signed'(row_buf[col_cnt_q + i[$clog2(MAX_DIM)-1:0]])
+                   * signed'(vec_buf[col_cnt_q + i[$clog2(MAX_DIM)-1:0]]);
+      end else begin
+        product[i] = 64'sd0;
+      end
+    end
+
+    // 3-stage adder tree
+    sum_s1[0] = product[0] + product[1];
+    sum_s1[1] = product[2] + product[3];
+    sum_s1[2] = product[4] + product[5];
+    sum_s1[3] = product[6] + product[7];
+
+    sum_s2[0] = sum_s1[0] + sum_s1[1];
+    sum_s2[1] = sum_s1[2] + sum_s1[3];
+
+    sum_s3    = sum_s2[0] + sum_s2[1];
+  end
+
+  // ---------------------------------------------------------------------------
   // Control register read/write
   // ---------------------------------------------------------------------------
-  // Register writes (1-cycle ready, combinational path)
-  assign accel_ready_o = accel_req_i;  // always ready in 1 cycle
+  assign accel_ready_o = accel_req_i;
 
   always_ff @(posedge clk_i or negedge rst_ni) begin
     if (!rst_ni) begin
@@ -119,7 +155,7 @@ module gemv_accel #(
               start_pulse <= 1'b1;
             end
           end
-          default: ;  // ignore writes to STATUS or unknown offsets
+          default: ;
         endcase
       end
     end
@@ -146,14 +182,13 @@ module gemv_accel #(
   // FSM: next-state logic (combinational)
   // ---------------------------------------------------------------------------
   always_comb begin
-    // Default assignments
-    state_d    = state_q;
-    col_cnt_d  = col_cnt_q;
-    row_cnt_d  = row_cnt_q;
-    acc_d      = acc_q;
-    dma_req_d  = 1'b0;
+    state_d     = state_q;
+    col_cnt_d   = col_cnt_q;
+    row_cnt_d   = row_cnt_q;
+    acc_d       = acc_q;
+    dma_req_d   = 1'b0;
     dma_write_d = 1'b0;
-    dma_addr_d = '0;
+    dma_addr_d  = '0;
     dma_wdata_d = '0;
 
     unique case (state_q)
@@ -168,11 +203,11 @@ module gemv_accel #(
 
       // StLoadVec: DMA read K elements of input vector
       StLoadVec: begin
-        dma_req_d  = 1'b1;
+        dma_req_d   = 1'b1;
         dma_write_d = 1'b0;
-        dma_addr_d = vec_addr_q + {col_cnt_q, 2'b00};  // byte address
+        dma_addr_d  = vec_addr_q + {col_cnt_q, 2'b00};
         if (dma_ready_i) begin
-          if (col_cnt_q + 1'b1 == cols_q[$clog2(MAX_DIM)-1:0]) begin
+          if (col_cnt_q + 1'b1 == cols_trunc) begin
             state_d   = StLoadRow;
             col_cnt_d = '0;
           end else begin
@@ -183,14 +218,13 @@ module gemv_accel #(
 
       // StLoadRow: DMA read K elements of current row
       StLoadRow: begin
-        dma_req_d  = 1'b1;
+        dma_req_d   = 1'b1;
         dma_write_d = 1'b0;
-        // mat_addr + (row_cnt * cols + col_cnt) * 4
-        dma_addr_d = mat_addr_q
-                     + ({row_cnt_q, 2'b00} * cols_q)
-                     + {col_cnt_q, 2'b00};
+        dma_addr_d  = mat_addr_q
+                      + ({row_cnt_q, 2'b00} * cols_q)
+                      + {col_cnt_q, 2'b00};
         if (dma_ready_i) begin
-          if (col_cnt_q + 1'b1 == cols_q[$clog2(MAX_DIM)-1:0]) begin
+          if (col_cnt_q + 1'b1 == cols_trunc) begin
             state_d   = StCompute;
             col_cnt_d = '0;
           end else begin
@@ -199,24 +233,33 @@ module gemv_accel #(
         end
       end
 
-      // StCompute: MAC over buffered row and vector (sequential MAC)
+      // StCompute: 8-way parallel MAC over buffered row and vector
       StCompute: begin
-        if (col_cnt_q == cols_q[$clog2(MAX_DIM)-1:0]) begin
+        if (col_cnt_q >= cols_trunc) begin
+          // All columns processed, go to store
           state_d   = StStore;
           col_cnt_d = '0;
-          // Pre-load write/addr/wdata one cycle before req goes high so that
-          // D_MEMORY's hold-time check (50 ps after posedge dmem_req_i) is met.
+          // Pre-load write signals for D_MEMORY hold-time
           dma_write_d = 1'b1;
           dma_addr_d  = out_addr_q + {row_cnt_q, 2'b00};
           dma_wdata_d = acc_q[DWidth-1+Q_BITS:Q_BITS];
         end else begin
-          col_cnt_d = col_cnt_q + 1;
+          // Process N_PE elements this cycle
+          if (col_cnt_q == '0) begin
+            acc_d = sum_s3;
+          end else begin
+            acc_d = acc_q + sum_s3;
+          end
+          // Advance by N_PE, capped at cols
+          if ((col_cnt_q + N_PE[$clog2(MAX_DIM)-1:0]) >= cols_trunc) begin
+            col_cnt_d = cols_trunc;  // will trigger store on next cycle
+          end else begin
+            col_cnt_d = col_cnt_q + N_PE[$clog2(MAX_DIM)-1:0];
+          end
         end
       end
 
       // StStore: DMA write result to output
-      // req goes high here; write/addr/wdata were pre-loaded in StCompute's
-      // last cycle so they are already stable at the posedge of dma_req_o.
       StStore: begin
         dma_req_d   = 1'b1;
         dma_write_d = 1'b1;
@@ -243,11 +286,6 @@ module gemv_accel #(
   end
 
   // ---------------------------------------------------------------------------
-  // Row buffer for current row elements
-  // ---------------------------------------------------------------------------
-  logic [DWidth-1:0] row_buf [MAX_DIM];
-
-  // ---------------------------------------------------------------------------
   // FSM: state register + datapath (sequential)
   // ---------------------------------------------------------------------------
   always_ff @(posedge clk_i or negedge rst_ni) begin
@@ -266,6 +304,7 @@ module gemv_accel #(
       state_q   <= state_d;
       col_cnt_q <= col_cnt_d;
       row_cnt_q <= row_cnt_d;
+      acc_q     <= acc_d;
 
       // DMA output registers
       dma_req_o   <= dma_req_d;
@@ -317,18 +356,6 @@ module gemv_accel #(
       // Row buffer write during LOAD_ROW
       if (state_q == StLoadRow && dma_ready_i) begin
         row_buf[col_cnt_q] <= dma_rdata_i;
-      end
-
-      // MAC accumulation during COMPUTE (late Q12 shift: accumulate full
-      // 64-bit products, apply >>> Q_BITS only at store to match software's
-      // dot_shift_q which shifts the final sum rather than each product)
-      if (state_q == StCompute) begin
-        if (col_cnt_q == '0) begin
-          acc_q <= signed'(row_buf[0]) * signed'(vec_buf[0]);
-        end else if (col_cnt_q < cols_q[$clog2(MAX_DIM)-1:0]) begin
-          acc_q <= acc_q
-                   + (signed'(row_buf[col_cnt_q]) * signed'(vec_buf[col_cnt_q]));
-        end
       end
 
       // Reset accumulator before each new row
