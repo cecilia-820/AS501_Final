@@ -17,6 +17,14 @@ module CORE_TB();
     // IOMEM offsets (word address space)
     localparam IOMEM_START_W = 32'h0800_0000; // byte 0x2000_0000
     localparam IOMEM_DEPTH_W = 32'h0002_0000; // 512KB
+
+    // SPM offsets (word address space)
+    localparam SPM_START_W   = 32'h0820_0000; // byte 0x2080_0000
+    localparam SPM_DEPTH_W   = 32'h0000_4000; // 16384 words = 64KB
+
+    // DMA controller offsets (word address space)
+    localparam DMA_START_W   = 32'h0824_0000; // byte 0x2090_0000
+    localparam DMA_DEPTH_W   = 32'h0000_0010; // 16 registers
     localparam InputStart    = 32'h0000_0000;
     localparam ResultStart   = 32'h0000_7fe1; // (_sresult - _sinput) / 4 from current mem.map
 
@@ -37,16 +45,16 @@ module CORE_TB();
     localparam int RESULT_W_USED_U32 = 2;
 
     // Function entry addresses from program/out/eval_int_riscv.dis
-    localparam logic [31:0] PC_MAIN                    = 32'h0000_1694;
-    localparam logic [31:0] PC_RESET_RESULT_BUFFER     = 32'h0000_152c;
-    localparam logic [31:0] PC_APPEND_RESULT_SEQUENCE  = 32'h0000_1578;
-    localparam logic [31:0] PC_INIT_STATIC_BUFFERS     = 32'h0000_0d38;
-    localparam logic [31:0] PC_GREEDY_DECODE_INT       = 32'h0000_1008;
-    localparam logic [31:0] PC_LSTM_STEP_INT           = 32'h0000_08ec;
-    localparam logic [31:0] PC_LINEAR_OUT_ARGMAX       = 32'h0000_0c60;
-    localparam logic [31:0] PC_EMBEDDING_LOOKUP        = 32'h0000_0844;
-    localparam logic [31:0] PC_ARENA_RESET                      = 32'h0000_18f4;
-    localparam logic [31:0] PC_ARENA_ALLOC                      = 32'h0000_1918;
+    localparam logic [31:0] PC_MAIN                    = 32'h0000_14f4;
+    localparam logic [31:0] PC_RESET_RESULT_BUFFER     = 32'h0000_138c;
+    localparam logic [31:0] PC_APPEND_RESULT_SEQUENCE  = 32'h0000_13d8;
+    localparam logic [31:0] PC_INIT_STATIC_BUFFERS     = 32'h0000_0b98;
+    localparam logic [31:0] PC_GREEDY_DECODE_INT       = 32'h0000_0e68;
+    localparam logic [31:0] PC_LSTM_STEP_INT           = 32'h0000_074c;
+    localparam logic [31:0] PC_LINEAR_OUT_ARGMAX       = 32'h0000_0ac0;
+    localparam logic [31:0] PC_EMBEDDING_LOOKUP        = 32'h0000_06a4;
+    localparam logic [31:0] PC_ARENA_RESET                      = 32'h0000_1754;
+    localparam logic [31:0] PC_ARENA_ALLOC                      = 32'h0000_1778;
     localparam logic [31:0] PC_GEMV_HW                          = 32'h0000_0038;
     localparam logic [31:0] PC_PUBLISH_PARTIAL_RESULT_SEQUENCE  = 32'h0000_0ee8;
 
@@ -119,7 +127,11 @@ module CORE_TB();
         .DMEM_START_W  (DMEM_START_W),
         .DMEM_DEPTH_W  (DMEM_DEPTH_W),
         .IOMEM_START_W (IOMEM_START_W),
-        .IOMEM_DEPTH_W (IOMEM_DEPTH_W)
+        .IOMEM_DEPTH_W (IOMEM_DEPTH_W),
+        .SPM_START_W   (SPM_START_W),
+        .SPM_DEPTH_W   (SPM_DEPTH_W),
+        .DMA_START_W   (DMA_START_W),
+        .DMA_DEPTH_W   (DMA_DEPTH_W)
     ) DUT (
         .clk_i         (clk),
         .rst_ni        (rst_n),

@@ -15,40 +15,40 @@ Linker script and memory map
                 [!provide]                        PROVIDE (_dsramstart = ORIGIN (DATARAM_L))
                 0x01200000                        PROVIDE (_estack = (ORIGIN (DATARAM_L) + LENGTH (DATARAM_L)))
 
-.text           0x00000000     0x19cc
+.text           0x00000000     0x182c
                 [!provide]                        PROVIDE (_start = .)
                 0x00000000                        . = ALIGN (0x4)
                 0x00000000                        _stext = .
  *(.text)
- .text          0x00000000       0x38 /tmp/ccWQHkST.o
+ .text          0x00000000       0x38 /tmp/ccQKGh9G.o
                 0x00000000                _start
- .text          0x00000038     0x18bc /tmp/cciHFYEL.o
-                0x00001694                main
- .text          0x000018f4       0xd8 /tmp/ccjb7YBc.o
-                0x000018f4                arena_reset
-                0x00001918                arena_alloc
- .text          0x000019cc        0x0 /tmp/ccagWSzD.o
- .text          0x000019cc        0x0 /tmp/ccF7nSC4.o
- .text          0x000019cc        0x0 /tmp/ccWzKXlE.o
+ .text          0x00000038     0x171c /tmp/ccYr3U6z.o
+                0x000014f4                main
+ .text          0x00001754       0xd8 /tmp/ccHgrDEw.o
+                0x00001754                arena_reset
+                0x00001778                arena_alloc
+ .text          0x0000182c        0x0 /tmp/ccOr2sdt.o
+ .text          0x0000182c        0x0 /tmp/cc3a3tRp.o
+ .text          0x0000182c        0x0 /tmp/ccgPZfKu.o
  *(.text*)
  *(.rodata)
  *(.rodata*)
  *(.srodata)
  *(.srodata*)
-                0x000019cc                        . = ALIGN (0x4)
-                0x000019cc                        _etext = .
+                0x0000182c                        . = ALIGN (0x4)
+                0x0000182c                        _etext = .
 
 .data           0x00200000        0x0
                 0x00200000                        . = ALIGN (0x4)
                 0x00200000                        _sdata = .
                 0x00200800                        PROVIDE (__global_pointer$ = (. + 0x800))
  *(.data)
- .data          0x00200000        0x0 /tmp/ccWQHkST.o
- .data          0x00200000        0x0 /tmp/cciHFYEL.o
- .data          0x00200000        0x0 /tmp/ccjb7YBc.o
- .data          0x00200000        0x0 /tmp/ccagWSzD.o
- .data          0x00200000        0x0 /tmp/ccF7nSC4.o
- .data          0x00200000        0x0 /tmp/ccWzKXlE.o
+ .data          0x00200000        0x0 /tmp/ccQKGh9G.o
+ .data          0x00200000        0x0 /tmp/ccYr3U6z.o
+ .data          0x00200000        0x0 /tmp/ccHgrDEw.o
+ .data          0x00200000        0x0 /tmp/ccOr2sdt.o
+ .data          0x00200000        0x0 /tmp/cc3a3tRp.o
+ .data          0x00200000        0x0 /tmp/ccgPZfKu.o
  *(.data*)
  *(.sdata)
  *(.sdata*)
@@ -59,7 +59,7 @@ Linker script and memory map
                 0x00200000                        . = ALIGN (0x4)
                 0x00200000                        _sweights = .
  *(.weights)
- .weights       0x00200000   0xbaa888 /tmp/ccWzKXlE.o
+ .weights       0x00200000   0xbaa888 /tmp/ccgPZfKu.o
                 0x00200000                model_q_bits
                 0x00200004                enc_layer_in_dims
                 0x0020000c                dec_layer_in_dims
@@ -99,16 +99,16 @@ Linker script and memory map
                 0x00daa888                        . = ALIGN (0x4)
                 0x00daa888                        _sbss = .
  *(.bss)
- .bss           0x00daa888        0x0 /tmp/ccWQHkST.o
- .bss           0x00daa888      0x828 /tmp/cciHFYEL.o
- .bss           0x00dab0b0    0x40000 /tmp/ccjb7YBc.o
+ .bss           0x00daa888        0x0 /tmp/ccQKGh9G.o
+ .bss           0x00daa888      0x828 /tmp/ccYr3U6z.o
+ .bss           0x00dab0b0    0x40000 /tmp/ccHgrDEw.o
                 0x00dab0b0                g_arena_buf
- .bss           0x00deb0b0        0x0 /tmp/ccagWSzD.o
- .bss           0x00deb0b0        0x0 /tmp/ccF7nSC4.o
- .bss           0x00deb0b0        0x0 /tmp/ccWzKXlE.o
+ .bss           0x00deb0b0        0x0 /tmp/ccOr2sdt.o
+ .bss           0x00deb0b0        0x0 /tmp/cc3a3tRp.o
+ .bss           0x00deb0b0        0x0 /tmp/ccgPZfKu.o
  *(.bss*)
  *(.sbss)
- .sbss          0x00deb0b0        0x4 /tmp/ccjb7YBc.o
+ .sbss          0x00deb0b0        0x4 /tmp/ccHgrDEw.o
                 0x00deb0b0                g_arena_off
  *(.sbss*)
  *(COMMON)
@@ -123,7 +123,7 @@ Linker script and memory map
                 0x20000000                        . = ALIGN (0x4)
                 0x20000000                        _sinput = .
  *(.input)
- .input         0x20000000    0x1ff84 /tmp/ccF7nSC4.o
+ .input         0x20000000    0x1ff84 /tmp/cc3a3tRp.o
                 0x20000000                input_src_offsets
                 0x20000fdc                input_src_data
                 0x2000fcb0                input_ref_offsets
@@ -133,13 +133,13 @@ Linker script and memory map
                 [!provide]                        PROVIDE (_input_base = ADDR (.input))
 
 .rela.dyn       0x2001ff84        0x0
- .rela.text     0x2001ff84        0x0 /tmp/ccWQHkST.o
+ .rela.text     0x2001ff84        0x0 /tmp/ccQKGh9G.o
 
 .result         0x2001ff84    0x50364
                 0x2001ff84                        . = ALIGN (0x4)
                 0x2001ff84                        _sresult = .
  *(.result)
- .result        0x2001ff84    0x50364 /tmp/ccagWSzD.o
+ .result        0x2001ff84    0x50364 /tmp/ccOr2sdt.o
                 0x2001ff84                result_status
                 0x2001ff88                result_sentence_count
                 0x2001ff8c                result_used_u32
@@ -147,12 +147,12 @@ Linker script and memory map
                 0x200702e8                        . = ALIGN (0x4)
                 0x200702e8                        _eresult = .
                 [!provide]                        PROVIDE (_result_base = ADDR (.result))
-LOAD /tmp/ccWQHkST.o
-LOAD /tmp/cciHFYEL.o
-LOAD /tmp/ccjb7YBc.o
-LOAD /tmp/ccagWSzD.o
-LOAD /tmp/ccF7nSC4.o
-LOAD /tmp/ccWzKXlE.o
+LOAD /tmp/ccQKGh9G.o
+LOAD /tmp/ccYr3U6z.o
+LOAD /tmp/ccHgrDEw.o
+LOAD /tmp/ccOr2sdt.o
+LOAD /tmp/cc3a3tRp.o
+LOAD /tmp/ccgPZfKu.o
 LOAD /opt/riscv/lib/gcc/riscv32-unknown-elf/13.2.0/libgcc.a
 START GROUP
 LOAD /opt/riscv/lib/gcc/riscv32-unknown-elf/13.2.0/../../../../riscv32-unknown-elf/lib/libc.a
@@ -164,22 +164,22 @@ OUTPUT(./out/eval_int_riscv.elf elf32-littleriscv)
 .riscv.attributes
                 0x00000000       0x33
  .riscv.attributes
-                0x00000000       0x31 /tmp/ccWQHkST.o
+                0x00000000       0x31 /tmp/ccQKGh9G.o
  .riscv.attributes
-                0x00000031       0x33 /tmp/cciHFYEL.o
+                0x00000031       0x33 /tmp/ccYr3U6z.o
  .riscv.attributes
-                0x00000064       0x33 /tmp/ccjb7YBc.o
+                0x00000064       0x33 /tmp/ccHgrDEw.o
  .riscv.attributes
-                0x00000097       0x33 /tmp/ccagWSzD.o
+                0x00000097       0x33 /tmp/ccOr2sdt.o
  .riscv.attributes
-                0x000000ca       0x33 /tmp/ccF7nSC4.o
+                0x000000ca       0x33 /tmp/cc3a3tRp.o
  .riscv.attributes
-                0x000000fd       0x33 /tmp/ccWzKXlE.o
+                0x000000fd       0x33 /tmp/ccgPZfKu.o
 
 .comment        0x00000000       0x10
- .comment       0x00000000       0x10 /tmp/cciHFYEL.o
+ .comment       0x00000000       0x10 /tmp/ccYr3U6z.o
                                  0x11 (size before relaxing)
- .comment       0x00000010       0x11 /tmp/ccjb7YBc.o
- .comment       0x00000010       0x11 /tmp/ccagWSzD.o
- .comment       0x00000010       0x11 /tmp/ccF7nSC4.o
- .comment       0x00000010       0x11 /tmp/ccWzKXlE.o
+ .comment       0x00000010       0x11 /tmp/ccHgrDEw.o
+ .comment       0x00000010       0x11 /tmp/ccOr2sdt.o
+ .comment       0x00000010       0x11 /tmp/cc3a3tRp.o
+ .comment       0x00000010       0x11 /tmp/ccgPZfKu.o

@@ -65,8 +65,10 @@
               $RTL_DIR/scalar_core/regfile.sv                  \
               $RTL_DIR/scalar_core/mcu.sv              \
               $RTL_DIR/scalar_core/scalar_core.sv              \
-              $RTL_DIR/cpu_top.sv
-              $RTL_DIR/accel/gemv_accel.sv"
+              $RTL_DIR/cpu_top.sv                               \
+              $RTL_DIR/accel/gemv_accel.sv                     \
+              $RTL_DIR/memory/scratchpad.sv                    \
+              $RTL_DIR/dma/dma_controller.sv"
 
     # Timescale
     TIMESCALE="1ns/1ps"
