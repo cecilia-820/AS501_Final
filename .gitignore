@@ -8,3 +8,4 @@ csrc/
 .claude/
 *.dis
 2_bare_w_mul_Hardware/syn/out/CPU_TOP.mapped.sdf
+3_genV_w_2_folder/syn/out/CPU_TOP.mapped.sdf
