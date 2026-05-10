@@ -21,10 +21,10 @@ module MCU #(
     parameter DMEM_DEPTH_W  = 32'h07f8_0000,
 
     parameter IOMEM_START_W = 32'h0800_0000,
-    parameter IOMEM_DEPTH_W = 32'h0010_0000
+    parameter IOMEM_DEPTH_W = 32'h0010_0000,
 
-    parameter int unsigned ACCEL_START_W = 32'h0810_0000,
-    parameter int unsigned ACCEL_DEPTH_W = 32'h0000_0010
+    parameter ACCEL_START_W = 32'h0810_0000,
+    parameter ACCEL_DEPTH_W = 32'h0000_0010
 )(
     // Clock & reset
     input  logic                   clk_i,
@@ -66,7 +66,7 @@ module MCU #(
     output logic[DWidth-1:0]       iomem_addr_o,
     output logic[DWidth-1:0]       iomem_wdata_o,
 
-    input  logic[DWidth-1:0]       iomem_rdata_i
+    input  logic[DWidth-1:0]       iomem_rdata_i,
 
     // ACCEL control port
     output logic                 accel_req_o,
@@ -95,6 +95,10 @@ module MCU #(
 
     // read-phase tracking
     logic is_accel_q;
+
+    // latched ACCEL read data (needed because accel_rdata_o is only valid when
+    // accel_req_o=1, which is only driven in D_IDLE; by D_WAIT we need to hold it)
+    logic [DWidth-1:0] accel_rdata_q;
 
     // states for IMEM
     logic imem_busy_q, imem_busy_d;
@@ -132,11 +136,17 @@ module MCU #(
                 // check for a request
                 if (dmem_req_i) begin
                     if (dmem_addr_is_accel) begin
-                        accel_req_o   = 1'b1;
-                        accel_write_o = dmem_write_i;
-                        accel_addr_o  = (dmem_addr_i - (ACCEL_START_W << 2)) >> 2;
-                        accel_wdata_o = dmem_wdata_i;
-                        dmem_ready_o  = 1'b1;
+                        // Drive ACCEL control signals this cycle so the ACCEL
+                        // latches write data / produces read data combinationally.
+                        // Do NOT assert dmem_ready_o here — doing so creates a
+                        // zero-delay combinational loop with the decoder's
+                        // dmem_req_o = !dmem_ready_i, hanging the simulation.
+                        accel_req_o     = 1'b1;
+                        accel_write_o   = dmem_write_i;
+                        accel_addr_o    = (dmem_addr_i - (ACCEL_START_W << 2)) >> 2;
+                        accel_wdata_o   = dmem_wdata_i;
+                        d_state_d       = D_WAIT;
+                        d_latency_cnt_d = LATENCY_CYCLES - 1; // ready on next cycle
                     end else if (dmem_addr_is_io) begin
                         d_state_d       = D_WAIT;
                         d_latency_cnt_d = '0;
@@ -171,16 +181,24 @@ module MCU #(
             d_latency_cnt_q <= '0;
             is_iomem_q      <= 1'b0;
             is_accel_q      <= 1'b0;
+            accel_rdata_q   <= '0;
         // update state every clk cycle
         end else begin
             d_state_q       <= d_state_d;
             d_latency_cnt_q <= d_latency_cnt_d;
 
-            // Latch the destination when a request is accepted during IDLE state. 
+            // Latch the destination when a request is accepted during IDLE state.
             if (d_state_q == D_IDLE && dmem_req_i) begin
-                // destination determined by address 
+                // destination determined by address
                 is_iomem_q <= dmem_addr_is_io;
                 is_accel_q <= dmem_addr_is_accel;
+            end
+
+            // Capture ACCEL read data in D_IDLE while accel_req_o is valid.
+            // By D_WAIT (next cycle) accel_req_o is 0, so we must hold the value.
+            if (d_state_q == D_IDLE && dmem_req_i
+                    && dmem_addr_is_accel && !dmem_write_i) begin
+                accel_rdata_q <= accel_rdata_i;
             end
         end
     end
@@ -239,6 +257,6 @@ module MCU #(
     assign iomem_write_o= dmem_write_i;
 
     // mux read data based on the latched request type
-    assign dmem_rdata_o = is_iomem_q ? iomem_rdata_i : is_accel_q ? accel_rdata_i : dmem_rdata_i;
+    assign dmem_rdata_o = is_iomem_q ? iomem_rdata_i : is_accel_q ? accel_rdata_q : dmem_rdata_i;
 
 endmodule

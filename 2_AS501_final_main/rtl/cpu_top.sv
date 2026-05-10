@@ -21,11 +21,11 @@ module CPU_TOP #(
     parameter DMEM_DEPTH_W  = 32'h07f8_0000,
 
     parameter IOMEM_START_W = 32'h0800_0000,
-    parameter IOMEM_DEPTH_W = 32'h0010_0000
+    parameter IOMEM_DEPTH_W = 32'h0010_0000,
 
     //accelerator
-    parameter int unsigned ACCEL_START_W = 32'h0810_0000,
-    parameter int unsigned ACCEL_DEPTH_W = 32'h0000_0010
+    parameter ACCEL_START_W = 32'h0810_0000,
+    parameter ACCEL_DEPTH_W = 32'h0000_0010
     
 )(
     // Basic signals
@@ -108,17 +108,21 @@ module CPU_TOP #(
     logic [DWidth-1:0]    mcu_ext_dmem_addr;
     logic [DWidth-1:0]    mcu_ext_dmem_wdata;
 
-    // Arbiter: DMA has priority when dma_req is asserted.
+    // D-cache memory-side signals (drive the DMEM arbiter)
+    logic                 dcache_mem_req;
+    logic                 dcache_mem_write;
+    logic [DWidth-1:0]    dcache_mem_addr;
+    logic [DWidth-1:0]    dcache_mem_wdata;
+
+    // Arbiter: D-cache (DMA path) has priority over MCU (CPU path) on DMEM bus.
     // During ACCEL operation, CPU polls STATUS via ACCEL control port (separate
     // path), so no DMEM contention arises in normal operation.
-    assign dmem_req_o   = dma_req ? 1'b1      : mcu_ext_dmem_req;
-    assign dmem_write_o = dma_req ? dma_write  : mcu_ext_dmem_write;
-    assign dmem_addr_o  = dma_req ? dma_addr   : mcu_ext_dmem_addr;
-    assign dmem_wdata_o = dma_req ? dma_wdata  : mcu_ext_dmem_wdata;
-    
-    // Route rdata/ready back to the correct requester
-    assign dma_rdata = dmem_rdata_i;
-    assign dma_ready = dma_req ? 1'b1 : 1'b0;
+    assign dmem_req_o   = dcache_mem_req   ? 1'b1             : mcu_ext_dmem_req;
+    assign dmem_write_o = dcache_mem_req   ? dcache_mem_write : mcu_ext_dmem_write;
+    assign dmem_addr_o  = dcache_mem_req   ? dcache_mem_addr  : mcu_ext_dmem_addr;
+    // dcache_mem_write pre-asserted 1 cycle before dcache_mem_req (DATA_CACHE
+    // StIdle write path) keeps dmem_wdata_o stable at the posedge of dmem_req_i.
+    assign dmem_wdata_o = dcache_mem_write ? dcache_mem_wdata : mcu_ext_dmem_wdata;
 
 
     
@@ -156,7 +160,7 @@ module CPU_TOP #(
         .DMEM_START_W  (DMEM_START_W),
         .DMEM_DEPTH_W  (DMEM_DEPTH_W),
         .IOMEM_START_W (IOMEM_START_W),
-        .IOMEM_DEPTH_W (IOMEM_DEPTH_W)
+        .IOMEM_DEPTH_W (IOMEM_DEPTH_W),
         .ACCEL_START_W (ACCEL_START_W),       
         .ACCEL_DEPTH_W (ACCEL_DEPTH_W)        
     ) MCU_INST (
@@ -194,7 +198,7 @@ module CPU_TOP #(
         .iomem_write_o (iomem_write_o),
         .iomem_addr_o  (iomem_addr_o),
         .iomem_wdata_o (iomem_wdata_o),
-        .iomem_rdata_i (iomem_rdata_i)
+        .iomem_rdata_i (iomem_rdata_i),
 
         // ACCEL control port
         .accel_req_o   (accel_req),           
@@ -222,6 +226,24 @@ module CPU_TOP #(
         .dma_wdata_o   (dma_wdata),
         .dma_rdata_i   (dma_rdata),
         .dma_ready_i   (dma_ready)
+    );
+
+    DATA_CACHE #(
+        .DWidth(DWidth)
+    ) u_data_cache (
+        .clk_i       (clk_i),
+        .rst_ni      (rst_ni),
+        .dma_req_i   (dma_req),
+        .dma_write_i (dma_write),
+        .dma_addr_i  (dma_addr - (DMEM_START_W << 2)),
+        .dma_wdata_i (dma_wdata),
+        .dma_rdata_o (dma_rdata),
+        .dma_ready_o (dma_ready),
+        .mem_req_o   (dcache_mem_req),
+        .mem_write_o (dcache_mem_write),
+        .mem_addr_o  (dcache_mem_addr),
+        .mem_wdata_o (dcache_mem_wdata),
+        .mem_rdata_i (dmem_rdata_i)
     );
 
 

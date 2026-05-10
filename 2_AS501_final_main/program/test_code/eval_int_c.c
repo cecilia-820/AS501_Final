@@ -22,7 +22,9 @@
 #include "input_data.h"
 #include "arena.h"
 #include "result.h"
+#ifdef RISCV
 #include "gemv_accel.h"
+#endif
 
 #if !defined(SERVER) && !defined(RISCV)
 #define SERVER
@@ -103,7 +105,7 @@ static int parse_args(int argc, char **argv, Args *args) {
     args->out_hyp = DEFAULT_OUT_HYP;
     args->out_result_txt = DEFAULT_OUT_RESULT_TXT;
     args->out_result_summary = DEFAULT_OUT_RESULT_SUMMARY;
-    args->max_sentences = 0;
+    args->max_sentences = 1;
 
     for (int i = 1; i < argc; ++i) {
         const char *a = argv[i];
@@ -321,17 +323,26 @@ static int lstm_step_int(
     g_lstm_step_call_count += 1u;
     trace_push(TRACE_EV_LSTM_STEP_ENTER, (uint32_t)in_dim, (uint32_t)hid, (uint32_t)gate_dim);
 
-    // --- HW GEMV: w_ih[gate_dim][in_dim] * x[in_dim] -> g_gates ---
-    gemv_hw(w_ih, x, g_gates, gate_dim, in_dim);
-
-    // --- HW GEMV: w_hh[gate_dim][hid] * h[hid] -> temp buffer ---
+#ifdef RISCV
+    // HW GEMV: w_ih * x -> g_gates, w_hh * h -> g_gates_hh
     static int32_t g_gates_hh[4 * MODEL_HID_SIZE];
+    //gemv input-hidden
+    gemv_hw(w_ih, x, g_gates, gate_dim, in_dim);
+    //gemv hidden-hidden
     gemv_hw(w_hh, h, g_gates_hh, gate_dim, hid);
-
-    // --- bias 더하기 + hh 결과 합산 ---
     for (int g = 0; g < gate_dim; ++g) {
         g_gates[g] = b[g] + g_gates[g] + g_gates_hh[g];
     }
+#else
+    for (int g = 0; g < gate_dim; ++g) {
+        const int32_t *wih_row = w_ih + (size_t)g * (size_t)in_dim;
+        const int32_t *whh_row = w_hh + (size_t)g * (size_t)hid;
+        int32_t s = b[g];
+        s += dot_shift_q(wih_row, x, in_dim, MODEL_Q_BITS);
+        s += dot_shift_q(whh_row, h, hid, MODEL_Q_BITS);
+        g_gates[g] = s;
+    }
+#endif
 
     for (int i = 0; i < hid; ++i) {
         int32_t i_q = lut_lookup_scalar(g_gates[i], sigmoid_lut_q, MODEL_X_MAX_Q, MODEL_LUT_SIZE);

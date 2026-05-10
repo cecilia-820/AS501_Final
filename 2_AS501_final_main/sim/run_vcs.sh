@@ -58,6 +58,7 @@
               /technology/TSMC_28nm_HPC_RF/SRAM/tsn28hpcpd127spsram_20120200_180a/TSMCHOME/sram/Output/ts5n28hpcphvta512x54m4f_tt1v25c/ts5n28hpcphvta512x54m4f_tt1v25c.v \
               $RTL_DIR/cache/submodule/cache_sram.sv           \
               $RTL_DIR/cache/instr_cache.sv                    \
+              $RTL_DIR/cache/data_cache.sv                     \
               $RTL_DIR/scalar_core/alu.sv                      \
               $RTL_DIR/scalar_core/csr.sv                      \
               $RTL_DIR/scalar_core/decoder.sv                  \

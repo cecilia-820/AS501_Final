@@ -172,7 +172,7 @@ module gemv_accel #(
         dma_write_d = 1'b0;
         dma_addr_d = vec_addr_q + {col_cnt_q, 2'b00};  // byte address
         if (dma_ready_i) begin
-          if (col_cnt_q == cols_q[$clog2(MAX_DIM)-1:0] - 1) begin
+          if (col_cnt_q + 1'b1 == cols_q[$clog2(MAX_DIM)-1:0]) begin
             state_d   = StLoadRow;
             col_cnt_d = '0;
           end else begin
@@ -190,7 +190,7 @@ module gemv_accel #(
                      + ({row_cnt_q, 2'b00} * cols_q)
                      + {col_cnt_q, 2'b00};
         if (dma_ready_i) begin
-          if (col_cnt_q == cols_q[$clog2(MAX_DIM)-1:0] - 1) begin
+          if (col_cnt_q + 1'b1 == cols_q[$clog2(MAX_DIM)-1:0]) begin
             state_d   = StCompute;
             col_cnt_d = '0;
           end else begin
@@ -201,24 +201,29 @@ module gemv_accel #(
 
       // StCompute: MAC over buffered row and vector (sequential MAC)
       StCompute: begin
-        // MAC one element per cycle from row_buf and vec_buf
-        // This state transitions through col_cnt
         if (col_cnt_q == cols_q[$clog2(MAX_DIM)-1:0]) begin
           state_d   = StStore;
           col_cnt_d = '0;
+          // Pre-load write/addr/wdata one cycle before req goes high so that
+          // D_MEMORY's hold-time check (50 ps after posedge dmem_req_i) is met.
+          dma_write_d = 1'b1;
+          dma_addr_d  = out_addr_q + {row_cnt_q, 2'b00};
+          dma_wdata_d = acc_q[DWidth-1+Q_BITS:Q_BITS];
         end else begin
           col_cnt_d = col_cnt_q + 1;
         end
       end
 
       // StStore: DMA write result to output
+      // req goes high here; write/addr/wdata were pre-loaded in StCompute's
+      // last cycle so they are already stable at the posedge of dma_req_o.
       StStore: begin
         dma_req_d   = 1'b1;
         dma_write_d = 1'b1;
         dma_addr_d  = out_addr_q + {row_cnt_q, 2'b00};
-        dma_wdata_d = acc_q[DWidth-1:0];  // truncated to 32-bit
+        dma_wdata_d = acc_q[DWidth-1+Q_BITS:Q_BITS];
         if (dma_ready_i) begin
-          if (row_cnt_q == rows_q[$clog2(MAX_DIM)-1:0] - 1) begin
+          if (row_cnt_q + 1'b1 == rows_q[$clog2(MAX_DIM)-1:0]) begin
             state_d = StDone;
           end else begin
             row_cnt_d = row_cnt_q + 1;
@@ -268,6 +273,19 @@ module gemv_accel #(
       dma_addr_o  <= dma_addr_d;
       dma_wdata_o <= dma_wdata_d;
 
+      // Debug: trace FSM milestones
+      if (start_pulse)
+        $display("[ACCEL] %0t: START rows=%0d cols=%0d mat=%0h vec=%0h out=%0h",
+                 $time, rows_q, cols_q, mat_addr_q, vec_addr_q, out_addr_q);
+      if (state_q == StLoadVec && state_d == StLoadRow)
+        $display("[ACCEL] %0t: LOAD_VEC done -> LOAD_ROW row=0", $time);
+      if (state_q == StStore && dma_ready_i) begin
+        if (row_cnt_q[6:0] == 7'd0)
+          $display("[ACCEL] %0t: STORE row=%0d done", $time, row_cnt_q);
+      end
+      if (state_d == StDone && state_q != StDone)
+        $display("[ACCEL] %0t: DONE! (all %0d rows)", $time, rows_q);
+
       // Status flags
       unique case (state_d)
         StIdle: begin
@@ -301,21 +319,21 @@ module gemv_accel #(
         row_buf[col_cnt_q] <= dma_rdata_i;
       end
 
-      // MAC accumulation during COMPUTE
+      // MAC accumulation during COMPUTE (late Q12 shift: accumulate full
+      // 64-bit products, apply >>> Q_BITS only at store to match software's
+      // dot_shift_q which shifts the final sum rather than each product)
       if (state_q == StCompute) begin
         if (col_cnt_q == '0) begin
-          // First element: initialize accumulator
-          acc_q <= (signed'(row_buf[0]) * signed'(vec_buf[0])) >>> Q_BITS;
+          acc_q <= signed'(row_buf[0]) * signed'(vec_buf[0]);
         end else if (col_cnt_q < cols_q[$clog2(MAX_DIM)-1:0]) begin
           acc_q <= acc_q
-                   + ((signed'(row_buf[col_cnt_q]) * signed'(vec_buf[col_cnt_q]))
-                      >>> Q_BITS);
+                   + (signed'(row_buf[col_cnt_q]) * signed'(vec_buf[col_cnt_q]));
         end
       end
 
       // Reset accumulator before each new row
       if (state_q == StStore && dma_ready_i
-          && row_cnt_q != rows_q[$clog2(MAX_DIM)-1:0] - 1) begin
+          && (row_cnt_q + 1'b1) != rows_q[$clog2(MAX_DIM)-1:0]) begin
         acc_q <= '0;
       end
     end
