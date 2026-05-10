@@ -1,0 +1,1912 @@
+Initializing gui preferences from file  /home/AS50120254528/.synopsys_dc_gui/preferences.tcl
+Current time:       Sun May 10 17:21:12 2026
+Hostname:           cpu
+CPU Model:          AMD EPYC 9654 96-Core Processor
+CPU Details:        Cores = 1 : Sockets = 1 : Cache Size = 1024 KB : Freq = 2.40 GHz
+OS:                 Linux 3.10.0-1160.119.1.el7.x86_64
+RAM:                1511 GB (Free 417 GB)
+Swap:               127 GB (Free 127 GB)
+Work Filesystem:    /home mounted to 20.20.20.20:/linux_home
+Tmp Filesystem:     / mounted to /dev/nvme0n1p2
+Work Disk:          35840 GB (Free 20752 GB)
+Tmp Disk:           1658 GB (Free 1592 GB)
+
+CPU Load: 967%, Ram Free: 417 GB, Swap Free: 127 GB, Work Disk Free: 20752 GB, Tmp Disk Free: 1592 GB
+#!/bin/bash
+################################################################################
+## AS501/603
+## Final Project
+## DC Synthesis Script
+################################################################################
+## Copyright (c) 2024 by Smart Energy-Efficient Design Lab. (SEED), KAIST
+## All rights reserved.
+##
+##                            Written by Hyungjoon Bae (jo_on@kaist.ac.kr)
+##                            Supervised by Wanyeong Jung (wanyeong@kaist.ac.kr)
+################################################################################
+################################################################################
+## Don't touch
+##
+# Setup number of cores
+set_host_options -max_cores 8
+1
+# Setup library
+set_app_var search_path "$LIB_DIR $search_path"
+/technology/TSMC_28nm_HPC_RF/STD/tcbn28hpcplusbwp30p140_190a/TSMCHOME/digital/Front_End/timing_power_noise/NLDM/tcbn28hpcplusbwp30p140_180a/ . /tools/Synopsys/dc/V-2023.12-SP5-1/libraries/syn /tools/Synopsys/dc/V-2023.12-SP5-1/dw/syn_ver /tools/Synopsys/dc/V-2023.12-SP5-1/dw/sim_ver
+set_app_var target_library "$TARGET_DB_FILES $TARGET_MEM_DB_FILES"
+/technology/TSMC_28nm_HPC_RF/STD/tcbn28hpcplusbwp30p140_190a/TSMCHOME/digital/Front_End/timing_power_noise/NLDM/tcbn28hpcplusbwp30p140_180a//tcbn28hpcplusbwp30p140tt1v25c.db /technology/TSMC_28nm_HPC_RF/SRAM/tsn28hpcpd127spsram_20120200_180a/TSMCHOME/sram/Output/ts5n28hpcphvta512x54m4f_tt1v25c/ts5n28hpcphvta512x54m4f_tt1v25c.db
+set_app_var synthetic_library dw_foundation.sldb
+dw_foundation.sldb
+set_app_var link_library "* $target_library $synthetic_library"
+* /technology/TSMC_28nm_HPC_RF/STD/tcbn28hpcplusbwp30p140_190a/TSMCHOME/digital/Front_End/timing_power_noise/NLDM/tcbn28hpcplusbwp30p140_180a//tcbn28hpcplusbwp30p140tt1v25c.db /technology/TSMC_28nm_HPC_RF/SRAM/tsn28hpcpd127spsram_20120200_180a/TSMCHOME/sram/Output/ts5n28hpcphvta512x54m4f_tt1v25c/ts5n28hpcphvta512x54m4f_tt1v25c.db dw_foundation.sldb
+# Enable inference of multibit registers from the buses
+set_app_var hdlin_infer_multibit default_all
+default_all
+# Remove new variable info messages from the end of the log file
+set_app_var sh_new_variable_message false
+false
+# Define the verification setup file for Formality
+set_svf $OUT_DIR/$TOP_NAME.mapped.svf
+1
+# Make work directory which contains *.pvl, *.syn, *.mr
+define_design_lib work -path $OUT_DIR/work
+1
+# Read RTL source files
+analyze -format sverilog -define $DEFINE_LIST $RTL_LIST
+Running PRESTO HDLC
+Compiling source file /home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/common/core_package.sv
+Compiling source file /home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/common/d_flip_flop.sv
+Compiling source file /home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/common/mux2to1.sv
+Compiling source file /home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/common/mux3to1.sv
+Compiling source file /home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/common/mux4to1.sv
+Compiling source file /home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/common/mux5to1.sv
+Compiling source file /home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/common/counter.sv
+Compiling source file /home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/cache/submodule/cache_sram.sv
+Compiling source file /home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/cache/instr_cache.sv
+Compiling source file /home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/scalar_core/alu.sv
+Opening include file /tools/Synopsys/dc/V-2023.12-SP5-1/dw/syn_ver/DW_dp_mult_comb_function.inc
+Compiling source file /home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/scalar_core/csr.sv
+Compiling source file /home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/scalar_core/decoder.sv
+Compiling source file /home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/scalar_core/regfile.sv
+Compiling source file /home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/scalar_core/scalar_core.sv
+Compiling source file /home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/cpu_top.sv
+Presto compilation completed successfully.
+Loading db file '/technology/TSMC_28nm_HPC_RF/STD/tcbn28hpcplusbwp30p140_190a/TSMCHOME/digital/Front_End/timing_power_noise/NLDM/tcbn28hpcplusbwp30p140_180a/tcbn28hpcplusbwp30p140tt1v25c.db'
+Loading db file '/technology/TSMC_28nm_HPC_RF/SRAM/tsn28hpcpd127spsram_20120200_180a/TSMCHOME/sram/Output/ts5n28hpcphvta512x54m4f_tt1v25c/ts5n28hpcphvta512x54m4f_tt1v25c.db'
+Loading db file '/tools/Synopsys/dc/V-2023.12-SP5-1/libraries/syn/dw_foundation.sldb'
+1
+# Elaborate & Link
+elaborate $TOP_NAME
+Loading db file '/tools/Synopsys/dc/V-2023.12-SP5-1/libraries/syn/gtech.db'
+Loading db file '/tools/Synopsys/dc/V-2023.12-SP5-1/libraries/syn/standard.sldb'
+  Loading link library 'tcbn28hpcplusbwp30p140tt1v25c'
+  Loading link library 'ts5n28hpcphvta512x54m4f_tt1v25c'
+  Loading link library 'gtech'
+Running PRESTO HDLC
+Presto compilation completed successfully. (CPU_TOP)
+Elaborated 1 design.
+Current design is now 'CPU_TOP'.
+Information: Building the design 'INSTR_CACHE' instantiated from design 'CPU_TOP' with
+        the parameters "DWidth=32". (HDL-193)
+
+Statistics for case statements in always block at line 81 in file
+        '/home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/cache/instr_cache.sv'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|            82            |    user/user     |
+===============================================
+Presto compilation completed successfully. (INSTR_CACHE_DWidth32)
+Information: Building the design 'SCALAR_CORE' instantiated from design 'CPU_TOP' with
+        the parameters "DWidth=32". (HDL-193)
+Presto compilation completed successfully. (SCALAR_CORE_DWidth32)
+Information: Building the design 'MCU' instantiated from design 'CPU_TOP' with
+        the parameters "IMEM_START_W=32'h00000000,IMEM_DEPTH_W=32'h00080000,DMEM_START_W=32'h00080000,DMEM_DEPTH_W=32'h07f80000,IOMEM_START_W=32'h08000000,IOMEM_DEPTH_W=32'h00100000". (HDL-193)
+Warning: Cannot find the design 'MCU' in the library 'WORK'. (LBR-1)
+Information: Building the design 'D_FF' instantiated from design 'INSTR_CACHE_DWidth32' with
+        the parameters "DWidth=32,RValue=1'h0". (HDL-193)
+
+Inferred memory devices in process
+        in routine D_FF_32_0 line 28 in file
+                '/home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/common/d_flip_flop.sv'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|   read_data_o_reg   | Flip-flop |  32   |  Y  | Y  | N  | N  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully. (D_FF_32_0)
+Information: Building the design 'COUNTER' instantiated from design 'INSTR_CACHE_DWidth32' with
+        the parameters "DWidth=30,RValue=1'h0,FValue=511". (HDL-193)
+
+Inferred memory devices in process
+        in routine COUNTER_30_0_511 line 30 in file
+                '/home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/common/counter.sv'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|   cnt_done_o_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|   cnt_data_o_reg    | Flip-flop |  30   |  Y  | Y  | Y  | N  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully. (COUNTER_30_0_511)
+Information: Building the design 'D_FF' instantiated from design 'INSTR_CACHE_DWidth32' with
+        the parameters "DWidth=2,RValue=2'h3". (HDL-193)
+
+Inferred memory devices in process
+        in routine D_FF_2_3 line 28 in file
+                '/home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/common/d_flip_flop.sv'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|   read_data_o_reg   | Flip-flop |   2   |  Y  | Y  | N  | N  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully. (D_FF_2_3)
+Information: Building the design 'ICACHE_SRAM' instantiated from design 'INSTR_CACHE_DWidth32' with
+        the parameters "Depth=512,DWidth=@28206b3a32373220743a20693a2028206b3a32373220743a20693a2028206b3a31383220743a33353a227369676e6564617272617928302533312530256c6f67696329255938315a6e48262220693a20763a3120292028206b3a31383220743a33353a227369676e6564617272617928302533312530256c6f67696329255938315a6e48262220693a20763a3231202920292028206b3a31383220743a33353a227369676e6564617272617928302533312530256c6f67696329255938315a6e48262220693a20763a3332202920292000@". (HDL-193)
+Presto compilation completed successfully. (ICACHE_SRAM_Depth512_DWidth54)
+Information: Building the design 'COUNTER' instantiated from design 'SCALAR_CORE_DWidth32' with
+        the parameters "DWidth=@28206b3a32373320743a20693a2028206b3a31383220743a33353a227369676e6564617272617928302533312530256c6f67696329255938315a6e48262220693a20763a333220292028206b3a31373820743a31333a22696e74254e624d764f26262220693a20693a32202920292000@,RValue=1'h0". (HDL-193)
+
+Inferred memory devices in process
+        in routine COUNTER_64_0 line 30 in file
+                '/home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/common/counter.sv'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|   cnt_done_o_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|   cnt_data_o_reg    | Flip-flop |  64   |  Y  | Y  | Y  | N  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully. (COUNTER_64_0)
+Information: Building the design 'MUX2TO1' instantiated from design 'SCALAR_CORE_DWidth32' with
+        the parameters "DWidth=32". (HDL-193)
+
+Statistics for case statements in always block at line 24 in file
+        '/home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/common/mux2to1.sv'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|            25            |    user/user     |
+===============================================
+Presto compilation completed successfully. (MUX2TO1_DWidth32)
+Information: Building the design 'DECODER' instantiated from design 'SCALAR_CORE_DWidth32' with
+        the parameters "DWidth=32,OpWidth=5,NumofReg=32,CWidth=12". (HDL-193)
+
+Statistics for case statements in always block at line 130 in file
+        '/home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/scalar_core/decoder.sv'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           131            |    user/user     |
+===============================================
+
+Statistics for case statements in always block at line 207 in file
+        '/home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/scalar_core/decoder.sv'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           208            |    user/user     |
+|           298            |    user/user     |
+|           378            |    user/user     |
+|           439            |    user/user     |
+===============================================
+Presto compilation completed successfully. (DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12)
+Information: Building the design 'REGFILE' instantiated from design 'SCALAR_CORE_DWidth32' with
+        the parameters "DWidth=32,NumofReg=32". (HDL-193)
+
+Inferred memory devices in process
+        in routine REGFILE_DWidth32_NumofReg32 line 38 in file
+                '/home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/scalar_core/regfile.sv'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|       GPR_reg       | Flip-flop | 1024  |  Y  | Y  | N  | N  | N  | N  | N  |
+===============================================================================
+Statistics for MUX_OPs
+====================================================================
+|        block name/line         | Inputs | Outputs | # sel inputs |
+====================================================================
+| REGFILE_DWidth32_NumofReg32/35 |   32   |   32    |      5       |
+| REGFILE_DWidth32_NumofReg32/36 |   32   |   32    |      5       |
+====================================================================
+Presto compilation completed successfully. (REGFILE_DWidth32_NumofReg32)
+Information: Building the design 'CSR' instantiated from design 'SCALAR_CORE_DWidth32' with
+        the parameters "DWidth=32,AWidth=12". (HDL-193)
+
+Statistics for case statements in always block at line 70 in file
+        '/home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/scalar_core/csr.sv'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|            71            |    user/user     |
+===============================================
+Presto compilation completed successfully. (CSR_DWidth32_AWidth12)
+Information: Building the design 'MUX4TO1' instantiated from design 'SCALAR_CORE_DWidth32' with
+        the parameters "DWidth=32". (HDL-193)
+
+Statistics for case statements in always block at line 26 in file
+        '/home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/common/mux4to1.sv'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|            27            |    user/user     |
+===============================================
+Presto compilation completed successfully. (MUX4TO1_DWidth32)
+Information: Building the design 'ALU' instantiated from design 'SCALAR_CORE_DWidth32' with
+        the parameters "DWidth=32,OpWidth=5". (HDL-193)
+
+Statistics for case statements in always block at line 56 in file
+        '/home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/scalar_core/alu.sv'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|            57            |    user/user     |
+===============================================
+Presto compilation completed successfully. (ALU_DWidth32_OpWidth5)
+Information: Building the design 'MUX5TO1' instantiated from design 'SCALAR_CORE_DWidth32' with
+        the parameters "DWidth=32". (HDL-193)
+
+Statistics for case statements in always block at line 27 in file
+        '/home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/common/mux5to1.sv'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|            28            |    user/user     |
+===============================================
+Presto compilation completed successfully. (MUX5TO1_DWidth32)
+Information: Building the design 'MUX3TO1' instantiated from design 'SCALAR_CORE_DWidth32' with
+        the parameters "DWidth=32". (HDL-193)
+
+Statistics for case statements in always block at line 25 in file
+        '/home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/common/mux3to1.sv'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|            26            |    user/user     |
+===============================================
+Presto compilation completed successfully. (MUX3TO1_DWidth32)
+Information: Building the design 'D_FF' instantiated from design 'DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12' with
+        the parameters "DWidth=2,RValue=2'h0". (HDL-193)
+
+Inferred memory devices in process
+        in routine D_FF_2_0 line 28 in file
+                '/home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/common/d_flip_flop.sv'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|   read_data_o_reg   | Flip-flop |   2   |  Y  | Y  | N  | N  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully. (D_FF_2_0)
+Information: Building the design 'D_FF' instantiated from design 'CSR_DWidth32_AWidth12' with
+        the parameters "DWidth=@28206b3a32373320743a20693a2028206b3a31383220743a33353a227369676e6564617272617928302533312530256c6f67696329255938315a6e48262220693a20763a333220292028206b3a31373820743a31333a22696e74254e624d764f26262220693a20693a32202920292000@,RValue=1'h0". (HDL-193)
+
+Inferred memory devices in process
+        in routine D_FF_64_0 line 28 in file
+                '/home/AS501_G3/1_AS501_final_bare_results/syn/../rtl/common/d_flip_flop.sv'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|   read_data_o_reg   | Flip-flop |  64   |  Y  | Y  | N  | N  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully. (D_FF_64_0)
+Warning: Design 'CPU_TOP' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+1
+link
+
+  Linking design 'CPU_TOP'
+  Using the following designs and libraries:
+  --------------------------------------------------------------------------
+  * (18 designs)              /home/AS501_G3/1_AS501_final_bare_results/syn/CPU_TOP.db, etc
+  tcbn28hpcplusbwp30p140tt1v25c (library) /technology/TSMC_28nm_HPC_RF/STD/tcbn28hpcplusbwp30p140_190a/TSMCHOME/digital/Front_End/timing_power_noise/NLDM/tcbn28hpcplusbwp30p140_180a/tcbn28hpcplusbwp30p140tt1v25c.db
+  ts5n28hpcphvta512x54m4f_tt1v25c (library) /technology/TSMC_28nm_HPC_RF/SRAM/tsn28hpcpd127spsram_20120200_180a/TSMCHOME/sram/Output/ts5n28hpcphvta512x54m4f_tt1v25c/ts5n28hpcphvta512x54m4f_tt1v25c.db
+  dw_foundation.sldb (library) /tools/Synopsys/dc/V-2023.12-SP5-1/libraries/syn/dw_foundation.sldb
+
+Information: Building the design 'MCU' instantiated from design 'CPU_TOP' with
+        the parameters "IMEM_START_W=32'h00000000,IMEM_DEPTH_W=32'h00080000,DMEM_START_W=32'h00080000,DMEM_DEPTH_W=32'h07f80000,IOMEM_START_W=32'h08000000,IOMEM_DEPTH_W=32'h00100000". (HDL-193)
+Warning: Cannot find the design 'MCU' in the library 'WORK'. (LBR-1)
+Warning: Unable to resolve reference 'MCU' in 'CPU_TOP'. (LINK-5)
+0
+# Set wire names to lower case
+define_name_rules LOWER_CASE -type net -allowed "a-z 0-9_*"
+1
+change_names -rules verilog -hierarchy
+Warning: Design 'CPU_TOP' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[31]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[30]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[29]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[28]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[27]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[26]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[25]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[24]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[23]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[22]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[21]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[20]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[19]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[18]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[17]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[16]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[15]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[14]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[13]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[12]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[11]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[10]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[9]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[8]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[7]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[6]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[5]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[4]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[3]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[2]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[1]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'imem_addr_o[0]' is connecting multiple ports. (UCN-1)
+Warning: The specified replacement character (_) is conflicting with the specified allowed or restricted character.   (UCN-4)
+Warning: In the design DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12, net 'csr_read_addr_o[11]' is connecting multiple ports. (UCN-1)
+Warning: In the design DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12, net 'csr_read_addr_o[10]' is connecting multiple ports. (UCN-1)
+Warning: In the design DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12, net 'csr_read_addr_o[9]' is connecting multiple ports. (UCN-1)
+Warning: In the design DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12, net 'csr_read_addr_o[8]' is connecting multiple ports. (UCN-1)
+Warning: In the design DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12, net 'csr_read_addr_o[7]' is connecting multiple ports. (UCN-1)
+Warning: In the design DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12, net 'csr_read_addr_o[6]' is connecting multiple ports. (UCN-1)
+Warning: In the design DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12, net 'csr_read_addr_o[5]' is connecting multiple ports. (UCN-1)
+Warning: In the design DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12, net 'csr_read_addr_o[4]' is connecting multiple ports. (UCN-1)
+Warning: In the design DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12, net 'csr_read_addr_o[3]' is connecting multiple ports. (UCN-1)
+Warning: In the design DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12, net 'csr_read_addr_o[2]' is connecting multiple ports. (UCN-1)
+Warning: In the design DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12, net 'csr_read_addr_o[1]' is connecting multiple ports. (UCN-1)
+Warning: In the design DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12, net 'csr_read_addr_o[0]' is connecting multiple ports. (UCN-1)
+1
+change_names -rules LOWER_CASE -hierarchy
+Warning: Design 'CPU_TOP' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[31]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[30]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[29]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[28]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[27]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[26]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[25]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[24]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[23]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[22]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[21]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[20]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[19]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[18]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[17]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[16]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[15]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[14]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[13]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[12]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[11]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[10]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[9]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[8]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[7]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[6]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[5]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[4]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[3]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[2]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[1]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[0]' is connecting multiple ports. (UCN-1)
+Warning: In the design DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12, net 'csr_read_addr_o[11]' is connecting multiple ports. (UCN-1)
+Warning: In the design DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12, net 'csr_read_addr_o[10]' is connecting multiple ports. (UCN-1)
+Warning: In the design DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12, net 'csr_read_addr_o[9]' is connecting multiple ports. (UCN-1)
+Warning: In the design DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12, net 'csr_read_addr_o[8]' is connecting multiple ports. (UCN-1)
+Warning: In the design DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12, net 'csr_read_addr_o[7]' is connecting multiple ports. (UCN-1)
+Warning: In the design DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12, net 'csr_read_addr_o[6]' is connecting multiple ports. (UCN-1)
+Warning: In the design DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12, net 'csr_read_addr_o[5]' is connecting multiple ports. (UCN-1)
+Warning: In the design DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12, net 'csr_read_addr_o[4]' is connecting multiple ports. (UCN-1)
+Warning: In the design DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12, net 'csr_read_addr_o[3]' is connecting multiple ports. (UCN-1)
+Warning: In the design DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12, net 'csr_read_addr_o[2]' is connecting multiple ports. (UCN-1)
+Warning: In the design DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12, net 'csr_read_addr_o[1]' is connecting multiple ports. (UCN-1)
+Warning: In the design DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12, net 'csr_read_addr_o[0]' is connecting multiple ports. (UCN-1)
+1
+# Prevent assignment statements in the Verilog netlist
+set_fix_multiple_port_nets -all -buffer_constants
+1
+# Check the current design for consistency
+redirect -tee -file $RPT_DIR/1_check_design.rpt {check_design}
+Warning: Design 'CPU_TOP' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+ 
+****************************************
+check_design summary:
+Version:     V-2023.12-SP5-1
+Date:        Sun May 10 17:21:15 2026
+****************************************
+
+                   Name                                            Total
+--------------------------------------------------------------------------------
+Inputs/Outputs                                                    187
+    Multiply driven inputs (LINT-6)                                98
+    Unconnected ports (LINT-28)                                    45
+    Feedthrough (LINT-29)                                          32
+    Shorted outputs (LINT-31)                                      12
+
+Cells                                                              94
+    Cells do not drive (LINT-1)                                     9
+    Connected to power or ground (LINT-32)                         50
+    Nets connected to multiple pins on same cell (LINT-33)         35
+
+Tristate                                                           99
+    A tristate bus has a non tri-state driver (LINT-34)            99
+--------------------------------------------------------------------------------
+
+Warning: In design 'COUNTER_30_0_511', cell 'C189' does not drive any nets. (LINT-1)
+Warning: In design 'COUNTER_64_0', cell 'C382' does not drive any nets. (LINT-1)
+Warning: In design 'ALU_DWidth32_OpWidth5', cell 'B_13' does not drive any nets. (LINT-1)
+Warning: In design 'ALU_DWidth32_OpWidth5', cell 'B_14' does not drive any nets. (LINT-1)
+Warning: In design 'ALU_DWidth32_OpWidth5', cell 'B_15' does not drive any nets. (LINT-1)
+Warning: In design 'ALU_DWidth32_OpWidth5', cell 'B_16' does not drive any nets. (LINT-1)
+Warning: In design 'ALU_DWidth32_OpWidth5', cell 'B_17' does not drive any nets. (LINT-1)
+Warning: In design 'ALU_DWidth32_OpWidth5', cell 'B_18' does not drive any nets. (LINT-1)
+Warning: In design 'ALU_DWidth32_OpWidth5', cell 'B_19' does not drive any nets. (LINT-1)
+Warning: In design 'CPU_TOP', input port 'clk_i' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'rst_ni' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[31]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[30]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[29]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[28]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[27]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[26]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[25]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[24]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[23]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[22]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[21]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[20]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[19]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[18]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[17]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[16]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[15]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[14]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[13]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[12]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[11]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[10]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[9]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[8]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[7]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[6]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[5]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[4]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[3]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[2]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[1]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'imem_rdata_i[0]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[31]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[30]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[29]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[28]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[27]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[26]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[25]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[24]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[23]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[22]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[21]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[20]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[19]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[18]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[17]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[16]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[15]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[14]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[13]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[12]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[11]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[10]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[9]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[8]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[7]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[6]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[5]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[4]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[3]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[2]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[1]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'dmem_rdata_i[0]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[31]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[30]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[29]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[28]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[27]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[26]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[25]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[24]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[23]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[22]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[21]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[20]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[19]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[18]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[17]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[16]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[15]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[14]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[13]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[12]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[11]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[10]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[9]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[8]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[7]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[6]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[5]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[4]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[3]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[2]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[1]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CPU_TOP', input port 'iomem_rdata_i[0]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_addr_i[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_addr_i[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_addr_i[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_addr_i[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_addr_i[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_addr_i[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_addr_i[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_addr_i[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_addr_i[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_addr_i[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_addr_i[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_addr_i[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[31]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[30]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[29]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[28]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[27]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[26]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[25]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[24]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[23]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[22]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[21]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[20]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[19]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[18]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[17]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[16]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_data_i[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'CSR_DWidth32_AWidth12', port 'write_en_i' is not connected to any nets. (LINT-28)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[31]' is connected directly to output port 'imem_addr_o[31]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[30]' is connected directly to output port 'imem_addr_o[30]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[29]' is connected directly to output port 'imem_addr_o[29]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[28]' is connected directly to output port 'imem_addr_o[28]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[27]' is connected directly to output port 'imem_addr_o[27]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[26]' is connected directly to output port 'imem_addr_o[26]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[25]' is connected directly to output port 'imem_addr_o[25]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[24]' is connected directly to output port 'imem_addr_o[24]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[23]' is connected directly to output port 'imem_addr_o[23]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[22]' is connected directly to output port 'imem_addr_o[22]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[21]' is connected directly to output port 'imem_addr_o[21]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[20]' is connected directly to output port 'imem_addr_o[20]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[19]' is connected directly to output port 'imem_addr_o[19]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[18]' is connected directly to output port 'imem_addr_o[18]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[17]' is connected directly to output port 'imem_addr_o[17]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[16]' is connected directly to output port 'imem_addr_o[16]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[15]' is connected directly to output port 'imem_addr_o[15]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[14]' is connected directly to output port 'imem_addr_o[14]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[13]' is connected directly to output port 'imem_addr_o[13]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[12]' is connected directly to output port 'imem_addr_o[12]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[11]' is connected directly to output port 'imem_addr_o[11]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[10]' is connected directly to output port 'imem_addr_o[10]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[9]' is connected directly to output port 'imem_addr_o[9]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[8]' is connected directly to output port 'imem_addr_o[8]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[7]' is connected directly to output port 'imem_addr_o[7]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[6]' is connected directly to output port 'imem_addr_o[6]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[5]' is connected directly to output port 'imem_addr_o[5]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[4]' is connected directly to output port 'imem_addr_o[4]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[3]' is connected directly to output port 'imem_addr_o[3]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[2]' is connected directly to output port 'imem_addr_o[2]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[1]' is connected directly to output port 'imem_addr_o[1]'. (LINT-29)
+Warning: In design 'INSTR_CACHE_DWidth32', input port 'addr_i[0]' is connected directly to output port 'imem_addr_o[0]'. (LINT-29)
+Warning: In design 'DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12', output port 'csr_read_addr_o[11]' is connected directly to output port 'csr_write_addr_o[11]'. (LINT-31)
+Warning: In design 'DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12', output port 'csr_read_addr_o[10]' is connected directly to output port 'csr_write_addr_o[10]'. (LINT-31)
+Warning: In design 'DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12', output port 'csr_read_addr_o[9]' is connected directly to output port 'csr_write_addr_o[9]'. (LINT-31)
+Warning: In design 'DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12', output port 'csr_read_addr_o[8]' is connected directly to output port 'csr_write_addr_o[8]'. (LINT-31)
+Warning: In design 'DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12', output port 'csr_read_addr_o[7]' is connected directly to output port 'csr_write_addr_o[7]'. (LINT-31)
+Warning: In design 'DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12', output port 'csr_read_addr_o[6]' is connected directly to output port 'csr_write_addr_o[6]'. (LINT-31)
+Warning: In design 'DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12', output port 'csr_read_addr_o[5]' is connected directly to output port 'csr_write_addr_o[5]'. (LINT-31)
+Warning: In design 'DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12', output port 'csr_read_addr_o[4]' is connected directly to output port 'csr_write_addr_o[4]'. (LINT-31)
+Warning: In design 'DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12', output port 'csr_read_addr_o[3]' is connected directly to output port 'csr_write_addr_o[3]'. (LINT-31)
+Warning: In design 'DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12', output port 'csr_read_addr_o[2]' is connected directly to output port 'csr_write_addr_o[2]'. (LINT-31)
+Warning: In design 'DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12', output port 'csr_read_addr_o[1]' is connected directly to output port 'csr_write_addr_o[1]'. (LINT-31)
+Warning: In design 'DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12', output port 'csr_read_addr_o[0]' is connected directly to output port 'csr_write_addr_o[0]'. (LINT-31)
+Warning: In design 'INSTR_CACHE_DWidth32', a pin on submodule 'FF_CACHE_STATE' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'write_en_i' is connected to logic 1. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'COUNTER_CYCLE' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'cnt_en_i' is connected to logic 1. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_PC' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data0_i[1]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_PC' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data0_i[0]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data3_i[31]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data3_i[30]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data3_i[29]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data3_i[28]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data3_i[27]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data3_i[26]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data3_i[25]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data3_i[24]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data3_i[23]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data3_i[22]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data3_i[21]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data3_i[20]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data3_i[19]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data3_i[18]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data3_i[17]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data3_i[16]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data3_i[15]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data3_i[14]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data3_i[13]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data3_i[12]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data3_i[11]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data3_i[10]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data3_i[9]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data3_i[8]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data4_i[31]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data4_i[30]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data4_i[29]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data4_i[28]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data4_i[27]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data4_i[26]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data4_i[25]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data4_i[24]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data4_i[23]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data4_i[22]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data4_i[21]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data4_i[20]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data4_i[19]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data4_i[18]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data4_i[17]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_LD' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data4_i[16]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_WB' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data2_i[1]' is connected to logic 0. 
+Warning: In design 'SCALAR_CORE_DWidth32', a pin on submodule 'MUX_WB' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data2_i[0]' is connected to logic 0. 
+Warning: In design 'DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12', a pin on submodule 'FF_DEC_STATE' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'write_en_i' is connected to logic 1. 
+Warning: In design 'CSR_DWidth32_AWidth12', a pin on submodule 'FF_RDATA' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'write_en_i' is connected to logic 1. 
+Warning: In design 'CSR_DWidth32_AWidth12', a pin on submodule 'FF_MCYCLE' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'write_en_i' is connected to logic 1. 
+Warning: In design 'CSR_DWidth32_AWidth12', a pin on submodule 'FF_MINSTRET' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'write_en_i' is connected to logic 1. 
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_PC'. (LINT-33)
+   Net 'n_logic0_' is connected to pins 'data0_i[1]', 'data0_i[0]''.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_LD'. (LINT-33)
+   Net 'rf_read2_data[7]' is connected to pins 'data0_i[31]', 'data0_i[30]'', 'data0_i[29]', 'data0_i[28]', 'data0_i[27]', 'data0_i[26]', 'data0_i[25]', 'data0_i[24]', 'data0_i[23]', 'data0_i[22]', 'data0_i[21]', 'data0_i[20]', 'data0_i[19]', 'data0_i[18]', 'data0_i[17]', 'data0_i[16]', 'data0_i[15]', 'data0_i[14]', 'data0_i[13]', 'data0_i[12]', 'data0_i[11]', 'data0_i[10]', 'data0_i[9]', 'data0_i[8]', 'data0_i[7]', 'data1_i[7]', 'data2_i[7]', 'data3_i[7]', 'data4_i[7]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_LD'. (LINT-33)
+   Net 'rf_read2_data[6]' is connected to pins 'data0_i[6]', 'data1_i[6]'', 'data2_i[6]', 'data3_i[6]', 'data4_i[6]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_LD'. (LINT-33)
+   Net 'rf_read2_data[5]' is connected to pins 'data0_i[5]', 'data1_i[5]'', 'data2_i[5]', 'data3_i[5]', 'data4_i[5]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_LD'. (LINT-33)
+   Net 'rf_read2_data[4]' is connected to pins 'data0_i[4]', 'data1_i[4]'', 'data2_i[4]', 'data3_i[4]', 'data4_i[4]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_LD'. (LINT-33)
+   Net 'rf_read2_data[3]' is connected to pins 'data0_i[3]', 'data1_i[3]'', 'data2_i[3]', 'data3_i[3]', 'data4_i[3]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_LD'. (LINT-33)
+   Net 'rf_read2_data[2]' is connected to pins 'data0_i[2]', 'data1_i[2]'', 'data2_i[2]', 'data3_i[2]', 'data4_i[2]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_LD'. (LINT-33)
+   Net 'rf_read2_data[1]' is connected to pins 'data0_i[1]', 'data1_i[1]'', 'data2_i[1]', 'data3_i[1]', 'data4_i[1]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_LD'. (LINT-33)
+   Net 'rf_read2_data[0]' is connected to pins 'data0_i[0]', 'data1_i[0]'', 'data2_i[0]', 'data3_i[0]', 'data4_i[0]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_LD'. (LINT-33)
+   Net 'rf_read2_data[15]' is connected to pins 'data1_i[31]', 'data1_i[30]'', 'data1_i[29]', 'data1_i[28]', 'data1_i[27]', 'data1_i[26]', 'data1_i[25]', 'data1_i[24]', 'data1_i[23]', 'data1_i[22]', 'data1_i[21]', 'data1_i[20]', 'data1_i[19]', 'data1_i[18]', 'data1_i[17]', 'data1_i[16]', 'data1_i[15]', 'data2_i[15]', 'data4_i[15]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_LD'. (LINT-33)
+   Net 'rf_read2_data[14]' is connected to pins 'data1_i[14]', 'data2_i[14]'', 'data4_i[14]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_LD'. (LINT-33)
+   Net 'rf_read2_data[13]' is connected to pins 'data1_i[13]', 'data2_i[13]'', 'data4_i[13]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_LD'. (LINT-33)
+   Net 'rf_read2_data[12]' is connected to pins 'data1_i[12]', 'data2_i[12]'', 'data4_i[12]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_LD'. (LINT-33)
+   Net 'rf_read2_data[11]' is connected to pins 'data1_i[11]', 'data2_i[11]'', 'data4_i[11]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_LD'. (LINT-33)
+   Net 'rf_read2_data[10]' is connected to pins 'data1_i[10]', 'data2_i[10]'', 'data4_i[10]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_LD'. (LINT-33)
+   Net 'rf_read2_data[9]' is connected to pins 'data1_i[9]', 'data2_i[9]'', 'data4_i[9]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_LD'. (LINT-33)
+   Net 'rf_read2_data[8]' is connected to pins 'data1_i[8]', 'data2_i[8]'', 'data4_i[8]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_LD'. (LINT-33)
+   Net 'n_logic0_' is connected to pins 'data3_i[31]', 'data3_i[30]'', 'data3_i[29]', 'data3_i[28]', 'data3_i[27]', 'data3_i[26]', 'data3_i[25]', 'data3_i[24]', 'data3_i[23]', 'data3_i[22]', 'data3_i[21]', 'data3_i[20]', 'data3_i[19]', 'data3_i[18]', 'data3_i[17]', 'data3_i[16]', 'data3_i[15]', 'data3_i[14]', 'data3_i[13]', 'data3_i[12]', 'data3_i[11]', 'data3_i[10]', 'data3_i[9]', 'data3_i[8]', 'data4_i[31]', 'data4_i[30]', 'data4_i[29]', 'data4_i[28]', 'data4_i[27]', 'data4_i[26]', 'data4_i[25]', 'data4_i[24]', 'data4_i[23]', 'data4_i[22]', 'data4_i[21]', 'data4_i[20]', 'data4_i[19]', 'data4_i[18]', 'data4_i[17]', 'data4_i[16]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_ST'. (LINT-33)
+   Net 'dmem_rdata_i[7]' is connected to pins 'data0_i[31]', 'data0_i[30]'', 'data0_i[29]', 'data0_i[28]', 'data0_i[27]', 'data0_i[26]', 'data0_i[25]', 'data0_i[24]', 'data0_i[23]', 'data0_i[22]', 'data0_i[21]', 'data0_i[20]', 'data0_i[19]', 'data0_i[18]', 'data0_i[17]', 'data0_i[16]', 'data0_i[15]', 'data0_i[14]', 'data0_i[13]', 'data0_i[12]', 'data0_i[11]', 'data0_i[10]', 'data0_i[9]', 'data0_i[8]', 'data0_i[7]', 'data1_i[7]', 'data2_i[7]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_ST'. (LINT-33)
+   Net 'dmem_rdata_i[6]' is connected to pins 'data0_i[6]', 'data1_i[6]'', 'data2_i[6]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_ST'. (LINT-33)
+   Net 'dmem_rdata_i[5]' is connected to pins 'data0_i[5]', 'data1_i[5]'', 'data2_i[5]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_ST'. (LINT-33)
+   Net 'dmem_rdata_i[4]' is connected to pins 'data0_i[4]', 'data1_i[4]'', 'data2_i[4]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_ST'. (LINT-33)
+   Net 'dmem_rdata_i[3]' is connected to pins 'data0_i[3]', 'data1_i[3]'', 'data2_i[3]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_ST'. (LINT-33)
+   Net 'dmem_rdata_i[2]' is connected to pins 'data0_i[2]', 'data1_i[2]'', 'data2_i[2]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_ST'. (LINT-33)
+   Net 'dmem_rdata_i[1]' is connected to pins 'data0_i[1]', 'data1_i[1]'', 'data2_i[1]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_ST'. (LINT-33)
+   Net 'dmem_rdata_i[0]' is connected to pins 'data0_i[0]', 'data1_i[0]'', 'data2_i[0]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_ST'. (LINT-33)
+   Net 'dmem_rdata_i[15]' is connected to pins 'data1_i[31]', 'data1_i[30]'', 'data1_i[29]', 'data1_i[28]', 'data1_i[27]', 'data1_i[26]', 'data1_i[25]', 'data1_i[24]', 'data1_i[23]', 'data1_i[22]', 'data1_i[21]', 'data1_i[20]', 'data1_i[19]', 'data1_i[18]', 'data1_i[17]', 'data1_i[16]', 'data1_i[15]', 'data2_i[15]'.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_ST'. (LINT-33)
+   Net 'dmem_rdata_i[14]' is connected to pins 'data1_i[14]', 'data2_i[14]''.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_ST'. (LINT-33)
+   Net 'dmem_rdata_i[13]' is connected to pins 'data1_i[13]', 'data2_i[13]''.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_ST'. (LINT-33)
+   Net 'dmem_rdata_i[12]' is connected to pins 'data1_i[12]', 'data2_i[12]''.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_ST'. (LINT-33)
+   Net 'dmem_rdata_i[11]' is connected to pins 'data1_i[11]', 'data2_i[11]''.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_ST'. (LINT-33)
+   Net 'dmem_rdata_i[10]' is connected to pins 'data1_i[10]', 'data2_i[10]''.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_ST'. (LINT-33)
+   Net 'dmem_rdata_i[9]' is connected to pins 'data1_i[9]', 'data2_i[9]''.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_ST'. (LINT-33)
+   Net 'dmem_rdata_i[8]' is connected to pins 'data1_i[8]', 'data2_i[8]''.
+Warning: In design 'SCALAR_CORE_DWidth32', the same net is connected to more than one pin on submodule 'MUX_WB'. (LINT-33)
+   Net 'n_logic0_' is connected to pins 'data2_i[1]', 'data2_i[0]''.
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_write' has non three-state driver 'SCORE/DECODER/C686/Z_0'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_req' has non three-state driver 'SCORE/DECODER/C679/Z_0'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[0]' has non three-state driver 'SCORE/ALU/C272/Z_0'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[1]' has non three-state driver 'SCORE/ALU/C272/Z_1'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[2]' has non three-state driver 'SCORE/ALU/C272/Z_2'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[3]' has non three-state driver 'SCORE/ALU/C272/Z_3'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[4]' has non three-state driver 'SCORE/ALU/C272/Z_4'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[5]' has non three-state driver 'SCORE/ALU/C272/Z_5'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[6]' has non three-state driver 'SCORE/ALU/C272/Z_6'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[7]' has non three-state driver 'SCORE/ALU/C272/Z_7'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[8]' has non three-state driver 'SCORE/ALU/C272/Z_8'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[9]' has non three-state driver 'SCORE/ALU/C272/Z_9'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[10]' has non three-state driver 'SCORE/ALU/C272/Z_10'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[11]' has non three-state driver 'SCORE/ALU/C272/Z_11'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[12]' has non three-state driver 'SCORE/ALU/C272/Z_12'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[13]' has non three-state driver 'SCORE/ALU/C272/Z_13'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[14]' has non three-state driver 'SCORE/ALU/C272/Z_14'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[15]' has non three-state driver 'SCORE/ALU/C272/Z_15'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[16]' has non three-state driver 'SCORE/ALU/C272/Z_16'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[17]' has non three-state driver 'SCORE/ALU/C272/Z_17'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[18]' has non three-state driver 'SCORE/ALU/C272/Z_18'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[19]' has non three-state driver 'SCORE/ALU/C272/Z_19'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[20]' has non three-state driver 'SCORE/ALU/C272/Z_20'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[21]' has non three-state driver 'SCORE/ALU/C272/Z_21'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[22]' has non three-state driver 'SCORE/ALU/C272/Z_22'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[23]' has non three-state driver 'SCORE/ALU/C272/Z_23'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[24]' has non three-state driver 'SCORE/ALU/C272/Z_24'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[25]' has non three-state driver 'SCORE/ALU/C272/Z_25'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[26]' has non three-state driver 'SCORE/ALU/C272/Z_26'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[27]' has non three-state driver 'SCORE/ALU/C272/Z_27'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[28]' has non three-state driver 'SCORE/ALU/C272/Z_28'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[29]' has non three-state driver 'SCORE/ALU/C272/Z_29'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[30]' has non three-state driver 'SCORE/ALU/C272/Z_30'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_addr[31]' has non three-state driver 'SCORE/ALU/C272/Z_31'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[0]' has non three-state driver 'SCORE/MUX_LD/C74/Z_0'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[1]' has non three-state driver 'SCORE/MUX_LD/C74/Z_1'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[2]' has non three-state driver 'SCORE/MUX_LD/C74/Z_2'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[3]' has non three-state driver 'SCORE/MUX_LD/C74/Z_3'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[4]' has non three-state driver 'SCORE/MUX_LD/C74/Z_4'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[5]' has non three-state driver 'SCORE/MUX_LD/C74/Z_5'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[6]' has non three-state driver 'SCORE/MUX_LD/C74/Z_6'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[7]' has non three-state driver 'SCORE/MUX_LD/C74/Z_7'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[8]' has non three-state driver 'SCORE/MUX_LD/C74/Z_8'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[9]' has non three-state driver 'SCORE/MUX_LD/C74/Z_9'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[10]' has non three-state driver 'SCORE/MUX_LD/C74/Z_10'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[11]' has non three-state driver 'SCORE/MUX_LD/C74/Z_11'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[12]' has non three-state driver 'SCORE/MUX_LD/C74/Z_12'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[13]' has non three-state driver 'SCORE/MUX_LD/C74/Z_13'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[14]' has non three-state driver 'SCORE/MUX_LD/C74/Z_14'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[15]' has non three-state driver 'SCORE/MUX_LD/C74/Z_15'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[16]' has non three-state driver 'SCORE/MUX_LD/C74/Z_16'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[17]' has non three-state driver 'SCORE/MUX_LD/C74/Z_17'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[18]' has non three-state driver 'SCORE/MUX_LD/C74/Z_18'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[19]' has non three-state driver 'SCORE/MUX_LD/C74/Z_19'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[20]' has non three-state driver 'SCORE/MUX_LD/C74/Z_20'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[21]' has non three-state driver 'SCORE/MUX_LD/C74/Z_21'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[22]' has non three-state driver 'SCORE/MUX_LD/C74/Z_22'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[23]' has non three-state driver 'SCORE/MUX_LD/C74/Z_23'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[24]' has non three-state driver 'SCORE/MUX_LD/C74/Z_24'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[25]' has non three-state driver 'SCORE/MUX_LD/C74/Z_25'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[26]' has non three-state driver 'SCORE/MUX_LD/C74/Z_26'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[27]' has non three-state driver 'SCORE/MUX_LD/C74/Z_27'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[28]' has non three-state driver 'SCORE/MUX_LD/C74/Z_28'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[29]' has non three-state driver 'SCORE/MUX_LD/C74/Z_29'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[30]' has non three-state driver 'SCORE/MUX_LD/C74/Z_30'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'core_dmem_wdata[31]' has non three-state driver 'SCORE/MUX_LD/C74/Z_31'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_req' has non three-state driver 'ICACHE/C234/Z_0'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[0]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_0_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[1]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_1_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[2]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_2_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[3]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_3_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[4]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_4_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[5]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_5_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[6]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_6_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[7]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_7_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[8]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_8_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[9]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_9_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[10]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_10_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[11]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_11_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[12]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_12_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[13]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_13_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[14]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_14_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[15]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_15_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[16]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_16_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[17]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_17_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[18]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_18_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[19]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_19_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[20]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_20_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[21]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_21_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[22]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_22_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[23]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_23_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[24]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_24_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[25]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_25_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[26]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_26_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[27]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_27_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[28]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_28_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[29]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_29_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[30]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_30_/Q'. (LINT-34)
+Warning: In design 'CPU_TOP', three-state bus 'icache_miss_addr[31]' has non three-state driver 'SCORE/FF_PC/read_data_o_reg_31_/Q'. (LINT-34)
+1
+# In/out port constraints
+# Remove all user-defined attributes from the current design
+reset_design
+Warning: Design 'CPU_TOP' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+1
+# Set operating condition
+set_operating_conditions tt1v25c
+Using operating conditions 'tt1v25c' found in library 'tcbn28hpcplusbwp30p140tt1v25c'.
+1
+# Create clock
+create_clock -period $CLOCK_PERIOD [get_ports $TOP_CLK]
+Warning: Design 'CPU_TOP' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+1
+# Set clock skew + jitter + setup margin
+set_clock_uncertainty -setup [expr 0.07 * $CLOCK_PERIOD] [get_clocks $TOP_CLK]
+Warning: Design 'CPU_TOP' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Design 'CPU_TOP' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+1
+# Set clock transition (How long it takes to be recognized as 0 to 1)
+set_clock_transition [expr 0.016 * $CLOCK_PERIOD] [get_clocks $TOP_CLK]
+Warning: Design 'CPU_TOP' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Design 'CPU_TOP' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+1
+# Assume the core is connected to SRAM
+# Set input delay (Assume ta = 0.6)
+set INPUTS_EX_GLOBAL [remove_from_collection [all_inputs] [get_ports "$TOP_CLK $TOP_RST"]]
+{imem_rdata_i[31] imem_rdata_i[30] imem_rdata_i[29] imem_rdata_i[28] imem_rdata_i[27] imem_rdata_i[26] imem_rdata_i[25] imem_rdata_i[24] imem_rdata_i[23] imem_rdata_i[22] imem_rdata_i[21] imem_rdata_i[20] imem_rdata_i[19] imem_rdata_i[18] imem_rdata_i[17] imem_rdata_i[16] imem_rdata_i[15] imem_rdata_i[14] imem_rdata_i[13] imem_rdata_i[12] imem_rdata_i[11] imem_rdata_i[10] imem_rdata_i[9] imem_rdata_i[8] imem_rdata_i[7] imem_rdata_i[6] imem_rdata_i[5] imem_rdata_i[4] imem_rdata_i[3] imem_rdata_i[2] imem_rdata_i[1] imem_rdata_i[0] dmem_rdata_i[31] dmem_rdata_i[30] dmem_rdata_i[29] dmem_rdata_i[28] dmem_rdata_i[27] dmem_rdata_i[26] dmem_rdata_i[25] dmem_rdata_i[24] dmem_rdata_i[23] dmem_rdata_i[22] dmem_rdata_i[21] dmem_rdata_i[20] dmem_rdata_i[19] dmem_rdata_i[18] dmem_rdata_i[17] dmem_rdata_i[16] dmem_rdata_i[15] dmem_rdata_i[14] dmem_rdata_i[13] dmem_rdata_i[12] dmem_rdata_i[11] dmem_rdata_i[10] dmem_rdata_i[9] dmem_rdata_i[8] dmem_rdata_i[7] dmem_rdata_i[6] dmem_rdata_i[5] dmem_rdata_i[4] dmem_rdata_i[3] dmem_rdata_i[2] dmem_rdata_i[1] dmem_rdata_i[0] iomem_rdata_i[31] iomem_rdata_i[30] iomem_rdata_i[29] iomem_rdata_i[28] iomem_rdata_i[27] iomem_rdata_i[26] iomem_rdata_i[25] iomem_rdata_i[24] iomem_rdata_i[23] iomem_rdata_i[22] iomem_rdata_i[21] iomem_rdata_i[20] iomem_rdata_i[19] iomem_rdata_i[18] iomem_rdata_i[17] iomem_rdata_i[16] iomem_rdata_i[15] iomem_rdata_i[14] iomem_rdata_i[13] iomem_rdata_i[12] iomem_rdata_i[11] iomem_rdata_i[10] iomem_rdata_i[9] iomem_rdata_i[8] iomem_rdata_i[7] iomem_rdata_i[6] iomem_rdata_i[5] iomem_rdata_i[4] iomem_rdata_i[3] iomem_rdata_i[2] iomem_rdata_i[1] iomem_rdata_i[0]}
+set_input_delay -max 0.6 -clock $TOP_CLK $INPUTS_EX_GLOBAL
+Warning: Design 'CPU_TOP' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+1
+# Set output delay (Assume tas, tcss, twes, tds = 1.0)
+set_output_delay -max 1.0 -clock $TOP_CLK [all_outputs]
+Warning: Design 'CPU_TOP' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+1
+# Report clock
+redirect -tee -file $RPT_DIR/2_check_clock.rpt {report_clock}
+Warning: Design 'CPU_TOP' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Information: Checking out the license 'DesignWare'. (SEC-104)
+Information: Changed wire load model for 'MUX2TO1_DWidth32' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'MUX4TO1_DWidth32' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'MUX3TO1_DWidth32' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'MUX5TO1_DWidth32' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'MUX2TO1_DWidth32' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'ALU_DWidth32_OpWidth5' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'MUX4TO1_DWidth32' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'MUX4TO1_DWidth32' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'D_FF_64_0' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'D_FF_64_0' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'D_FF_32_0' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'CSR_DWidth32_AWidth12' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'REGFILE_DWidth32_NumofReg32' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'COUNTER_64_0' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'D_FF_2_0' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'D_FF_32_0' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'D_FF_32_0' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'MUX2TO1_DWidth32' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'COUNTER_64_0' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'SCALAR_CORE_DWidth32' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'ICACHE_SRAM_Depth512_DWidth54' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'D_FF_2_3' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'COUNTER_30_0_511' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'D_FF_32_0' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'INSTR_CACHE_DWidth32' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'alt1' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'apparch' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'alt1' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'astr' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'alt1' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'astr' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Updating graph... (UID-83)
+Warning: Design 'CPU_TOP' contains 2 high-fanout nets. A fanout number of 1000 will be used for delay calculations involving these nets. (TIM-134)
+ 
+****************************************
+Report : clocks
+Design : CPU_TOP
+Version: V-2023.12-SP5-1
+Date   : Sun May 10 17:21:15 2026
+****************************************
+
+Attributes:
+    d - dont_touch_network
+    f - fix_hold
+    p - propagated_clock
+    G - generated_clock
+    g - lib_generated_clock
+
+Clock          Period   Waveform            Attrs     Sources
+--------------------------------------------------------------------------------
+clk_i           10.00   {0 5}                         {clk_i}
+--------------------------------------------------------------------------------
+1
+# Compile the Design
+redirect -tee -file $RPT_DIR/3_compile.rpt {eval "compile_ultra -no_autoungroup"}
+Warning: Design 'CPU_TOP' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Information: Performing leakage power optimization. (PWR-850)
+CPU Load: 2%, Ram Free: 417 GB, Swap Free: 127 GB, Work Disk Free: 20752 GB, Tmp Disk Free: 1592 GB
+Analyzing: "/technology/TSMC_28nm_HPC_RF/SRAM/tsn28hpcpd127spsram_20120200_180a/TSMCHOME/sram/Output/ts5n28hpcphvta512x54m4f_tt1v25c/ts5n28hpcphvta512x54m4f_tt1v25c.db"
+Analyzing: "/technology/TSMC_28nm_HPC_RF/STD/tcbn28hpcplusbwp30p140_190a/TSMCHOME/digital/Front_End/timing_power_noise/NLDM/tcbn28hpcplusbwp30p140_180a/tcbn28hpcplusbwp30p140tt1v25c.db"
+Library analysis succeeded.
+Information: Running optimization using a maximum of 8 cores. (OPT-1500)
+Information: Evaluating DesignWare library utilization. (UISN-27)
+
+============================================================================
+| DesignWare Building Block Library  |         Version         | Available |
+============================================================================
+| Basic DW Building Blocks           | V-2023.12-DWBB_202312.5 |     *     |
+| Licensed DW Building Blocks        | V-2023.12-DWBB_202312.5 |     *     |
+============================================================================
+
+====================================================================================================
+| Flow Information                                                                                 |
+----------------------------------------------------------------------------------------------------
+| Flow         | Design Compiler WLM                                                               |
+| Command Line | compile_ultra -no_autoungroup                                                     |
+====================================================================================================
+| Design Information                                      | Value                                  |
+====================================================================================================
+| Number of Scenarios                                     | 0                                      |
+| Leaf Cell Count                                         | 2500                                   |
+| Number of User Hierarchies                              | 26                                     |
+| Sequential Cell Count                                   | 1446                                   |
+| Macro Count                                             | 0                                      |
+| Number of Power Domains                                 | 0                                      |
+| Number of Path Groups                                   | 2                                      |
+| Number of VT Class                                      | 0                                      |
+| Number of Clocks                                        | 1                                      |
+| Number of Dont Touch Cells                              | 245                                    |
+| Number of Dont Touch Nets                               | 0                                      |
+| Number of Size Only Cells                               | 0                                      |
+| Design with UPF Data                                    | false                                  |
+----------------------------------------------------------------------------------------------------
+| Variables                                               | Value                                  |
+----------------------------------------------------------------------------------------------------
+| set_fix_multiple_port_nets                              | -all -buffer_constants                 |
+====================================================================================================
+Information: Sequential output inversion is enabled.  SVF file must be used for formal verification. (OPT-1208)
+
+Information: There are 381 potential problems in your design. Please run 'check_design' for more information. (LINT-99)
+
+Information: Uniquified 4 instances of design 'D_FF_32_0'. (OPT-1056)
+Information: Uniquified 2 instances of design 'COUNTER_64_0'. (OPT-1056)
+Information: Uniquified 3 instances of design 'MUX2TO1_DWidth32'. (OPT-1056)
+Information: Uniquified 3 instances of design 'MUX4TO1_DWidth32'. (OPT-1056)
+Information: Uniquified 2 instances of design 'D_FF_64_0'. (OPT-1056)
+  Simplifying Design 'CPU_TOP'
+Information: The register 'SCORE/DECODER/COUNTER_INSTRET/cnt_done_o_reg' will be removed. (OPT-1207)
+Information: The register 'SCORE/COUNTER_CYCLE/cnt_done_o_reg' will be removed. (OPT-1207)
+
+  Loading target library 'ts5n28hpcphvta512x54m4f_tt1v25c'
+Information: Building the design 'MCU' instantiated from design 'CPU_TOP' with
+        the parameters "IMEM_START_W=32'h00000000,IMEM_DEPTH_W=32'h00080000,DMEM_START_W=32'h00080000,DMEM_DEPTH_W=32'h07f80000,IOMEM_START_W=32'h08000000,IOMEM_DEPTH_W=32'h00100000". (HDL-193)
+Warning: Cannot find the design 'MCU' in the library 'WORK'. (LBR-1)
+Warning: Unable to resolve reference 'MCU' in 'CPU_TOP'. (LINK-5)
+Loaded alib file './alib-52/tcbn28hpcplusbwp30p140tt1v25c.db.alib'
+Loaded alib file './alib-52/ts5n28hpcphvta512x54m4f_tt1v25c.db.alib' (placeholder)
+CPU Load: 2%, Ram Free: 416 GB, Swap Free: 127 GB, Work Disk Free: 20752 GB, Tmp Disk Free: 1592 GB
+Information: State dependent leakage is now switched from on to off.
+
+  Beginning Pass 1 Mapping
+  ------------------------
+  Processing 'REGFILE_DWidth32_NumofReg32'
+  Processing 'DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12'
+  Processing 'INSTR_CACHE_DWidth32'
+Information: Added key list 'DesignWare' to design 'INSTR_CACHE_DWidth32'. (DDB-72)
+  Processing 'COUNTER_64_0_1'
+ Implement Synthetic for 'COUNTER_64_0_1'.
+  Processing 'D_FF_32_0_0'
+  Processing 'MUX4TO1_DWidth32_0'
+  Processing 'ICACHE_SRAM_Depth512_DWidth54'
+  Processing 'MUX2TO1_DWidth32_2'
+  Processing 'ALU_DWidth32_OpWidth5'
+ Implement Synthetic for 'ALU_DWidth32_OpWidth5'.
+Information: Added key list 'DesignWare' to design 'ALU_DWidth32_OpWidth5'. (DDB-72)
+  Processing 'CPU_TOP'
+  Processing 'COUNTER_64_0_0'
+ Implement Synthetic for 'COUNTER_64_0_0'.
+  Processing 'D_FF_32_0_1'
+  Processing 'MUX4TO1_DWidth32_1'
+  Processing 'MUX3TO1_DWidth32'
+  Processing 'D_FF_2_3'
+  Processing 'SCALAR_CORE_DWidth32'
+ Implement Synthetic for 'SCALAR_CORE_DWidth32'.
+  Processing 'D_FF_64_0_0'
+  Processing 'CSR_DWidth32_AWidth12'
+  Processing 'COUNTER_30_0_511'
+ Implement Synthetic for 'COUNTER_30_0_511'.
+  Processing 'MUX5TO1_DWidth32'
+  Processing 'MUX2TO1_DWidth32_1'
+  Processing 'D_FF_2_0'
+  Processing 'MUX2TO1_DWidth32_0'
+Information: Building the design 'MCU' instantiated from design 'CPU_TOP' with
+        the parameters "IMEM_START_W=32'h00000000,IMEM_DEPTH_W=32'h00080000,DMEM_START_W=32'h00080000,DMEM_DEPTH_W=32'h07f80000,IOMEM_START_W=32'h08000000,IOMEM_DEPTH_W=32'h00100000". (HDL-193)
+Warning: Cannot find the design 'MCU' in the library 'WORK'. (LBR-1)
+Warning: Unable to resolve reference 'MCU' in 'CPU_TOP'. (LINK-5)
+Warning: Design 'CPU_TOP' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+CPU Load: 2%, Ram Free: 416 GB, Swap Free: 127 GB, Work Disk Free: 20752 GB, Tmp Disk Free: 1592 GB
+
+  Updating timing information
+Information: Updating design information... (UID-85)
+Information: The library cell 'TIELBWP30P140' in the library 'tcbn28hpcplusbwp30p140tt1v25c' is not characterized for internal power. (PWR-536)
+Information: The library cell 'TIEHBWP30P140' in the library 'tcbn28hpcplusbwp30p140tt1v25c' is not characterized for internal power. (PWR-536)
+Information: The target library(s) contains cell(s), other than black boxes, that are not characterized for internal power. (PWR-24)
+Information: Removing unused design 'MUX2TO1_DWidth32_0'. (OPT-1055)
+Information: The register 'SCORE/SRF/GPR_reg_0__0_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__1_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__2_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__3_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__4_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__5_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__6_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__7_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__8_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__9_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__10_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__11_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__12_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__13_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__14_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__15_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__16_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__17_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__18_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__19_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__20_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__21_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__22_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__23_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__24_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__25_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__26_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__27_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__28_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__29_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__30_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__31_' is a constant and will be removed. (OPT-1206)
+
+  Beginning Mapping Optimizations  (Ultra High effort)
+  -------------------------------
+Information: Added key list 'DesignWare' to design 'SCALAR_CORE_DWidth32'. (DDB-72)
+Information: Added key list 'DesignWare' to design 'COUNTER_30_0_511'. (DDB-72)
+Information: Added key list 'DesignWare' to design 'COUNTER_64_0_1'. (DDB-72)
+Information: Added key list 'DesignWare' to design 'COUNTER_64_0_0'. (DDB-72)
+  Mapping Optimization (Phase 1)
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:23   19684.3      0.00       0.0      24.3                           69603.9141
+    0:00:23   19657.3      0.00       0.0      24.3                           69393.3516
+
+  Beginning Constant Register Removal
+  -----------------------------------
+
+  Beginning Global Optimizations
+  ------------------------------
+  Numerical Synthesis (Phase 1)
+  Numerical Synthesis (Phase 2)
+  Global Optimization (Phase 1)
+  Global Optimization (Phase 2)
+  Global Optimization (Phase 3)
+  Global Optimization (Phase 4)
+  Global Optimization (Phase 5)
+  Global Optimization (Phase 6)
+  Global Optimization (Phase 7)
+  Global Optimization (Phase 8)
+  Global Optimization (Phase 9)
+  Global Optimization (Phase 10)
+  Global Optimization (Phase 11)
+  Global Optimization (Phase 12)
+  Global Optimization (Phase 13)
+  Global Optimization (Phase 14)
+  Global Optimization (Phase 15)
+  Global Optimization (Phase 16)
+  Global Optimization (Phase 17)
+  Global Optimization (Phase 18)
+  Global Optimization (Phase 19)
+  Global Optimization (Phase 20)
+  Global Optimization (Phase 21)
+  Global Optimization (Phase 22)
+  Global Optimization (Phase 23)
+  Global Optimization (Phase 24)
+  Global Optimization (Phase 25)
+  Global Optimization (Phase 26)
+  Global Optimization (Phase 27)
+  Global Optimization (Phase 28)
+  Global Optimization (Phase 29)
+  Global Optimization (Phase 30)
+  Global Optimization (Phase 31)
+
+  Beginning Isolate Ports
+  -----------------------
+
+  Beginning Delay Optimization
+  ----------------------------
+    0:00:26   18884.7      0.00       0.0      24.3                           58919.5000
+    0:00:26   18884.7      0.00       0.0      24.3                           58919.5000
+    0:00:26   18884.7      0.00       0.0      24.3                           58919.5000
+    0:00:27   18884.7      0.00       0.0      24.3                           58919.5000
+    0:00:27   18883.6      0.00       0.0      24.3                           58915.7500
+    0:00:27   18883.6      0.00       0.0      24.3                           58915.7500
+
+  Beginning WLM Backend Optimization
+  --------------------------------------
+    0:00:29   18920.5      0.00       0.0      24.3                           58788.6172
+    0:00:29   18920.5      0.00       0.0      24.3                           58788.6172
+    0:00:29   18920.5      0.00       0.0      24.3                           58788.6172
+    0:00:29   18920.5      0.00       0.0      24.3                           58788.6172
+    0:00:29   18920.5      0.00       0.0      24.3                           58788.6172
+    0:00:30   18919.5      0.00       0.0      24.3                           58776.9258
+    0:00:30   18919.5      0.00       0.0      24.3                           58776.9258
+    0:00:30   18919.5      0.00       0.0      24.3                           58776.9258
+    0:00:30   18919.5      0.00       0.0      24.3                           58776.9258
+    0:00:30   18919.5      0.00       0.0      24.3                           58776.9258
+    0:00:30   18919.5      0.00       0.0      24.3                           58776.9258
+    0:00:30   18919.5      0.00       0.0      24.3                           58776.9258
+    0:00:30   18919.5      0.00       0.0      24.3                           58776.9258
+    0:00:30   18919.5      0.00       0.0      24.3                           58776.9258
+    0:00:30   18919.5      0.00       0.0      24.3                           58776.9258
+    0:00:30   18919.5      0.00       0.0      24.3                           58776.9258
+    0:00:30   18919.5      0.00       0.0      24.3                           58776.9258
+    0:00:30   18919.5      0.00       0.0      24.3                           58776.9258
+    0:00:30   18919.5      0.00       0.0      24.3                           58776.9258
+    0:00:30   18919.5      0.00       0.0      24.3                           58776.9258
+    0:00:30   18919.5      0.00       0.0      24.3                           58776.9258
+    0:00:30   18919.5      0.00       0.0      24.3                           58776.9258
+    0:00:30   18919.5      0.00       0.0      24.3                           58776.9258
+    0:00:30   18919.5      0.00       0.0      24.3                           58776.9258
+
+
+  Beginning Design Rule Fixing  (min_capacitance)
+  ----------------------------
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:30   18919.5      0.00       0.0      24.3                           58776.9258
+  Global Optimization (Phase 32)
+  Global Optimization (Phase 33)
+  Global Optimization (Phase 34)
+    0:00:30   18919.5      0.00       0.0      24.3                           58776.9258
+    0:00:30   18919.5      0.00       0.0      24.3                           58776.9258
+    0:00:30   18919.5      0.00       0.0      24.3                           58776.9258
+    0:00:30   18919.5      0.00       0.0      24.3                           58776.9258
+    0:00:30   18919.5      0.00       0.0      24.3                           58776.9258
+    0:00:31   18919.5      0.00       0.0      24.3                           58765.4805
+    0:00:31   18919.5      0.00       0.0      24.3                           58765.4805
+    0:00:31   18919.5      0.00       0.0      24.3                           58765.4805
+    0:00:31   18919.5      0.00       0.0      24.3                           58765.4805
+    0:00:31   18919.5      0.00       0.0      24.3                           58765.4805
+    0:00:31   18919.5      0.00       0.0      24.3                           58765.4805
+    0:00:31   18919.5      0.00       0.0      24.3                           58765.4805
+    0:00:31   18919.5      0.00       0.0      24.3                           58765.4805
+    0:00:31   18919.5      0.00       0.0      24.3                           58765.4805
+    0:00:31   18919.5      0.00       0.0      24.3                           58765.4805
+    0:00:31   18919.5      0.00       0.0      24.3                           58765.4805
+    0:00:31   18919.5      0.00       0.0      24.3                           58765.4805
+    0:00:31   18919.5      0.00       0.0      24.3                           58765.4805
+    0:00:31   18919.5      0.00       0.0      24.3                           58765.4805
+    0:00:31   18919.5      0.00       0.0      24.3                           58765.4805
+    0:00:31   18919.5      0.00       0.0      24.3                           58765.4805
+    0:00:31   18919.5      0.00       0.0      24.3                           58765.4805
+    0:00:31   18919.5      0.00       0.0      24.3                           58765.4805
+    0:00:31   18919.5      0.00       0.0      24.3                           58765.4805
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:31   18864.1      0.00       0.0      24.3                           58748.3711
+    0:00:32   18864.1      0.00       0.0      24.3                           58429.6367
+    0:00:32   18864.1      0.00       0.0      24.3                           58429.6367
+    0:00:32   18864.1      0.00       0.0      24.3                           58429.6367
+    0:00:32   18864.1      0.00       0.0      24.3                           58429.6367
+    0:00:32   18863.7      0.00       0.0      24.3                           58412.3750
+    0:00:32   18863.7      0.00       0.0      24.3                           58412.3750
+    0:00:32   18863.7      0.00       0.0      24.3                           58412.3750
+    0:00:32   18863.7      0.00       0.0      24.3                           58412.3750
+    0:00:32   18863.7      0.00       0.0      24.3                           58412.3750
+    0:00:32   18863.7      0.00       0.0      24.3                           58412.3750
+CPU Load: 2%, Ram Free: 417 GB, Swap Free: 127 GB, Work Disk Free: 20753 GB, Tmp Disk Free: 1592 GB
+Loading db file '/technology/TSMC_28nm_HPC_RF/STD/tcbn28hpcplusbwp30p140_190a/TSMCHOME/digital/Front_End/timing_power_noise/NLDM/tcbn28hpcplusbwp30p140_180a/tcbn28hpcplusbwp30p140tt1v25c.db'
+Loading db file '/technology/TSMC_28nm_HPC_RF/SRAM/tsn28hpcpd127spsram_20120200_180a/TSMCHOME/sram/Output/ts5n28hpcphvta512x54m4f_tt1v25c/ts5n28hpcphvta512x54m4f_tt1v25c.db'
+
+
+Note: Symbol # after min delay cost means estimated hold TNS across all active scenarios 
+
+
+  Optimization Complete
+  ---------------------
+Warning: Design 'CPU_TOP' contains 1 high-fanout nets. A fanout number of 1000 will be used for delay calculations involving these nets. (TIM-134)
+     Net 'SCORE/CSR/FF_MINSTRET/clk_i': 1412 load(s), 1 driver(s), 1 inout(s)
+  Loading target library 'ts5n28hpcphvta512x54m4f_tt1v25c'
+Information: Building the design 'MCU' instantiated from design 'CPU_TOP' with
+        the parameters "IMEM_START_W=32'h00000000,IMEM_DEPTH_W=32'h00080000,DMEM_START_W=32'h00080000,DMEM_DEPTH_W=32'h07f80000,IOMEM_START_W=32'h08000000,IOMEM_DEPTH_W=32'h00100000". (HDL-193)
+Warning: Cannot find the design 'MCU' in the library 'WORK'. (LBR-1)
+Warning: Unable to resolve reference 'MCU' in 'CPU_TOP'. (LINK-5)
+Information: State dependent leakage is now switched from off to on.
+Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
+Warning: Design has unannotated black box outputs. (PWR-428)
+CPU Load: 2%, Ram Free: 416 GB, Swap Free: 127 GB, Work Disk Free: 20753 GB, Tmp Disk Free: 1592 GB
+Information: Total number of MV cells in the design.
+----------------------------------------------------------------------------------------------------
+ MV Cells                                           Total Number                                   
+----------------------------------------------------------------------------------------------------
+ Level Shifter:                                     0                                             
+ Enable Level Shifter:                              0                                             
+ Isolation Cell:                                    0                                             
+ Retention Cell:                                    0                                             
+ Retention Clamp Cell:                              0                                             
+ Switch Cell:                                       0                                             
+ Always-On Cell:                                    0                                             
+ Repeater Cell:                                     0                                             
+
+----------------------------------------------------------------------------------------------------
+Unmapped MV Cells 
+----------------------------------------------------------------------------------------------------
+0 Isolation Cells are unmapped 
+0 Retention Clamp Cells are unmapped 
+----------------------------------------------------------------------------------------------------
+1
+# Write Out Final Design and Reports
+# .ddc: Recommended binary format used for subsequent Design Compiler sessions
+# .v  : Verilog netlist for ASCII flow (Formality, PrimeTime, VCS)
+# .sdf: SDF backannotated topographical mode timing for PrimeTime
+# .sdc: SDC constraints for ASCII flow
+write_file -format ddc -hierarchy -output $OUT_DIR/$TOP_NAME.mapped.ddc
+Information: Building the design 'MCU' instantiated from design 'CPU_TOP' with
+        the parameters "IMEM_START_W=32'h00000000,IMEM_DEPTH_W=32'h00080000,DMEM_START_W=32'h00080000,DMEM_DEPTH_W=32'h07f80000,IOMEM_START_W=32'h08000000,IOMEM_DEPTH_W=32'h00100000". (HDL-193)
+Warning: Cannot find the design 'MCU' in the library 'WORK'. (LBR-1)
+Warning: Unable to resolve reference 'MCU' in 'CPU_TOP'. (LINK-5)
+Writing ddc file '/home/AS501_G3/1_AS501_final_bare_results/syn/out/CPU_TOP.mapped.ddc'.
+1
+set_app_var verilogout_no_tri true
+true
+change_names -rules verilog -hierarchy
+Warning: Design 'CPU_TOP' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[31]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[30]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[29]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[28]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[27]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[26]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[25]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[24]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[23]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[22]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[21]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[20]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[19]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[18]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[17]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[16]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[15]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[14]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[13]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[12]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[11]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[10]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[9]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[8]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[7]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[6]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[5]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[4]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[3]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[2]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[1]' is connecting multiple ports. (UCN-1)
+Warning: In the design INSTR_CACHE_DWidth32, net 'addr_i[0]' is connecting multiple ports. (UCN-1)
+1
+write_file -format verilog -hierarchy -output $OUT_DIR/$TOP_NAME.mapped.v
+Warning: Design 'CPU_TOP' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Writing verilog file '/home/AS501_G3/1_AS501_final_bare_results/syn/out/CPU_TOP.mapped.v'.
+Warning: Verilog 'assign' or 'tran' statements are written out. (VO-4)
+1
+write_sdf $OUT_DIR/$TOP_NAME.mapped.sdf
+Warning: Design 'CPU_TOP' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Information: Annotated 'cell' delays are assumed to include load delay. (UID-282)
+Information: Writing timing information to file '/home/AS501_G3/1_AS501_final_bare_results/syn/out/CPU_TOP.mapped.sdf'. (WT-3)
+Information: Updating design information... (UID-85)
+Warning: Design 'CPU_TOP' contains 1 high-fanout nets. A fanout number of 1000 will be used for delay calculations involving these nets. (TIM-134)
+Warning: Design contains black-box components.  These cells will have no timing information. (WT-7)
+1
+write_sdc $OUT_DIR/$TOP_NAME.mapped.sdc
+Warning: Design 'CPU_TOP' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+1
+# Write and close SVF file and make it available for immediate use
+set_svf -off
+1
+# Generate Final Reports
+redirect -tee -file $RPT_DIR/4_report_timing.rpt {report_timing -transition_time -nets -attributes -nosplit}
+Warning: Design 'CPU_TOP' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -nets
+        -max_paths 1
+        -transition_time
+Design : CPU_TOP
+Version: V-2023.12-SP5-1
+Date   : Sun May 10 17:22:41 2026
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: tt1v25c   Library: tcbn28hpcplusbwp30p140tt1v25c
+Wire Load Model Mode: segmented
+
+  Startpoint: ICACHE/ICACHE_SRAM/SRAM
+              (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: icache_read_o
+            (output port clocked by clk_i)
+  Path Group: clk_i
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  D_FF_64_0_0        ZeroWireload          tcbn28hpcplusbwp30p140tt1v25c
+  D_FF_32_0_2        ZeroWireload          tcbn28hpcplusbwp30p140tt1v25c
+  D_FF_32_0_1        ZeroWireload          tcbn28hpcplusbwp30p140tt1v25c
+  D_FF_64_0_1        ZeroWireload          tcbn28hpcplusbwp30p140tt1v25c
+  D_FF_32_0_0        ZeroWireload          tcbn28hpcplusbwp30p140tt1v25c
+  COUNTER_64_0_0     ZeroWireload          tcbn28hpcplusbwp30p140tt1v25c
+  D_FF_2_0           ZeroWireload          tcbn28hpcplusbwp30p140tt1v25c
+  CSR_DWidth32_AWidth12 ZeroWireload       tcbn28hpcplusbwp30p140tt1v25c
+  REGFILE_DWidth32_NumofReg32 ZeroWireload tcbn28hpcplusbwp30p140tt1v25c
+  DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12 ZeroWireload tcbn28hpcplusbwp30p140tt1v25c
+  COUNTER_64_0_1     ZeroWireload          tcbn28hpcplusbwp30p140tt1v25c
+  ICACHE_SRAM_Depth512_DWidth54 ZeroWireload tcbn28hpcplusbwp30p140tt1v25c
+  D_FF_2_3           ZeroWireload          tcbn28hpcplusbwp30p140tt1v25c
+  COUNTER_30_0_511   ZeroWireload          tcbn28hpcplusbwp30p140tt1v25c
+  D_FF_32_0_3        ZeroWireload          tcbn28hpcplusbwp30p140tt1v25c
+  SCALAR_CORE_DWidth32 ZeroWireload        tcbn28hpcplusbwp30p140tt1v25c
+  CPU_TOP            ZeroWireload          tcbn28hpcplusbwp30p140tt1v25c
+  INSTR_CACHE_DWidth32 ZeroWireload        tcbn28hpcplusbwp30p140tt1v25c
+  MUX4TO1_DWidth32_1 ZeroWireload          tcbn28hpcplusbwp30p140tt1v25c
+  MUX4TO1_DWidth32_0 ZeroWireload          tcbn28hpcplusbwp30p140tt1v25c
+  MUX4TO1_DWidth32_2 ZeroWireload          tcbn28hpcplusbwp30p140tt1v25c
+  ALU_DWidth32_OpWidth5 ZeroWireload       tcbn28hpcplusbwp30p140tt1v25c
+  MUX2TO1_DWidth32_1 ZeroWireload          tcbn28hpcplusbwp30p140tt1v25c
+
+Attributes:
+    d - dont_touch
+    u - dont_use
+   mo - map_only
+   so - size_only
+    i - ideal_net or ideal_network
+  inf - infeasible path
+
+  Point                                                                     Fanout     Trans      Incr       Path      Attributes
+  ---------------------------------------------------------------------------------------------------------------------------------------
+  clock clk_i (rise edge)                                                                         0.00       0.00
+  clock network delay (ideal)                                                                     0.00       0.00
+  ICACHE/ICACHE_SRAM/SRAM/CLK (TS5N28HPCPHVTA512X54M4F)                                 0.16      0.00 #     0.00 r    d u mo 
+  ICACHE/ICACHE_SRAM/SRAM/Q[44] (TS5N28HPCPHVTA512X54M4F)                               0.01      0.29       0.29 r    d u mo 
+  ICACHE/ICACHE_SRAM/data_o[44] (net)                                         2                   0.00       0.29 r
+  ICACHE/ICACHE_SRAM/data_o[44] (ICACHE_SRAM_Depth512_DWidth54)                                   0.00       0.29 r
+  ICACHE/cache_line[44] (net)                                                                     0.00       0.29 r
+  ICACHE/U101/ZN (OAI22D1BWP30P140)                                                     0.02      0.01       0.31 f
+  ICACHE/n33 (net)                                                            1                   0.00       0.31 f
+  ICACHE/U102/ZN (AOI221D1BWP30P140)                                                    0.02      0.02       0.33 r
+  ICACHE/n36 (net)                                                            1                   0.00       0.33 r
+  ICACHE/U103/ZN (OAI211D1BWP30P140)                                                    0.03      0.02       0.35 f
+  ICACHE/n37 (net)                                                            1                   0.00       0.35 f
+  ICACHE/U104/ZN (AOI21D1BWP30P140)                                                     0.02      0.02       0.37 r
+  ICACHE/n39 (net)                                                            1                   0.00       0.37 r
+  ICACHE/U105/Z (AN4D0BWP30P140)                                                        0.01      0.03       0.40 r
+  ICACHE/n43 (net)                                                            1                   0.00       0.40 r
+  ICACHE/U106/ZN (ND4D0BWP30P140)                                                       0.04      0.03       0.42 f
+  ICACHE/n47 (net)                                                            2                   0.00       0.42 f
+  ICACHE/U107/ZN (INVD1BWP30P140)                                                       0.01      0.01       0.44 r
+  ICACHE/n50 (net)                                                            3                   0.00       0.44 r
+  ICACHE/U117/ZN (AOI21D1BWP30P140)                                                     0.12      0.07       0.51 f
+  ICACHE/n83 (net)                                                           32                   0.00       0.51 f
+  ICACHE/U172/ZN (AOI222D1BWP30P140)                                                    0.04      0.04       0.55 r
+  ICACHE/n79 (net)                                                            1                   0.00       0.55 r
+  ICACHE/U173/ZN (INVD1BWP30P140)                                                       0.02      0.01       0.56 f
+  ICACHE/instr_o[3] (net)                                                     5                   0.00       0.56 f
+  ICACHE/instr_o[3] (INSTR_CACHE_DWidth32)                                                        0.00       0.56 f
+  icache_rdata[3] (net)                                                                           0.00       0.56 f
+  SCORE/imem_rdata_i[3] (SCALAR_CORE_DWidth32)                                                    0.00       0.56 f
+  SCORE/imem_rdata_i[3] (net)                                                                     0.00       0.56 f
+  SCORE/DECODER/imem_rdata_i[3] (DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12)                   0.00       0.56 f
+  SCORE/DECODER/imem_rdata_i[3] (net)                                                             0.00       0.56 f
+  SCORE/DECODER/U21/ZN (INVD1BWP30P140)                                                 0.01      0.01       0.58 r
+  SCORE/DECODER/n88 (net)                                                     4                   0.00       0.58 r
+  SCORE/DECODER/U22/ZN (ND2D1BWP30P140)                                                 0.02      0.01       0.59 f
+  SCORE/DECODER/n23 (net)                                                     3                   0.00       0.59 f
+  SCORE/DECODER/U23/ZN (NR2D1BWP30P140)                                                 0.01      0.01       0.60 r
+  SCORE/DECODER/n38 (net)                                                     2                   0.00       0.60 r
+  SCORE/DECODER/U24/ZN (INVD1BWP30P140)                                                 0.01      0.01       0.61 f
+  SCORE/DECODER/n71 (net)                                                     6                   0.00       0.61 f
+  SCORE/DECODER/U26/ZN (NR2D1BWP30P140)                                                 0.01      0.01       0.63 r
+  SCORE/DECODER/n10 (net)                                                     3                   0.00       0.63 r
+  SCORE/DECODER/U27/ZN (ND2D1BWP30P140)                                                 0.05      0.03       0.66 f
+  SCORE/DECODER/n50 (net)                                                    15                   0.00       0.66 f
+  SCORE/DECODER/U151/ZN (NR2D1BWP30P140)                                                0.01      0.02       0.68 r
+  SCORE/DECODER/csr_read_addr_o[6] (net)                                      1                   0.00       0.68 r
+  SCORE/DECODER/csr_read_addr_o[6] (DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12)                0.00       0.68 r
+  SCORE/dec_cread_addr[6] (net)                                                                   0.00       0.68 r
+  SCORE/CSR/read_addr_i[6] (CSR_DWidth32_AWidth12)                                                0.00       0.68 r
+  SCORE/CSR/read_addr_i[6] (net)                                                                  0.00       0.68 r
+  SCORE/CSR/U3/Z (OR4D1BWP30P140)                                                       0.01      0.02       0.69 r
+  SCORE/CSR/n3 (net)                                                          1                   0.00       0.69 r
+  SCORE/CSR/U5/ZN (NR4D0BWP30P140)                                                      0.02      0.01       0.71 f
+  SCORE/CSR/n4 (net)                                                          3                   0.00       0.71 f
+  SCORE/CSR/U8/ZN (INVD1BWP30P140)                                                      0.07      0.05       0.75 r
+  SCORE/CSR/n99 (net)                                                        34                   0.00       0.75 r
+  SCORE/CSR/U13/ZN (NR3D0BWP30P140)                                                     0.13      0.09       0.84 f
+  SCORE/CSR/n101 (net)                                                       32                   0.00       0.84 f
+  SCORE/CSR/U18/ZN (AOI22D1BWP30P140)                                                   0.03      0.03       0.87 r
+  SCORE/CSR/n9 (net)                                                          1                   0.00       0.87 r
+  SCORE/CSR/U19/ZN (OAI211D1BWP30P140)                                                  0.04      0.03       0.90 f
+  SCORE/CSR/read_data_o[1] (net)                                              4                   0.00       0.90 f
+  SCORE/CSR/read_data_o[1] (CSR_DWidth32_AWidth12)                                                0.00       0.90 f
+  SCORE/csr_read_data[1] (net)                                                                    0.00       0.90 f
+  SCORE/MUX_ALU_B/data2_i[1] (MUX4TO1_DWidth32_1)                                                 0.00       0.90 f
+  SCORE/MUX_ALU_B/data2_i[1] (net)                                                                0.00       0.90 f
+  SCORE/MUX_ALU_B/U12/ZN (AOI22D1BWP30P140)                                             0.02      0.02       0.92 r
+  SCORE/MUX_ALU_B/n7 (net)                                                    1                   0.00       0.92 r
+  SCORE/MUX_ALU_B/U14/ZN (OAI211D1BWP30P140)                                            0.36      0.20       1.12 f
+  SCORE/MUX_ALU_B/data_o[1] (net)                                            70                   0.00       1.12 f
+  SCORE/MUX_ALU_B/data_o[1] (MUX4TO1_DWidth32_1)                                                  0.00       1.12 f
+  SCORE/alu_b[1] (net)                                                                            0.00       1.12 f
+  SCORE/ALU/b_i[1] (ALU_DWidth32_OpWidth5)                                                        0.00       1.12 f
+  SCORE/ALU/b_i[1] (net)                                                                          0.00       1.12 f
+  SCORE/ALU/U380/ZN (INVD1BWP30P140)                                                    0.22      0.19       1.32 r
+  SCORE/ALU/n1907 (net)                                                      78                   0.00       1.32 r
+  SCORE/ALU/U381/ZN (AOI21D1BWP30P140)                                                  0.05      0.02       1.34 f
+  SCORE/ALU/n34 (net)                                                         1                   0.00       1.34 f
+  SCORE/ALU/U464/CO (FA1D0BWP30P140)                                                    0.03      0.04       1.37 f
+  SCORE/ALU/n38 (net)                                                         1                   0.00       1.37 f
+  SCORE/ALU/U469/S (FA1D0BWP30P140)                                                     0.05      0.06       1.43 f
+  SCORE/ALU/n1123 (net)                                                      11                   0.00       1.43 f
+  SCORE/ALU/U470/ZN (AOI222D1BWP30P140)                                                 0.07      0.04       1.47 r
+  SCORE/ALU/n41 (net)                                                         2                   0.00       1.47 r
+  SCORE/ALU/U471/ZN (OAI211D1BWP30P140)                                                 0.05      0.02       1.49 f
+  SCORE/ALU/n40 (net)                                                         1                   0.00       1.49 f
+  SCORE/ALU/U472/ZN (OAI21D1BWP30P140)                                                  0.03      0.02       1.51 r
+  SCORE/ALU/intadd_7_B_0_ (net)                                               1                   0.00       1.51 r
+  SCORE/ALU/intadd_7_U18/CO (FA1D0BWP30P140)                                            0.02      0.04       1.54 r    mo 
+  SCORE/ALU/intadd_7_n17 (net)                                                1                   0.00       1.54 r
+  SCORE/ALU/intadd_7_U17/CO (FA1D0BWP30P140)                                            0.02      0.03       1.58 r    mo 
+  SCORE/ALU/intadd_7_n16 (net)                                                1                   0.00       1.58 r
+  SCORE/ALU/intadd_7_U16/CO (FA1D0BWP30P140)                                            0.02      0.03       1.61 r    mo 
+  SCORE/ALU/intadd_7_n15 (net)                                                1                   0.00       1.61 r
+  SCORE/ALU/intadd_7_U15/CO (FA1D0BWP30P140)                                            0.02      0.03       1.64 r    mo 
+  SCORE/ALU/intadd_7_n14 (net)                                                1                   0.00       1.64 r
+  SCORE/ALU/intadd_7_U14/CO (FA1D0BWP30P140)                                            0.02      0.03       1.67 r    mo 
+  SCORE/ALU/intadd_7_n13 (net)                                                1                   0.00       1.67 r
+  SCORE/ALU/intadd_7_U13/CO (FA1D0BWP30P140)                                            0.02      0.03       1.71 r    mo 
+  SCORE/ALU/intadd_7_n12 (net)                                                1                   0.00       1.71 r
+  SCORE/ALU/intadd_7_U12/CO (FA1D0BWP30P140)                                            0.02      0.03       1.74 r    mo 
+  SCORE/ALU/intadd_7_n11 (net)                                                1                   0.00       1.74 r
+  SCORE/ALU/intadd_7_U11/CO (FA1D0BWP30P140)                                            0.02      0.03       1.77 r    mo 
+  SCORE/ALU/intadd_7_n10 (net)                                                1                   0.00       1.77 r
+  SCORE/ALU/intadd_7_U10/CO (FA1D0BWP30P140)                                            0.02      0.03       1.80 r    mo 
+  SCORE/ALU/intadd_7_n9 (net)                                                 1                   0.00       1.80 r
+  SCORE/ALU/intadd_7_U9/CO (FA1D0BWP30P140)                                             0.02      0.03       1.83 r    mo 
+  SCORE/ALU/intadd_7_n8 (net)                                                 1                   0.00       1.83 r
+  SCORE/ALU/intadd_7_U8/CO (FA1D0BWP30P140)                                             0.02      0.03       1.87 r    mo 
+  SCORE/ALU/intadd_7_n7 (net)                                                 1                   0.00       1.87 r
+  SCORE/ALU/intadd_7_U7/CO (FA1D0BWP30P140)                                             0.02      0.03       1.90 r    mo 
+  SCORE/ALU/intadd_7_n6 (net)                                                 1                   0.00       1.90 r
+  SCORE/ALU/intadd_7_U6/CO (FA1D0BWP30P140)                                             0.02      0.03       1.93 r    mo 
+  SCORE/ALU/intadd_7_n5 (net)                                                 1                   0.00       1.93 r
+  SCORE/ALU/intadd_7_U5/CO (FA1D0BWP30P140)                                             0.02      0.03       1.96 r    mo 
+  SCORE/ALU/intadd_7_n4 (net)                                                 1                   0.00       1.96 r
+  SCORE/ALU/intadd_7_U4/CO (FA1D0BWP30P140)                                             0.02      0.03       1.99 r    mo 
+  SCORE/ALU/intadd_7_n3 (net)                                                 1                   0.00       1.99 r
+  SCORE/ALU/intadd_7_U3/CO (FA1D0BWP30P140)                                             0.02      0.03       2.03 r    mo 
+  SCORE/ALU/intadd_7_n2 (net)                                                 1                   0.00       2.03 r
+  SCORE/ALU/intadd_7_U2/CO (FA1D0BWP30P140)                                             0.02      0.03       2.06 r    mo 
+  SCORE/ALU/intadd_7_n1 (net)                                                 3                   0.00       2.06 r
+  SCORE/ALU/U444/ZN (IAO21D1BWP30P140)                                                  0.02      0.02       2.08 r
+  SCORE/ALU/intadd_10_B_0_ (net)                                              1                   0.00       2.08 r
+  SCORE/ALU/intadd_10_U13/CO (FA1D0BWP30P140)                                           0.02      0.03       2.12 r    mo 
+  SCORE/ALU/intadd_10_n12 (net)                                               1                   0.00       2.12 r
+  SCORE/ALU/intadd_10_U12/CO (FA1D0BWP30P140)                                           0.02      0.03       2.15 r    mo 
+  SCORE/ALU/intadd_10_n11 (net)                                               1                   0.00       2.15 r
+  SCORE/ALU/intadd_10_U11/CO (FA1D0BWP30P140)                                           0.02      0.03       2.18 r    mo 
+  SCORE/ALU/intadd_10_n10 (net)                                               1                   0.00       2.18 r
+  SCORE/ALU/intadd_10_U10/CO (FA1D0BWP30P140)                                           0.02      0.03       2.21 r    mo 
+  SCORE/ALU/intadd_10_n9 (net)                                                1                   0.00       2.21 r
+  SCORE/ALU/intadd_10_U9/CO (FA1D0BWP30P140)                                            0.02      0.03       2.24 r    mo 
+  SCORE/ALU/intadd_10_n8 (net)                                                1                   0.00       2.24 r
+  SCORE/ALU/intadd_10_U8/CO (FA1D0BWP30P140)                                            0.02      0.03       2.28 r    mo 
+  SCORE/ALU/intadd_10_n7 (net)                                                1                   0.00       2.28 r
+  SCORE/ALU/intadd_10_U7/CO (FA1D0BWP30P140)                                            0.02      0.03       2.31 r    mo 
+  SCORE/ALU/intadd_10_n6 (net)                                                1                   0.00       2.31 r
+  SCORE/ALU/intadd_10_U6/CO (FA1D0BWP30P140)                                            0.02      0.03       2.34 r    mo 
+  SCORE/ALU/intadd_10_n5 (net)                                                1                   0.00       2.34 r
+  SCORE/ALU/intadd_10_U5/CO (FA1D0BWP30P140)                                            0.02      0.03       2.37 r    mo 
+  SCORE/ALU/intadd_10_n4 (net)                                                1                   0.00       2.37 r
+  SCORE/ALU/intadd_10_U4/CO (FA1D0BWP30P140)                                            0.02      0.03       2.40 r    mo 
+  SCORE/ALU/intadd_10_n3 (net)                                                1                   0.00       2.40 r
+  SCORE/ALU/intadd_10_U3/CO (FA1D0BWP30P140)                                            0.02      0.03       2.44 r    mo 
+  SCORE/ALU/intadd_10_n2 (net)                                                1                   0.00       2.44 r
+  SCORE/ALU/intadd_10_U2/CO (FA1D0BWP30P140)                                            0.02      0.03       2.47 r    mo 
+  SCORE/ALU/intadd_10_n1 (net)                                                2                   0.00       2.47 r
+  SCORE/ALU/U2084/ZN (INVD1BWP30P140)                                                   0.01      0.01       2.47 f
+  SCORE/ALU/n1964 (net)                                                       2                   0.00       2.47 f
+  SCORE/ALU/U2085/ZN (NR2D1BWP30P140)                                                   0.01      0.01       2.48 r
+  SCORE/ALU/n1678 (net)                                                       2                   0.00       2.48 r
+  SCORE/ALU/U2089/ZN (OAI21D1BWP30P140)                                                 0.02      0.01       2.49 f
+  SCORE/ALU/n1677 (net)                                                       2                   0.00       2.49 f
+  SCORE/ALU/U2090/ZN (OAI21D1BWP30P140)                                                 0.02      0.01       2.51 r
+  SCORE/ALU/n1812 (net)                                                       3                   0.00       2.51 r
+  SCORE/ALU/U2092/ZN (OAI21D1BWP30P140)                                                 0.02      0.02       2.52 f
+  SCORE/ALU/n1663 (net)                                                       1                   0.00       2.52 f
+  SCORE/ALU/U2386/CO (FA1D0BWP30P140)                                                   0.02      0.04       2.56 f
+  SCORE/ALU/n2035 (net)                                                       3                   0.00       2.56 f
+  SCORE/ALU/U2102/ZN (MAOI222D1BWP30P140)                                               0.03      0.02       2.58 r
+  SCORE/ALU/n2012 (net)                                                       3                   0.00       2.58 r
+  SCORE/ALU/U2104/ZN (OAI21D1BWP30P140)                                                 0.02      0.02       2.60 f
+  SCORE/ALU/n2081 (net)                                                       1                   0.00       2.60 f
+  SCORE/ALU/U2676/CO (FA1D0BWP30P140)                                                   0.01      0.03       2.63 f
+  SCORE/ALU/n1911 (net)                                                       2                   0.00       2.63 f
+  SCORE/ALU/U2106/ZN (NR2D1BWP30P140)                                                   0.01      0.01       2.64 r
+  SCORE/ALU/n1909 (net)                                                       2                   0.00       2.64 r
+  SCORE/ALU/U2107/ZN (NR2D1BWP30P140)                                                   0.01      0.01       2.64 f
+  SCORE/ALU/n1886 (net)                                                       3                   0.00       2.64 f
+  SCORE/ALU/U2108/ZN (AOI21D1BWP30P140)                                                 0.01      0.01       2.66 r
+  SCORE/ALU/n2057 (net)                                                       2                   0.00       2.66 r
+  SCORE/ALU/U2109/ZN (ND2D1BWP30P140)                                                   0.01      0.01       2.67 f
+  SCORE/ALU/n2055 (net)                                                       3                   0.00       2.67 f
+  SCORE/ALU/U2110/ZN (NR2D1BWP30P140)                                                   0.01      0.01       2.68 r
+  SCORE/ALU/n1518 (net)                                                       1                   0.00       2.68 r
+  SCORE/ALU/U2114/ZN (NR2D1BWP30P140)                                                   0.01      0.01       2.69 f
+  SCORE/ALU/n1879 (net)                                                       2                   0.00       2.69 f
+  SCORE/ALU/U2115/ZN (OAI21D1BWP30P140)                                                 0.02      0.01       2.70 r
+  SCORE/ALU/n1985 (net)                                                       3                   0.00       2.70 r
+  SCORE/ALU/U2117/ZN (OAI21D1BWP30P140)                                                 0.02      0.01       2.71 f
+  SCORE/ALU/n1625 (net)                                                       2                   0.00       2.71 f
+  SCORE/ALU/U2119/ZN (NR2D1BWP30P140)                                                   0.01      0.01       2.72 r
+  SCORE/ALU/n1623 (net)                                                       2                   0.00       2.72 r
+  SCORE/ALU/U2120/ZN (NR2D1BWP30P140)                                                   0.01      0.01       2.73 f
+  SCORE/ALU/n1611 (net)                                                       2                   0.00       2.73 f
+  SCORE/ALU/U2122/ZN (NR2D1BWP30P140)                                                   0.01      0.01       2.74 r
+  SCORE/ALU/n1609 (net)                                                       2                   0.00       2.74 r
+  SCORE/ALU/U2123/ZN (NR2D1BWP30P140)                                                   0.01      0.01       2.75 f
+  SCORE/ALU/n2131 (net)                                                       2                   0.00       2.75 f
+  SCORE/ALU/U2132/ZN (NR2D1BWP30P140)                                                   0.01      0.01       2.76 r
+  SCORE/ALU/n2129 (net)                                                       3                   0.00       2.76 r
+  SCORE/ALU/U2136/ZN (ND2D1BWP30P140)                                                   0.01      0.01       2.77 f
+  SCORE/ALU/n1597 (net)                                                       2                   0.00       2.77 f
+  SCORE/ALU/U2137/ZN (NR2D1BWP30P140)                                                   0.02      0.01       2.78 r
+  SCORE/ALU/n1855 (net)                                                       3                   0.00       2.78 r
+  SCORE/ALU/U2140/ZN (ND2D1BWP30P140)                                                   0.01      0.01       2.79 f
+  SCORE/ALU/n1833 (net)                                                       2                   0.00       2.79 f
+  SCORE/ALU/U2141/ZN (NR2D1BWP30P140)                                                   0.01      0.01       2.80 r
+  SCORE/ALU/n1547 (net)                                                       1                   0.00       2.80 r
+  SCORE/ALU/U2150/ZN (NR2D1BWP30P140)                                                   0.01      0.01       2.81 f
+  SCORE/ALU/n1837 (net)                                                       2                   0.00       2.81 f
+  SCORE/ALU/U2151/ZN (OAI21D1BWP30P140)                                                 0.01      0.01       2.81 r
+  SCORE/ALU/n2200 (net)                                                       2                   0.00       2.81 r
+  SCORE/ALU/U2152/ZN (ND2D1BWP30P140)                                                   0.01      0.01       2.82 f
+  SCORE/ALU/n2199 (net)                                                       2                   0.00       2.82 f
+  SCORE/ALU/U2153/ZN (OAI31D0BWP30P140)                                                 0.03      0.02       2.84 r
+  SCORE/ALU/n2181 (net)                                                       3                   0.00       2.84 r
+  SCORE/ALU/U2154/ZN (ND2D1BWP30P140)                                                   0.01      0.01       2.85 f
+  SCORE/ALU/n2160 (net)                                                       2                   0.00       2.85 f
+  SCORE/ALU/U2155/ZN (AOI21D1BWP30P140)                                                 0.02      0.02       2.87 r
+  SCORE/ALU/n2267 (net)                                                       3                   0.00       2.87 r
+  SCORE/ALU/U2157/ZN (ND2D1BWP30P140)                                                   0.01      0.01       2.88 f
+  SCORE/ALU/n2251 (net)                                                       2                   0.00       2.88 f
+  SCORE/ALU/U2158/ZN (AOI21D1BWP30P140)                                                 0.02      0.01       2.89 r
+  SCORE/ALU/n2223 (net)                                                       2                   0.00       2.89 r
+  SCORE/ALU/U2159/ZN (ND2D1BWP30P140)                                                   0.01      0.01       2.90 f
+  SCORE/ALU/n1556 (net)                                                       1                   0.00       2.90 f
+  SCORE/ALU/U2169/ZN (ND2D1BWP30P140)                                                   0.01      0.01       2.91 r
+  SCORE/ALU/n2225 (net)                                                       2                   0.00       2.91 r
+  SCORE/ALU/U2170/ZN (NR2D1BWP30P140)                                                   0.01      0.01       2.92 f
+  SCORE/ALU/n2436 (net)                                                       2                   0.00       2.92 f
+  SCORE/ALU/U2171/ZN (NR2D1BWP30P140)                                                   0.01      0.01       2.93 r
+  SCORE/ALU/n2434 (net)                                                       2                   0.00       2.93 r
+  SCORE/ALU/U2172/ZN (NR2D1BWP30P140)                                                   0.01      0.01       2.94 f
+  SCORE/ALU/n2403 (net)                                                       3                   0.00       2.94 f
+  SCORE/ALU/U2173/ZN (OAI21D1BWP30P140)                                                 0.02      0.01       2.95 r
+  SCORE/ALU/n1775 (net)                                                       3                   0.00       2.95 r
+  SCORE/ALU/U2174/ZN (NR2D1BWP30P140)                                                   0.01      0.01       2.96 f
+  SCORE/ALU/n1561 (net)                                                       1                   0.00       2.96 f
+  SCORE/ALU/U2175/ZN (NR2D1BWP30P140)                                                   0.01      0.01       2.97 r
+  SCORE/ALU/n1749 (net)                                                       3                   0.00       2.97 r
+  SCORE/ALU/U2176/ZN (AOI22D1BWP30P140)                                                 0.02      0.01       2.98 f
+  SCORE/ALU/n1566 (net)                                                       2                   0.00       2.98 f
+  SCORE/ALU/U2177/ZN (OAI21D1BWP30P140)                                                 0.02      0.01       2.99 r
+  SCORE/ALU/n1565 (net)                                                       1                   0.00       2.99 r
+  SCORE/ALU/U2178/ZN (OAI31D0BWP30P140)                                                 0.02      0.02       3.01 f
+  SCORE/ALU/n1568 (net)                                                       1                   0.00       3.01 f
+  SCORE/ALU/U2/ZN (XNR2UD0BWP30P140)                                                    0.02      0.02       3.03 f
+  SCORE/ALU/n1571 (net)                                                       1                   0.00       3.03 f
+  SCORE/ALU/U2199/ZN (AOI22D1BWP30P140)                                                 0.02      0.01       3.05 r
+  SCORE/ALU/n1591 (net)                                                       1                   0.00       3.05 r
+  SCORE/ALU/U2241/ZN (ND3D1BWP30P140)                                                   0.02      0.02       3.06 f
+  SCORE/ALU/res_o[31] (net)                                                   4                   0.00       3.06 f
+  SCORE/ALU/U2874/ZN (NR4D0BWP30P140)                                                   0.02      0.02       3.08 r
+  SCORE/ALU/zero_o (net)                                                      1                   0.00       3.08 r
+  SCORE/ALU/zero_o (ALU_DWidth32_OpWidth5)                                                        0.00       3.08 r
+  SCORE/alu_zero (net)                                                                            0.00       3.08 r
+  SCORE/DECODER/flag_zero_i (DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12)                       0.00       3.08 r
+  SCORE/DECODER/flag_zero_i (net)                                                                 0.00       3.08 r
+  SCORE/DECODER/U48/ZN (MUX2ND0BWP30P140)                                               0.02      0.01       3.10 f
+  SCORE/DECODER/n7 (net)                                                      2                   0.00       3.10 f
+  SCORE/DECODER/U49/ZN (OAI21D1BWP30P140)                                               0.01      0.01       3.11 r
+  SCORE/DECODER/n6 (net)                                                      1                   0.00       3.11 r
+  SCORE/DECODER/U52/ZN (OAI211D1BWP30P140)                                              0.02      0.02       3.12 f
+  SCORE/DECODER/n8 (net)                                                      1                   0.00       3.12 f
+  SCORE/DECODER/U53/ZN (AOI21D1BWP30P140)                                               0.02      0.01       3.14 r
+  SCORE/DECODER/n76 (net)                                                     2                   0.00       3.14 r
+  SCORE/DECODER/U175/ZN (OAI21D1BWP30P140)                                              0.01      0.01       3.15 f
+  SCORE/DECODER/n78 (net)                                                     1                   0.00       3.15 f
+  SCORE/DECODER/U176/Z (AO22D0BWP30P140)                                                0.01      0.03       3.18 f
+  SCORE/DECODER/imem_read_o (net)                                             3                   0.00       3.18 f
+  SCORE/DECODER/imem_read_o (DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12)                       0.00       3.18 f
+  SCORE/imem_req_o (net)                                                                          0.00       3.18 f
+  SCORE/imem_req_o (SCALAR_CORE_DWidth32)                                                         0.00       3.18 f
+  icache_read_o (net)                                                                             0.00       3.18 f
+  icache_read_o (out)                                                                   0.01      0.00       3.18 f
+  data arrival time                                                                                          3.18
+
+  clock clk_i (rise edge)                                                                        10.00      10.00
+  clock network delay (ideal)                                                                     0.00      10.00
+  clock uncertainty                                                                              -0.70       9.30
+  output external delay                                                                          -1.00       8.30
+  data required time                                                                                         8.30
+  ---------------------------------------------------------------------------------------------------------------------------------------
+  data required time                                                                                         8.30
+  data arrival time                                                                                         -3.18
+  ---------------------------------------------------------------------------------------------------------------------------------------
+  slack (MET)                                                                                                5.12
+
+
+1
+redirect -tee -file $RPT_DIR/5_report_area.rpt {report_area -physical -hierarchy -nosplit}
+Warning: Design 'CPU_TOP' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+ 
+****************************************
+Report : area
+Design : CPU_TOP
+Version: V-2023.12-SP5-1
+Date   : Sun May 10 17:22:41 2026
+****************************************
+
+Library(s) Used:
+
+    tcbn28hpcplusbwp30p140tt1v25c (File: /technology/TSMC_28nm_HPC_RF/STD/tcbn28hpcplusbwp30p140_190a/TSMCHOME/digital/Front_End/timing_power_noise/NLDM/tcbn28hpcplusbwp30p140_180a/tcbn28hpcplusbwp30p140tt1v25c.db)
+    ts5n28hpcphvta512x54m4f_tt1v25c (File: /technology/TSMC_28nm_HPC_RF/SRAM/tsn28hpcpd127spsram_20120200_180a/TSMCHOME/sram/Output/ts5n28hpcphvta512x54m4f_tt1v25c/ts5n28hpcphvta512x54m4f_tt1v25c.db)
+
+Number of ports:                         3035
+Number of nets:                         12106
+Number of cells:                         8938
+Number of combinational cells:           7500
+Number of sequential cells:              1412
+Number of macros/black boxes:               1
+Number of buf/inv:                        531
+Number of references:                       3
+
+Combinational area:               4965.659954
+Buf/Inv area:                      133.812002
+Noncombinational area:            2726.891964
+Macro/Black Box area:            11170.114258
+Net Interconnect area:      undefined  (Wire load has zero net area)
+
+Total cell area:                 18862.666176
+Total area:                 undefined
+
+Information: This design contains black box (unknown) components. (RPT-8)
+
+The above information was reported from the logical library. The following are from the physical library:
+
+Hierarchical area distribution
+------------------------------
+
+                                  Global cell area             Local cell area
+                                  -------------------  -------------------------------- 
+Hierarchical cell                 Absolute    Percent  Combi-     Noncombi-  Black-
+                                  Total       Total    national   national   boxes       Design
+--------------------------------  ----------  -------  ---------  ---------  ----------  ---------------------------------------------
+CPU_TOP                           18862.6662    100.0     0.0000     0.0000      0.0000  CPU_TOP
+ICACHE                            11483.7283     60.9   110.5020     0.0000      0.0000  INSTR_CACHE_DWidth32
+ICACHE/COUNTER_ICACHE               112.6440      0.6    42.3360    70.3080      0.0000  COUNTER_30_0_511
+ICACHE/FF_CACHE_STATE                 4.7880      0.0     1.0080     3.7800      0.0000  D_FF_2_3
+ICACHE/FF_INSTR                      85.6800      0.5    25.2000    60.4800      0.0000  D_FF_32_0_3
+ICACHE/ICACHE_SRAM                11170.1143     59.2     0.0000     0.0000  11170.1143  ICACHE_SRAM_Depth512_DWidth54
+SCORE                              7378.9379     39.1   106.8480     0.0000      0.0000  SCALAR_CORE_DWidth32
+SCORE/ALU                          2303.2800     12.2  2303.2800     0.0000      0.0000  ALU_DWidth32_OpWidth5
+SCORE/COUNTER_CYCLE                 212.8140      1.1    67.6620   145.1520      0.0000  COUNTER_64_0_1
+SCORE/CSR                           456.3720      2.4    73.3320     0.0000      0.0000  CSR_DWidth32_AWidth12
+SCORE/CSR/FF_MCYCLE                 153.2160      0.8    32.2560   120.9600      0.0000  D_FF_64_0_1
+SCORE/CSR/FF_MINSTRET               153.2160      0.8    32.2560   120.9600      0.0000  D_FF_64_0_0
+SCORE/CSR/FF_RDATA                   76.6080      0.4    16.1280    60.4800      0.0000  D_FF_32_0_0
+SCORE/DECODER                       323.8200      1.7    83.2860     0.0000      0.0000  DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12
+SCORE/DECODER/COUNTER_INSTRET       235.7460      1.2    90.5940   145.1520      0.0000  COUNTER_64_0_0
+SCORE/DECODER/FF_DEC_STATE            4.7880      0.0     1.0080     3.7800      0.0000  D_FF_2_0
+SCORE/FF_IADDR                       85.6800      0.5    25.2000    60.4800      0.0000  D_FF_32_0_1
+SCORE/FF_PC                          85.6800      0.5    25.2000    60.4800      0.0000  D_FF_32_0_2
+SCORE/MUX_ALU_A                      54.1800      0.3    54.1800     0.0000      0.0000  MUX4TO1_DWidth32_2
+SCORE/MUX_ALU_B                      54.3060      0.3    54.3060     0.0000      0.0000  MUX4TO1_DWidth32_1
+SCORE/MUX_BR                         28.2240      0.1    28.2240     0.0000      0.0000  MUX2TO1_DWidth32_1
+SCORE/MUX_LD                         23.8140      0.1    23.8140     0.0000      0.0000  MUX5TO1_DWidth32
+SCORE/MUX_PC                         27.4680      0.1    27.4680     0.0000      0.0000  MUX2TO1_DWidth32_2
+SCORE/MUX_ST                         22.5540      0.1    22.5540     0.0000      0.0000  MUX3TO1_DWidth32
+SCORE/MUX_WB                         53.6760      0.3    53.6760     0.0000      0.0000  MUX4TO1_DWidth32_0
+SCORE/SRF                          3540.2220     18.8  1665.3420  1874.8800      0.0000  REGFILE_DWidth32_NumofReg32
+--------------------------------  ----------  -------  ---------  ---------  ----------  ---------------------------------------------
+Total                                                  4965.6600  2726.8920  11170.1143
+
+1
+redirect -tee -file $RPT_DIR/6_report_power.rpt {report_power -nosplit}
+Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
+Warning: Design has unannotated primary inputs. (PWR-414)
+Warning: Design has unannotated sequential cell outputs. (PWR-415)
+Warning: Design has unannotated black box outputs. (PWR-428)
+ 
+****************************************
+Report : power
+        -analysis_effort low
+Design : CPU_TOP
+Version: V-2023.12-SP5-1
+Date   : Sun May 10 17:22:41 2026
+****************************************
+
+
+Library(s) Used:
+
+    tcbn28hpcplusbwp30p140tt1v25c (File: /technology/TSMC_28nm_HPC_RF/STD/tcbn28hpcplusbwp30p140_190a/TSMCHOME/digital/Front_End/timing_power_noise/NLDM/tcbn28hpcplusbwp30p140_180a/tcbn28hpcplusbwp30p140tt1v25c.db)
+    ts5n28hpcphvta512x54m4f_tt1v25c (File: /technology/TSMC_28nm_HPC_RF/SRAM/tsn28hpcpd127spsram_20120200_180a/TSMCHOME/sram/Output/ts5n28hpcphvta512x54m4f_tt1v25c/ts5n28hpcphvta512x54m4f_tt1v25c.db)
+
+
+Operating Conditions: tt1v25c   Library: tcbn28hpcplusbwp30p140tt1v25c
+Wire Load Model Mode: segmented
+
+Design        Wire Load Model            Library
+------------------------------------------------
+CPU_TOP                ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+INSTR_CACHE_DWidth32   ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+SCALAR_CORE_DWidth32   ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+D_FF_32_0_3            ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+COUNTER_30_0_511       ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+D_FF_2_3               ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+ICACHE_SRAM_Depth512_DWidth54 ZeroWireload tcbn28hpcplusbwp30p140tt1v25c
+COUNTER_64_0_1         ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+MUX2TO1_DWidth32_2     ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12 ZeroWireload tcbn28hpcplusbwp30p140tt1v25c
+REGFILE_DWidth32_NumofReg32 ZeroWireload tcbn28hpcplusbwp30p140tt1v25c
+CSR_DWidth32_AWidth12  ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+MUX4TO1_DWidth32_2     ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+ALU_DWidth32_OpWidth5  ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+MUX2TO1_DWidth32_1     ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+MUX5TO1_DWidth32       ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+MUX3TO1_DWidth32       ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+MUX4TO1_DWidth32_0     ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+D_FF_2_0               ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+COUNTER_64_0_0         ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+D_FF_32_0_0            ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+D_FF_64_0_1            ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+D_FF_32_0_1            ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+D_FF_32_0_2            ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+MUX4TO1_DWidth32_1     ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+D_FF_64_0_0            ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+
+
+Global Operating Voltage = 1    
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000pf
+    Time Units = 1ns
+    Dynamic Power Units = 1mW    (derived from V,C,T units)
+    Leakage Power Units = 1nW
+
+
+Attributes
+----------
+i - Including register clock pin internal power
+
+
+  Cell Internal Power  =   1.1132 mW    (2%)
+  Net Switching Power  =  50.0085 mW   (98%)
+                         ---------
+Total Dynamic Power    =  51.1217 mW  (100%)
+
+Cell Leakage Power     =  53.5440 uW
+
+
+                 Internal         Switching           Leakage            Total
+Power Group      Power            Power               Power              Power   (   %    )  Attrs
+--------------------------------------------------------------------------------------------------
+io_pad             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+memory             0.4284        1.9503e-04        1.3372e+04            0.4419  (   0.86%)
+black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
+clock_network      0.6807           50.0077        2.2405e+04           50.7099  (  99.09%)  i
+register       3.2163e-03        4.0170e-04        1.6442e+04        2.0060e-02  (   0.04%)
+sequential         0.0000            0.0000            0.0000            0.0000  (   0.00%)
+combinational  9.8594e-04        4.5279e-04        1.3244e+03        2.7632e-03  (   0.01%)
+--------------------------------------------------------------------------------------------------
+Total              1.1132 mW        50.0088 mW     5.3544e+04 nW        51.1747 mW
+1
+# gui_start
+exit
+
+Memory usage for this session 624 Mbytes.
+Memory usage for this session including child processes 968 Mbytes.
+CPU usage for this session 114 seconds ( 0.03 hours ).
+Elapsed time for this session 91 seconds ( 0.03 hours ).
+
+Thank you...
+

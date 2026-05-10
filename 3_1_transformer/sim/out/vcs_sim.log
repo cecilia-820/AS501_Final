@@ -1,0 +1,54 @@
+Info: [VCS_SAVE_RESTORE_INFO] ASLR (Address Space Layout Randomization) is detected on the machine. To enable $save functionality, ASLR will be switched off and simv re-executed.
+Please use '-no_save' simv switch to avoid re-execution or '-suppress=ASLR_DETECTED_INFO' to suppress this message.
+Chronologic VCS simulator copyright 1991-2023
+Contains Synopsys proprietary information.
+Compiler version V-2023.12-1_Full64; Runtime version V-2023.12-1_Full64;  May 10 17:40 2026
+	Warning CORE_TB.DUT.ICACHE.ICACHE_SRAM.SRAM : input CEB unknown/high-Z at simulation time 5.0
+
+[TB] partial result saved: sent_cnt=0 used_u32=0 file=lstm_result_summary.txt
+[TESTBENCH] Wall-clock start (epoch sec): 1778402430
+[TB] partial result saved: sent_cnt=0 used_u32=0 file=lstm_result_summary.txt
+[TB] IMEM[0..7] = 02200137 00010113 002011b7 80018193 017b5537 b9850513 017f55b7 21058593
+[TB][func] time=8579715000 pc=0x00001a38 main
+[TB][func] time=8582265000 pc=0x000019e0 arena_reset
+[TB][func] time=8582815000 pc=0x000019ec arena_alloc
+[TB][func] cycle=926042 time=9260445000 pc=0x00000040 layer_norm count=1
+[TB][func] cycle=2027470 (0.002B) time=20274725000 pc=0x0000049c multi_head_attention count=1
+[TB][func] cycle=26282502 time=262825045000 pc=0x00000040 layer_norm count=2
+[TB][func] cycle=51186587 (0.051B) time=511865895000 pc=0x0000049c multi_head_attention count=2
+[TB][func] cycle=75444784 time=754447865000 pc=0x00000040 layer_norm count=3
+[TB] partial result saved: sent_cnt=1 used_u32=0 file=lstm_result_summary.txt
+[TB][func] cycle=100465404 (0.100B) time=1004654065000 pc=0x0000049c multi_head_attention count=3
+[TB][func] cycle=102561142 time=1025611445000 pc=0x00000040 layer_norm count=4
+[TB][func] cycle=102662070 (0.103B) time=1026620725000 pc=0x0000049c multi_head_attention count=4
+[TB][func] cycle=115211698 time=1152117005000 pc=0x00000040 layer_norm count=5
+[TB][func] cycle=117477053 (0.117B) time=1174770555000 pc=0x0000049c multi_head_attention count=5
+[TB][func] cycle=119572956 time=1195729585000 pc=0x00000040 layer_norm count=6
+[TB][func] cycle=119675045 (0.120B) time=1196750475000 pc=0x0000049c multi_head_attention count=6
+[TB][func] cycle=132224706 time=1322247085000 pc=0x00000040 layer_norm count=7
+[TB] partial result saved: sent_cnt=1 used_u32=103 file=lstm_result_summary.txt
+[TB][func] cycle=175410345 time=1754103475000 pc=0x00000040 layer_norm count=8
+[TB][func] cycle=175610998 (0.176B) time=1756110005000 pc=0x0000049c multi_head_attention count=7
+[TB][func] cycle=179822415 time=1798224175000 pc=0x00000040 layer_norm count=9
+[TB][func] cycle=180023300 (0.180B) time=1800233025000 pc=0x0000049c multi_head_attention count=8
+[TB][func] cycle=193743386 time=1937433885000 pc=0x00000040 layer_norm count=10
+[TB][func] cycle=198270529 (0.198B) time=1982705315000 pc=0x0000049c multi_head_attention count=9
+[TB][func] cycle=202481775 time=2024817775000 pc=0x00000040 layer_norm count=11
+[TB][func] cycle=202683958 (0.203B) time=2026839605000 pc=0x0000049c multi_head_attention count=10
+[TB][func] cycle=216403962 time=2164039645000 pc=0x00000040 layer_norm count=12
+[TB][func] cycle=261758332 time=2617583345000 pc=0x00000040 layer_norm count=13
+[TB][func] cycle=262059082 (0.262B) time=2620590845000 pc=0x0000049c multi_head_attention count=11
+[TB][func] cycle=268408178 time=2684081805000 pc=0x00000040 layer_norm count=14
+[TB][func] cycle=268710255 (0.269B) time=2687102575000 pc=0x0000049c multi_head_attention count=12
+[TB][func] cycle=283600803 time=2836008055000 pc=0x00000040 layer_norm count=15
+[TB][func] cycle=290392275 (0.290B) time=2903922775000 pc=0x0000049c multi_head_attention count=13
+[TB][func] cycle=296741068 time=2967410705000 pc=0x00000040 layer_norm count=16
+[TB][func] cycle=297045495 (0.297B) time=2970454975000 pc=0x0000049c multi_head_attention count=14
+[TB][func] cycle=311936119 time=3119361215000 pc=0x00000040 layer_norm count=17
+[TB][func] cycle=359459475 time=3594594775000 pc=0x00000040 layer_norm count=18
+[TB][func] cycle=359860254 (0.360B) time=3598602565000 pc=0x0000049c multi_head_attention count=15
+[TB][func] cycle=368367766 time=3683677685000 pc=0x00000040 layer_norm count=19
+[TB][func] cycle=368769353 (0.369B) time=3687693555000 pc=0x0000049c multi_head_attention count=16
+[TB][func] cycle=384830234 time=3848302365000 pc=0x00000040 layer_norm count=20
+[TB][func] cycle=393882036 (0.394B) time=3938820385000 pc=0x0000049c multi_head_attention count=17
+[TB][func] cycle=402792532 (0.403B) time=4027925345000 pc=0x0000049c multi_head_attention count=18

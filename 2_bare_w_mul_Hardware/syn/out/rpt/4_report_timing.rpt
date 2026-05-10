@@ -1,0 +1,333 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -nets
+        -max_paths 1
+        -transition_time
+Design : CPU_TOP
+Version: V-2023.12-SP5-1
+Date   : Sun May 10 18:21:04 2026
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: tt1v25c   Library: tcbn28hpcplusbwp30p140tt1v25c
+Wire Load Model Mode: segmented
+
+  Startpoint: imem_rdata_i[1]
+              (input port clocked by clk_i)
+  Endpoint: dmem_req_o (output port clocked by clk_i)
+  Path Group: clk_i
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  CPU_TOP            ZeroWireload          tcbn28hpcplusbwp30p140tt1v25c
+  MCU_00000000_00080000_00080000_07f80000_08000000_00100000_08100000_00000010 ZeroWireload tcbn28hpcplusbwp30p140tt1v25c
+  INSTR_CACHE_DWidth32 ZeroWireload        tcbn28hpcplusbwp30p140tt1v25c
+  DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12 ZeroWireload tcbn28hpcplusbwp30p140tt1v25c
+  D_FF_32_0_3        ZeroWireload          tcbn28hpcplusbwp30p140tt1v25c
+  SCALAR_CORE_DWidth32 ZeroWireload        tcbn28hpcplusbwp30p140tt1v25c
+  CSR_DWidth32_AWidth12 ZeroWireload       tcbn28hpcplusbwp30p140tt1v25c
+  MUX4TO1_DWidth32_1 ZeroWireload          tcbn28hpcplusbwp30p140tt1v25c
+  D_FF_32_0_0        ZeroWireload          tcbn28hpcplusbwp30p140tt1v25c
+  MUX4TO1_DWidth32_0 ZeroWireload          tcbn28hpcplusbwp30p140tt1v25c
+  MUX4TO1_DWidth32_2 ZeroWireload          tcbn28hpcplusbwp30p140tt1v25c
+  ALU_DWidth32_OpWidth5 ZeroWireload       tcbn28hpcplusbwp30p140tt1v25c
+  MUX2TO1_DWidth32_1 ZeroWireload          tcbn28hpcplusbwp30p140tt1v25c
+
+Attributes:
+    d - dont_touch
+    u - dont_use
+   mo - map_only
+   so - size_only
+    i - ideal_net or ideal_network
+  inf - infeasible path
+
+  Point                                                                                           Fanout     Trans      Incr       Path      Attributes
+  -------------------------------------------------------------------------------------------------------------------------------------------------------------
+  clock clk_i (rise edge)                                                                                               0.00       0.00
+  clock network delay (ideal)                                                                                           0.00       0.00
+  input external delay                                                                                                  0.60       0.60 r
+  imem_rdata_i[1] (in)                                                                                        0.00      0.00       0.60 r
+  imem_rdata_i[1] (net)                                                                             2                   0.00       0.60 r
+  MCU_INST/imem_rdata_i[1] (MCU_00000000_00080000_00080000_07f80000_08000000_00100000_08100000_00000010)                0.00       0.60 r
+  MCU_INST/imem_rdata_i[1] (net)                                                                                        0.00       0.60 r
+  MCU_INST/imem_rdata_o[1] (MCU_00000000_00080000_00080000_07f80000_08000000_00100000_08100000_00000010)                0.00       0.60 r
+  mcu_imem_rdata[1] (net)                                                                                               0.00       0.60 r
+  ICACHE/imem_rdata_i[1] (INSTR_CACHE_DWidth32)                                                                         0.00       0.60 r
+  ICACHE/imem_rdata_i[1] (net)                                                                                          0.00       0.60 r
+  ICACHE/U170/ZN (AOI222D1BWP30P140)                                                                          0.04      0.01       0.61 f
+  ICACHE/n73 (net)                                                                                  1                   0.00       0.61 f
+  ICACHE/U171/ZN (INVD1BWP30P140)                                                                             0.01      0.01       0.63 r
+  ICACHE/instr_o[1] (net)                                                                           2                   0.00       0.63 r
+  ICACHE/instr_o[1] (INSTR_CACHE_DWidth32)                                                                              0.00       0.63 r
+  icache_rdata[1] (net)                                                                                                 0.00       0.63 r
+  SCORE/imem_rdata_i[1] (SCALAR_CORE_DWidth32)                                                                          0.00       0.63 r
+  SCORE/imem_rdata_i[1] (net)                                                                                           0.00       0.63 r
+  SCORE/DECODER/imem_rdata_i[1] (DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12)                                         0.00       0.63 r
+  SCORE/DECODER/imem_rdata_i[1] (net)                                                                                   0.00       0.63 r
+  SCORE/DECODER/U33/ZN (ND2D1BWP30P140)                                                                       0.04      0.03       0.65 f
+  SCORE/DECODER/n95 (net)                                                                          13                   0.00       0.65 f
+  SCORE/DECODER/U34/ZN (INVD1BWP30P140)                                                                       0.03      0.03       0.68 r
+  SCORE/DECODER/n75 (net)                                                                          12                   0.00       0.68 r
+  SCORE/DECODER/U54/ZN (ND2D1BWP30P140)                                                                       0.05      0.04       0.72 f
+  SCORE/DECODER/n70 (net)                                                                          15                   0.00       0.72 f
+  SCORE/DECODER/U160/ZN (NR2D1BWP30P140)                                                                      0.01      0.02       0.74 r
+  SCORE/DECODER/csr_read_addr_o[6] (net)                                                            1                   0.00       0.74 r
+  SCORE/DECODER/csr_read_addr_o[6] (DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12)                                      0.00       0.74 r
+  SCORE/dec_cread_addr[6] (net)                                                                                         0.00       0.74 r
+  SCORE/CSR/read_addr_i[6] (CSR_DWidth32_AWidth12)                                                                      0.00       0.74 r
+  SCORE/CSR/read_addr_i[6] (net)                                                                                        0.00       0.74 r
+  SCORE/CSR/U10/Z (OR4D1BWP30P140)                                                                            0.01      0.02       0.76 r
+  SCORE/CSR/n4 (net)                                                                                1                   0.00       0.76 r
+  SCORE/CSR/U12/ZN (NR4D0BWP30P140)                                                                           0.02      0.01       0.77 f
+  SCORE/CSR/n5 (net)                                                                                3                   0.00       0.77 f
+  SCORE/CSR/U14/ZN (INVD1BWP30P140)                                                                           0.07      0.05       0.82 r
+  SCORE/CSR/n100 (net)                                                                             34                   0.00       0.82 r
+  SCORE/CSR/U19/ZN (NR3D0BWP30P140)                                                                           0.13      0.09       0.91 f
+  SCORE/CSR/n102 (net)                                                                             32                   0.00       0.91 f
+  SCORE/CSR/U28/ZN (AOI22D1BWP30P140)                                                                         0.03      0.03       0.94 r
+  SCORE/CSR/n13 (net)                                                                               1                   0.00       0.94 r
+  SCORE/CSR/U29/ZN (OAI211D1BWP30P140)                                                                        0.04      0.03       0.96 f
+  SCORE/CSR/read_data_o[2] (net)                                                                    4                   0.00       0.96 f
+  SCORE/CSR/read_data_o[2] (CSR_DWidth32_AWidth12)                                                                      0.00       0.96 f
+  SCORE/csr_read_data[2] (net)                                                                                          0.00       0.96 f
+  SCORE/MUX_ALU_B/data2_i[2] (MUX4TO1_DWidth32_1)                                                                       0.00       0.96 f
+  SCORE/MUX_ALU_B/data2_i[2] (net)                                                                                      0.00       0.96 f
+  SCORE/MUX_ALU_B/U15/ZN (AOI22D1BWP30P140)                                                                   0.02      0.02       0.98 r
+  SCORE/MUX_ALU_B/n9 (net)                                                                          1                   0.00       0.98 r
+  SCORE/MUX_ALU_B/U17/ZN (OAI211D1BWP30P140)                                                                  0.35      0.20       1.18 f
+  SCORE/MUX_ALU_B/data_o[2] (net)                                                                  67                   0.00       1.18 f
+  SCORE/MUX_ALU_B/data_o[2] (MUX4TO1_DWidth32_1)                                                                        0.00       1.18 f
+  SCORE/alu_b[2] (net)                                                                                                  0.00       1.18 f
+  SCORE/ALU/b_i[2] (ALU_DWidth32_OpWidth5)                                                                              0.00       1.18 f
+  SCORE/ALU/b_i[2] (net)                                                                                                0.00       1.18 f
+  SCORE/ALU/U1283/ZN (INVD1BWP30P140)                                                                         0.22      0.20       1.38 r
+  SCORE/ALU/n2410 (net)                                                                            83                   0.00       1.38 r
+  SCORE/ALU/U1372/ZN (AOI21D1BWP30P140)                                                                       0.05      0.02       1.40 f
+  SCORE/ALU/n26 (net)                                                                               1                   0.00       1.40 f
+  SCORE/ALU/U1583/CO (FA1D1BWP30P140)                                                                         0.02      0.03       1.43 f
+  SCORE/ALU/n403 (net)                                                                              1                   0.00       1.43 f
+  SCORE/ALU/U1861/CO (FA1D1BWP30P140)                                                                         0.02      0.03       1.46 f
+  SCORE/ALU/n928 (net)                                                                              3                   0.00       1.46 f
+  SCORE/ALU/U1155/ZN (OAI21D1BWP30P140)                                                                       0.01      0.01       1.47 r
+  SCORE/ALU/n926 (net)                                                                              1                   0.00       1.47 r
+  SCORE/ALU/U62/ZN (OAI31D0BWP30P140)                                                                         0.08      0.05       1.52 f
+  SCORE/ALU/n1870 (net)                                                                            11                   0.00       1.52 f
+  SCORE/ALU/U2456/ZN (AOI22D1BWP30P140)                                                                       0.06      0.03       1.55 r
+  SCORE/ALU/n1519 (net)                                                                             2                   0.00       1.55 r
+  SCORE/ALU/U834/ZN (AOI31D0BWP30P140)                                                                        0.05      0.03       1.58 f
+  SCORE/ALU/intadd_61_B_1_ (net)                                                                    1                   0.00       1.58 f
+  SCORE/ALU/intadd_61_U27/CO (FA1D1BWP30P140)                                                                 0.01      0.04       1.62 f    mo 
+  SCORE/ALU/intadd_61_n26 (net)                                                                     1                   0.00       1.62 f
+  SCORE/ALU/intadd_61_U26/CO (FA1D1BWP30P140)                                                                 0.01      0.02       1.64 f    mo 
+  SCORE/ALU/intadd_61_n25 (net)                                                                     1                   0.00       1.64 f
+  SCORE/ALU/intadd_61_U25/CO (FA1D0BWP30P140)                                                                 0.02      0.03       1.67 f    mo 
+  SCORE/ALU/intadd_61_n24 (net)                                                                     1                   0.00       1.67 f
+  SCORE/ALU/intadd_61_U24/CO (FA1D1BWP30P140)                                                                 0.01      0.02       1.69 f    mo 
+  SCORE/ALU/intadd_61_n23 (net)                                                                     1                   0.00       1.69 f
+  SCORE/ALU/intadd_61_U23/CO (FA1D1BWP30P140)                                                                 0.01      0.02       1.72 f    mo 
+  SCORE/ALU/intadd_61_n22 (net)                                                                     1                   0.00       1.72 f
+  SCORE/ALU/intadd_61_U22/CO (FA1D1BWP30P140)                                                                 0.01      0.02       1.74 f    mo 
+  SCORE/ALU/intadd_61_n21 (net)                                                                     1                   0.00       1.74 f
+  SCORE/ALU/intadd_61_U21/CO (FA1D1BWP30P140)                                                                 0.01      0.02       1.76 f    mo 
+  SCORE/ALU/intadd_61_n20 (net)                                                                     1                   0.00       1.76 f
+  SCORE/ALU/intadd_61_U20/CO (FA1D0BWP30P140)                                                                 0.02      0.03       1.79 f    mo 
+  SCORE/ALU/intadd_61_n19 (net)                                                                     1                   0.00       1.79 f
+  SCORE/ALU/intadd_61_U19/CO (FA1D1BWP30P140)                                                                 0.01      0.02       1.82 f    mo 
+  SCORE/ALU/intadd_61_n18 (net)                                                                     1                   0.00       1.82 f
+  SCORE/ALU/intadd_61_U18/CO (FA1D1BWP30P140)                                                                 0.01      0.02       1.84 f    mo 
+  SCORE/ALU/intadd_61_n17 (net)                                                                     1                   0.00       1.84 f
+  SCORE/ALU/intadd_61_U17/CO (FA1D1BWP30P140)                                                                 0.01      0.02       1.86 f    mo 
+  SCORE/ALU/intadd_61_n16 (net)                                                                     1                   0.00       1.86 f
+  SCORE/ALU/intadd_61_U16/CO (FA1D1BWP30P140)                                                                 0.01      0.02       1.89 f    mo 
+  SCORE/ALU/intadd_61_n15 (net)                                                                     1                   0.00       1.89 f
+  SCORE/ALU/intadd_61_U15/CO (FA1D1BWP30P140)                                                                 0.01      0.02       1.91 f    mo 
+  SCORE/ALU/intadd_61_n14 (net)                                                                     1                   0.00       1.91 f
+  SCORE/ALU/intadd_61_U14/CO (FA1D1BWP30P140)                                                                 0.01      0.02       1.93 f    mo 
+  SCORE/ALU/intadd_61_n13 (net)                                                                     1                   0.00       1.93 f
+  SCORE/ALU/intadd_61_U13/CO (FA1D1BWP30P140)                                                                 0.01      0.02       1.96 f    mo 
+  SCORE/ALU/intadd_61_n12 (net)                                                                     1                   0.00       1.96 f
+  SCORE/ALU/intadd_61_U12/CO (FA1D1BWP30P140)                                                                 0.01      0.02       1.98 f    mo 
+  SCORE/ALU/intadd_61_n11 (net)                                                                     1                   0.00       1.98 f
+  SCORE/ALU/intadd_61_U11/CO (FA1D1BWP30P140)                                                                 0.01      0.02       2.00 f    mo 
+  SCORE/ALU/intadd_61_n10 (net)                                                                     1                   0.00       2.00 f
+  SCORE/ALU/intadd_61_U10/CO (FA1D1BWP30P140)                                                                 0.01      0.02       2.03 f    mo 
+  SCORE/ALU/intadd_61_n9 (net)                                                                      1                   0.00       2.03 f
+  SCORE/ALU/intadd_61_U9/CO (FA1D1BWP30P140)                                                                  0.01      0.02       2.05 f    mo 
+  SCORE/ALU/intadd_61_n8 (net)                                                                      1                   0.00       2.05 f
+  SCORE/ALU/intadd_61_U8/CO (FA1D1BWP30P140)                                                                  0.01      0.02       2.07 f    mo 
+  SCORE/ALU/intadd_61_n7 (net)                                                                      1                   0.00       2.07 f
+  SCORE/ALU/intadd_61_U7/CO (FA1D1BWP30P140)                                                                  0.01      0.02       2.10 f    mo 
+  SCORE/ALU/intadd_61_n6 (net)                                                                      1                   0.00       2.10 f
+  SCORE/ALU/intadd_61_U6/CO (FA1D1BWP30P140)                                                                  0.01      0.02       2.12 f    mo 
+  SCORE/ALU/intadd_61_n5 (net)                                                                      1                   0.00       2.12 f
+  SCORE/ALU/intadd_61_U5/CO (FA1D1BWP30P140)                                                                  0.01      0.02       2.14 f    mo 
+  SCORE/ALU/intadd_61_n4 (net)                                                                      1                   0.00       2.14 f
+  SCORE/ALU/intadd_61_U4/CO (FA1D1BWP30P140)                                                                  0.01      0.02       2.17 f    mo 
+  SCORE/ALU/intadd_61_n3 (net)                                                                      1                   0.00       2.17 f
+  SCORE/ALU/intadd_61_U3/CO (FA1D1BWP30P140)                                                                  0.01      0.02       2.19 f    mo 
+  SCORE/ALU/intadd_61_n2 (net)                                                                      1                   0.00       2.19 f
+  SCORE/ALU/intadd_61_U2/S (FA1D1BWP30P140)                                                                   0.02      0.04       2.23 r    mo 
+  SCORE/ALU/intadd_61_SUM_26_ (net)                                                                 1                   0.00       2.23 r
+  SCORE/ALU/intadd_70_U2/CO (FA1D1BWP30P140)                                                                  0.01      0.02       2.26 r    mo 
+  SCORE/ALU/intadd_70_n1 (net)                                                                      2                   0.00       2.26 r
+  SCORE/ALU/U214/ZN (INVD1BWP30P140)                                                                          0.01      0.01       2.26 f
+  SCORE/ALU/n431 (net)                                                                              2                   0.00       2.26 f
+  SCORE/ALU/U211/ZN (NR2D1BWP30P140)                                                                          0.01      0.01       2.27 r
+  SCORE/ALU/n55 (net)                                                                               2                   0.00       2.27 r
+  SCORE/ALU/U1484/ZN (OAI21D1BWP30P140)                                                                       0.02      0.01       2.28 f
+  SCORE/ALU/n305 (net)                                                                              2                   0.00       2.28 f
+  SCORE/ALU/U208/ZN (OAI21D1BWP30P140)                                                                        0.02      0.01       2.30 r
+  SCORE/ALU/n1977 (net)                                                                             3                   0.00       2.30 r
+  SCORE/ALU/U206/ZN (OAI21D1BWP30P140)                                                                        0.02      0.02       2.31 f
+  SCORE/ALU/n1169 (net)                                                                             1                   0.00       2.31 f
+  SCORE/ALU/U2266/CO (FA1D1BWP30P140)                                                                         0.01      0.03       2.34 f
+  SCORE/ALU/n2121 (net)                                                                             3                   0.00       2.34 f
+  SCORE/ALU/U1767/ZN (MAOI222D1BWP30P140)                                                                     0.02      0.02       2.36 r
+  SCORE/ALU/n505 (net)                                                                              3                   0.00       2.36 r
+  SCORE/ALU/U203/ZN (OAI21D1BWP30P140)                                                                        0.02      0.02       2.38 f
+  SCORE/ALU/n445 (net)                                                                              1                   0.00       2.38 f
+  SCORE/ALU/U1891/CO (FA1D1BWP30P140)                                                                         0.01      0.03       2.41 f
+  SCORE/ALU/n2069 (net)                                                                             2                   0.00       2.41 f
+  SCORE/ALU/U199/ZN (NR2D1BWP30P140)                                                                          0.01      0.01       2.42 r
+  SCORE/ALU/n2067 (net)                                                                             2                   0.00       2.42 r
+  SCORE/ALU/U197/ZN (NR2D1BWP30P140)                                                                          0.01      0.01       2.42 f
+  SCORE/ALU/n2049 (net)                                                                             3                   0.00       2.42 f
+  SCORE/ALU/U196/ZN (AOI21D1BWP30P140)                                                                        0.01      0.01       2.44 r
+  SCORE/ALU/n2145 (net)                                                                             2                   0.00       2.44 r
+  SCORE/ALU/U1488/ZN (ND2D1BWP30P140)                                                                         0.01      0.01       2.45 f
+  SCORE/ALU/n2143 (net)                                                                             3                   0.00       2.45 f
+  SCORE/ALU/U190/ZN (NR2D1BWP30P140)                                                                          0.01      0.01       2.46 r
+  SCORE/ALU/n326 (net)                                                                              1                   0.00       2.46 r
+  SCORE/ALU/U189/ZN (NR2D1BWP30P140)                                                                          0.01      0.01       2.46 f
+  SCORE/ALU/n2042 (net)                                                                             2                   0.00       2.46 f
+  SCORE/ALU/U186/ZN (OAI21D1BWP30P140)                                                                        0.02      0.01       2.48 r
+  SCORE/ALU/n475 (net)                                                                              3                   0.00       2.48 r
+  SCORE/ALU/U185/ZN (OAI21D1BWP30P140)                                                                        0.02      0.01       2.49 f
+  SCORE/ALU/n566 (net)                                                                              2                   0.00       2.49 f
+  SCORE/ALU/U184/ZN (NR2D1BWP30P140)                                                                          0.01      0.01       2.50 r
+  SCORE/ALU/n564 (net)                                                                              2                   0.00       2.50 r
+  SCORE/ALU/U182/ZN (NR2D1BWP30P140)                                                                          0.01      0.01       2.51 f
+  SCORE/ALU/n549 (net)                                                                              2                   0.00       2.51 f
+  SCORE/ALU/U181/ZN (NR2D1BWP30P140)                                                                          0.01      0.01       2.52 r
+  SCORE/ALU/n547 (net)                                                                              2                   0.00       2.52 r
+  SCORE/ALU/U180/ZN (NR2D1BWP30P140)                                                                          0.01      0.01       2.53 f
+  SCORE/ALU/n391 (net)                                                                              2                   0.00       2.53 f
+  SCORE/ALU/U179/ZN (NR2D1BWP30P140)                                                                          0.01      0.01       2.54 r
+  SCORE/ALU/n524 (net)                                                                              3                   0.00       2.54 r
+  SCORE/ALU/U98/ZN (ND2D1BWP30P140)                                                                           0.01      0.01       2.55 f
+  SCORE/ALU/n1189 (net)                                                                             2                   0.00       2.55 f
+  SCORE/ALU/U176/ZN (NR2D1BWP30P140)                                                                          0.02      0.01       2.56 r
+  SCORE/ALU/n2016 (net)                                                                             3                   0.00       2.56 r
+  SCORE/ALU/U97/ZN (ND2D1BWP30P140)                                                                           0.01      0.01       2.57 f
+  SCORE/ALU/n1995 (net)                                                                             2                   0.00       2.57 f
+  SCORE/ALU/U1494/ZN (NR2D1BWP30P140)                                                                         0.01      0.01       2.58 r
+  SCORE/ALU/n347 (net)                                                                              1                   0.00       2.58 r
+  SCORE/ALU/U167/ZN (NR2D1BWP30P140)                                                                          0.01      0.01       2.58 f
+  SCORE/ALU/n1998 (net)                                                                             2                   0.00       2.58 f
+  SCORE/ALU/U166/ZN (OAI21D1BWP30P140)                                                                        0.01      0.01       2.59 r
+  SCORE/ALU/n604 (net)                                                                              2                   0.00       2.59 r
+  SCORE/ALU/U165/ZN (ND2D1BWP30P140)                                                                          0.01      0.01       2.60 f
+  SCORE/ALU/n603 (net)                                                                              2                   0.00       2.60 f
+  SCORE/ALU/U164/ZN (OAI31D0BWP30P140)                                                                        0.03      0.02       2.62 r
+  SCORE/ALU/n2204 (net)                                                                             3                   0.00       2.62 r
+  SCORE/ALU/U1777/ZN (ND2D1BWP30P140)                                                                         0.01      0.01       2.63 f
+  SCORE/ALU/n2181 (net)                                                                             2                   0.00       2.63 f
+  SCORE/ALU/U162/ZN (AOI21D1BWP30P140)                                                                        0.02      0.02       2.65 r
+  SCORE/ALU/n2267 (net)                                                                             3                   0.00       2.65 r
+  SCORE/ALU/U96/ZN (ND2D1BWP30P140)                                                                           0.01      0.01       2.66 f
+  SCORE/ALU/n2250 (net)                                                                             2                   0.00       2.66 f
+  SCORE/ALU/U160/ZN (AOI21D1BWP30P140)                                                                        0.01      0.01       2.67 r
+  SCORE/ALU/n2222 (net)                                                                             2                   0.00       2.67 r
+  SCORE/ALU/U1778/ZN (ND2D1BWP30P140)                                                                         0.01      0.01       2.68 f
+  SCORE/ALU/n356 (net)                                                                              1                   0.00       2.68 f
+  SCORE/ALU/U1498/ZN (ND2D1BWP30P140)                                                                         0.01      0.01       2.69 r
+  SCORE/ALU/n2224 (net)                                                                             2                   0.00       2.69 r
+  SCORE/ALU/U158/ZN (NR2D1BWP30P140)                                                                          0.01      0.01       2.70 f
+  SCORE/ALU/n2435 (net)                                                                             2                   0.00       2.70 f
+  SCORE/ALU/U156/ZN (NR2D1BWP30P140)                                                                          0.01      0.01       2.71 r
+  SCORE/ALU/n2433 (net)                                                                             2                   0.00       2.71 r
+  SCORE/ALU/U154/ZN (NR2D1BWP30P140)                                                                          0.01      0.01       2.72 f
+  SCORE/ALU/n2402 (net)                                                                             3                   0.00       2.72 f
+  SCORE/ALU/U153/ZN (OAI21D1BWP30P140)                                                                        0.02      0.01       2.73 r
+  SCORE/ALU/n1944 (net)                                                                             3                   0.00       2.73 r
+  SCORE/ALU/U1781/ZN (NR2D1BWP30P140)                                                                         0.01      0.01       2.73 f
+  SCORE/ALU/n361 (net)                                                                              1                   0.00       2.73 f
+  SCORE/ALU/U1481/ZN (NR2D1BWP30P140)                                                                         0.01      0.01       2.75 r
+  SCORE/ALU/n1921 (net)                                                                             3                   0.00       2.75 r
+  SCORE/ALU/U1782/ZN (AOI22D1BWP30P140)                                                                       0.02      0.01       2.76 f
+  SCORE/ALU/n366 (net)                                                                              2                   0.00       2.76 f
+  SCORE/ALU/U1783/ZN (OAI21D1BWP30P140)                                                                       0.02      0.01       2.77 r
+  SCORE/ALU/n365 (net)                                                                              1                   0.00       2.77 r
+  SCORE/ALU/U1784/ZN (OAI31D0BWP30P140)                                                                       0.02      0.02       2.79 f
+  SCORE/ALU/n368 (net)                                                                              1                   0.00       2.79 f
+  SCORE/ALU/U1785/ZN (XNR2UD0BWP30P140)                                                                       0.02      0.02       2.81 f
+  SCORE/ALU/n372 (net)                                                                              1                   0.00       2.81 f
+  SCORE/ALU/U1798/ZN (AOI22D1BWP30P140)                                                                       0.02      0.01       2.82 r
+  SCORE/ALU/n388 (net)                                                                              1                   0.00       2.82 r
+  SCORE/ALU/U1824/ZN (ND3D1BWP30P140)                                                                         0.04      0.03       2.85 f
+  SCORE/ALU/res_o[31] (net)                                                                         8                   0.00       2.85 f
+  SCORE/ALU/res_o[31] (ALU_DWidth32_OpWidth5)                                                                           0.00       2.85 f
+  SCORE/dmem_addr_o[31] (net)                                                                                           0.00       2.85 f
+  SCORE/dmem_addr_o[31] (SCALAR_CORE_DWidth32)                                                                          0.00       2.85 f
+  core_dmem_addr[31] (net)                                                                                              0.00       2.85 f
+  MCU_INST/dmem_addr_i[31] (MCU_00000000_00080000_00080000_07f80000_08000000_00100000_08100000_00000010)                0.00       2.85 f
+  MCU_INST/dmem_addr_i[31] (net)                                                                                        0.00       2.85 f
+  MCU_INST/U87/ZN (NR4D0BWP30P140)                                                                            0.02      0.02       2.87 r
+  MCU_INST/n364 (net)                                                                               1                   0.00       2.87 r
+  MCU_INST/U90/Z (AN4D0BWP30P140)                                                                             0.01      0.03       2.90 r
+  MCU_INST/n366 (net)                                                                               1                   0.00       2.90 r
+  MCU_INST/U91/ZN (ND4D0BWP30P140)                                                                            0.04      0.03       2.93 f
+  MCU_INST/n86 (net)                                                                                2                   0.00       2.93 f
+  MCU_INST/U140/ZN (NR2D1BWP30P140)                                                                           0.02      0.01       2.94 r    so 
+  MCU_INST/accel_req_o (net)                                                                        2                   0.00       2.94 r
+  MCU_INST/U179/ZN (AOI31D0BWP30P140)                                                                         0.02      0.01       2.95 f
+  MCU_INST/n410 (net)                                                                               1                   0.00       2.95 f
+  MCU_INST/U180/ZN (INVD1BWP30P140)                                                                           0.01      0.01       2.96 r
+  MCU_INST/dmem_ready_o (net)                                                                       3                   0.00       2.96 r
+  MCU_INST/dmem_ready_o (MCU_00000000_00080000_00080000_07f80000_08000000_00100000_08100000_00000010)                   0.00       2.96 r
+  mcu_dmem_ready (net)                                                                                                  0.00       2.96 r
+  SCORE/dmem_ready_i (SCALAR_CORE_DWidth32)                                                                             0.00       2.96 r
+  SCORE/dmem_ready_i (net)                                                                                              0.00       2.96 r
+  SCORE/DECODER/dmem_ready_i (DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12)                                            0.00       2.96 r
+  SCORE/DECODER/dmem_ready_i (net)                                                                                      0.00       2.96 r
+  SCORE/DECODER/U42/ZN (OAI33D1BWP30P140)                                                                     0.02      0.02       2.98 f
+  SCORE/DECODER/dmem_req_o (net)                                                                    3                   0.00       2.98 f
+  SCORE/DECODER/dmem_req_o (DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12)                                              0.00       2.98 f
+  SCORE/dmem_req_o (net)                                                                                                0.00       2.98 f
+  SCORE/dmem_req_o (SCALAR_CORE_DWidth32)                                                                               0.00       2.98 f
+  core_dmem_req (net)                                                                                                   0.00       2.98 f
+  MCU_INST/dmem_req_i (MCU_00000000_00080000_00080000_07f80000_08000000_00100000_08100000_00000010)                     0.00       2.98 f
+  MCU_INST/dmem_req_i (net)                                                                                             0.00       2.98 f
+  MCU_INST/U100/ZN (ND2D1BWP30P140)                                                                           0.01      0.01       2.99 r
+  MCU_INST/n87 (net)                                                                                2                   0.00       2.99 r
+  MCU_INST/U101/ZN (INVD1BWP30P140)                                                                           0.01      0.01       3.00 f
+  MCU_INST/n433 (net)                                                                               4                   0.00       3.00 f
+  MCU_INST/U102/ZN (ND2D1BWP30P140)                                                                           0.02      0.01       3.01 r
+  MCU_INST/n431 (net)                                                                               6                   0.00       3.01 r
+  MCU_INST/U178/ZN (INR2D1BWP30P140)                                                                          0.01      0.01       3.02 f
+  MCU_INST/dmem_req_o (net)                                                                         1                   0.00       3.02 f
+  MCU_INST/dmem_req_o (MCU_00000000_00080000_00080000_07f80000_08000000_00100000_08100000_00000010)                     0.00       3.02 f
+  mcu_ext_dmem_req (net)                                                                                                0.00       3.02 f
+  U135/Z (OR2D1BWP30P140)                                                                                     0.01      0.01       3.03 f
+  dmem_req_o (net)                                                                                  1                   0.00       3.03 f
+  dmem_req_o (out)                                                                                            0.01      0.00       3.03 f
+  data arrival time                                                                                                                3.03
+
+  clock clk_i (rise edge)                                                                                              10.00      10.00
+  clock network delay (ideal)                                                                                           0.00      10.00
+  clock uncertainty                                                                                                    -0.70       9.30
+  output external delay                                                                                                -1.00       8.30
+  data required time                                                                                                               8.30
+  -------------------------------------------------------------------------------------------------------------------------------------------------------------
+  data required time                                                                                                               8.30
+  data arrival time                                                                                                               -3.03
+  -------------------------------------------------------------------------------------------------------------------------------------------------------------
+  slack (MET)                                                                                                                      5.27
+
+
+1

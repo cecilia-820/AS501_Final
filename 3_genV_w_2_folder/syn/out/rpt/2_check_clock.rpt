@@ -1,0 +1,68 @@
+Warning: Design 'CPU_TOP' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Information: Checking out the license 'DesignWare'. (SEC-104)
+Information: Changed wire load model for 'dma_controller_32_00200000_1fffffff_20800000_2080ffff' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'scratchpad_DWidth32_Depth16384' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'ICACHE_SRAM_Depth512_DWidth54' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'DATA_CACHE_DWidth32' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'gemv_accel_DWidth32' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'MCU_00000000_00080000_00080000_07f80000_08000000_00100000_08100000_00000010_08200000_00004000_08240000_00000010' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'MUX2TO1_DWidth32' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'MUX4TO1_DWidth32' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'MUX3TO1_DWidth32' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'MUX5TO1_DWidth32' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'MUX2TO1_DWidth32' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'ALU_DWidth32_OpWidth5' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'MUX4TO1_DWidth32' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'MUX4TO1_DWidth32' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'D_FF_64_0' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'D_FF_64_0' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'D_FF_32_0' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'CSR_DWidth32_AWidth12' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'REGFILE_DWidth32_NumofReg32' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'COUNTER_64_0' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'D_FF_2_0' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'D_FF_32_0' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'D_FF_32_0' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'MUX2TO1_DWidth32' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'COUNTER_64_0' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'SCALAR_CORE_DWidth32' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'ICACHE_SRAM_Depth512_DWidth54' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'D_FF_2_3' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'COUNTER_30_0_511' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'D_FF_32_0' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'INSTR_CACHE_DWidth32' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'alt1' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'apparch' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'alt1' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'apparch' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'alt1' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'apparch' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'alt1' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'apparch' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'alt1' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'astr' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'alt1' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Changed wire load model for 'astr' from '(none)' to 'ZeroWireload'. (OPT-170)
+Information: Updating graph... (UID-83)
+Warning: Design 'CPU_TOP' contains 39 high-fanout nets. A fanout number of 1000 will be used for delay calculations involving these nets. (TIM-134)
+ 
+****************************************
+Report : clocks
+Design : CPU_TOP
+Version: V-2023.12-SP5-1
+Date   : Sun May 10 19:36:09 2026
+****************************************
+
+Attributes:
+    d - dont_touch_network
+    f - fix_hold
+    p - propagated_clock
+    G - generated_clock
+    g - lib_generated_clock
+
+Clock          Period   Waveform            Attrs     Sources
+--------------------------------------------------------------------------------
+clk_i           10.00   {0 5}                         {clk_i}
+--------------------------------------------------------------------------------
+1

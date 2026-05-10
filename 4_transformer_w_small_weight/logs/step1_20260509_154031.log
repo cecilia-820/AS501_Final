@@ -1,0 +1,88 @@
+==== Sat May  9 15:40:37 KST 2026 | PART A: make server in TF_Training_DH ====
+ [server] HOST 추론  (MAX_SENTENCES=5)
+gcc -O2 -Wall -Wextra -std=c11 -DSERVER -DMAX_SENTENCES_OVERRIDE=5 -I./test_code ./test_code/eval_transformer_q.c ./test_code/int_model_transformer_q12.c ./test_code/arena.c ./test_code/result.c \
+    -o ./out/eval_transformer_server -lm
+gcc: error: ./test_code/int_model_transformer_q12.c: No such file or directory
+make: *** [Makefile:227: server] Error 1
+==== Sat May  9 15:41:45 KST 2026 | PART A: retry make server ====
+ [server] HOST 추론  (MAX_SENTENCES=5)
+gcc -O2 -Wall -Wextra -std=c11 -DSERVER -DMAX_SENTENCES_OVERRIDE=5 -I./test_code ./test_code/eval_transformer_q.c ./test_code/int_model_transformer_q12.c ./test_code/arena.c ./test_code/result.c \
+    -o ./out/eval_transformer_server -lm
+In file included from ./test_code/eval_transformer_q.c:40:
+./test_code/input_data.h:9:52: error: expected ‘,’ or ‘;’ before ‘}’ token
+ static const uint32_t input_src_offsets[2] = {0, 3}};
+                                                    ^
+./test_code/input_data.h:11:62: error: expected ‘,’ or ‘;’ before ‘}’ token
+ static const uint32_t input_src_data[3] = {3936, 10216, 2666}};
+                                                              ^
+./test_code/eval_transformer_q.c: In function ‘scaled_dot_product_attention’:
+./test_code/eval_transformer_q.c:457:34: error: ‘TF_EXP_X_MIN_Q’ undeclared (first use in this function)
+                                ? TF_EXP_X_MIN_Q : s;
+                                  ^~~~~~~~~~~~~~
+./test_code/eval_transformer_q.c:457:34: note: each undeclared identifier is reported only once for each function it appears in
+In file included from ./test_code/result.h:16,
+                 from ./test_code/result.c:12:
+./test_code/input_data.h:9:52: error: expected ‘,’ or ‘;’ before ‘}’ token
+ static const uint32_t input_src_offsets[2] = {0, 3}};
+                                                    ^
+./test_code/input_data.h:11:62: error: expected ‘,’ or ‘;’ before ‘}’ token
+ static const uint32_t input_src_data[3] = {3936, 10216, 2666}};
+                                                              ^
+make: *** [Makefile:227: server] Error 1
+==== Sat May  9 15:44:49 KST 2026 | PART A: retry make server after fixes ====
+ [server] HOST 추론  (MAX_SENTENCES=5)
+gcc -O2 -Wall -Wextra -std=c11 -DSERVER -DMAX_SENTENCES_OVERRIDE=5 -I./test_code ./test_code/eval_transformer_q.c ./test_code/int_model_transformer_q12.c ./test_code/arena.c ./test_code/result.c \
+    -o ./out/eval_transformer_server -lm
+./out/eval_transformer_server              \
+    --out-hyp            ./processed/val.hyp.tf_q.u32bin          \
+    --out-result-txt     ./processed/val.result_mem.tf_q.txt      \
+    --out-result-summary ./processed/val.result_summary.tf_q.txt  \
+    --max-sentences 5
+[TF][trace] main enter  (sentences=1)
+[TF][trace] buffers OK
+[TF][trace] sentence 0 begin
+[TF][trace] encoder done (src_len=3)
+[TF][trace] decoder step 0
+[TF][trace] decoder step 1
+[TF][trace] decoder step 2
+[TF][trace] decoder step 3
+[TF][trace] decoder step 4
+[TF][trace] decoder step 5
+[TF][trace] decoder step 6
+[TF][trace] decoder step 7
+[TF][trace] decoder step 8
+[TF][trace] decoder step 9
+[TF][trace] decoder step 10
+[TF][trace] decoder step 11
+[TF][trace] decoder step 12
+[TF][trace] decoder step 13
+[TF][trace] decoder step 14
+[TF][trace] decoder step 15
+[TF][trace] decoder step 16
+[TF][trace] decoder step 17
+[TF][trace] decoder step 18
+[TF][trace] decoder step 19
+[TF][trace] decoder step 20
+[TF][trace] decoder step 21
+[TF][trace] decoder step 22
+[TF][trace] decoder step 23
+[TF][trace] decoder step 24
+[TF][trace] decoder step 25
+[TF][trace] decoder step 26
+[TF][trace] decoder step 27
+[TF][trace] decoder step 28
+[TF][trace] decoder step 29
+[TF][trace] decoder step 30
+[TF][trace] decoder step 31
+[TF][trace] decoder step 32
+[TF][trace] decoder step 33
+[TF][trace] decoder step 34
+[TF][trace] decoder step 35
+[TF][trace] decoder step 36
+[TF][trace] decoder step 37
+[TF][trace] decoder step 38
+[TF][trace] sentence done (out_len=40)
+[Decode] 1/1  (tf_dec_steps_total=39)
+[TF][trace] main exit  (decoded=1)
+[Save] ./processed/val.hyp.tf_q.u32bin  (n=1)
+ [server] 완료

@@ -1,0 +1,336 @@
+Warning: Design 'CPU_TOP' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Information: Performing leakage power optimization. (PWR-850)
+CPU Load: 2%, Ram Free: 415 GB, Swap Free: 127 GB, Work Disk Free: 20752 GB, Tmp Disk Free: 1592 GB
+Analyzing: "/technology/TSMC_28nm_HPC_RF/SRAM/tsn28hpcpd127spsram_20120200_180a/TSMCHOME/sram/Output/ts5n28hpcphvta512x54m4f_tt1v25c/ts5n28hpcphvta512x54m4f_tt1v25c.db"
+Analyzing: "/technology/TSMC_28nm_HPC_RF/STD/tcbn28hpcplusbwp30p140_190a/TSMCHOME/digital/Front_End/timing_power_noise/NLDM/tcbn28hpcplusbwp30p140_180a/tcbn28hpcplusbwp30p140tt1v25c.db"
+Library analysis succeeded.
+Information: Running optimization using a maximum of 8 cores. (OPT-1500)
+Information: Evaluating DesignWare library utilization. (UISN-27)
+
+============================================================================
+| DesignWare Building Block Library  |         Version         | Available |
+============================================================================
+| Basic DW Building Blocks           | V-2023.12-DWBB_202312.5 |     *     |
+| Licensed DW Building Blocks        | V-2023.12-DWBB_202312.5 |     *     |
+============================================================================
+
+====================================================================================================
+| Flow Information                                                                                 |
+----------------------------------------------------------------------------------------------------
+| Flow         | Design Compiler WLM                                                               |
+| Command Line | compile_ultra -no_autoungroup                                                     |
+====================================================================================================
+| Design Information                                      | Value                                  |
+====================================================================================================
+| Number of Scenarios                                     | 0                                      |
+| Leaf Cell Count                                         | 40231                                  |
+| Number of User Hierarchies                              | 32                                     |
+| Sequential Cell Count                                   | 34915                                  |
+| Macro Count                                             | 0                                      |
+| Number of Power Domains                                 | 0                                      |
+| Number of Path Groups                                   | 2                                      |
+| Number of VT Class                                      | 0                                      |
+| Number of Clocks                                        | 1                                      |
+| Number of Dont Touch Cells                              | 2474                                   |
+| Number of Dont Touch Nets                               | 0                                      |
+| Number of Size Only Cells                               | 7                                      |
+| Design with UPF Data                                    | false                                  |
+----------------------------------------------------------------------------------------------------
+| Variables                                               | Value                                  |
+----------------------------------------------------------------------------------------------------
+| set_fix_multiple_port_nets                              | -all -buffer_constants                 |
+====================================================================================================
+Information: Sequential output inversion is enabled.  SVF file must be used for formal verification. (OPT-1208)
+
+Information: There are 633 potential problems in your design. Please run 'check_design' for more information. (LINT-99)
+
+Information: Uniquified 4 instances of design 'D_FF_32_0'. (OPT-1056)
+Information: Uniquified 2 instances of design 'ICACHE_SRAM_Depth512_DWidth54'. (OPT-1056)
+Information: Uniquified 2 instances of design 'COUNTER_64_0'. (OPT-1056)
+Information: Uniquified 3 instances of design 'MUX2TO1_DWidth32'. (OPT-1056)
+Information: Uniquified 3 instances of design 'MUX4TO1_DWidth32'. (OPT-1056)
+Information: Uniquified 2 instances of design 'D_FF_64_0'. (OPT-1056)
+  Simplifying Design 'CPU_TOP'
+Information: The register 'SCORE/DECODER/COUNTER_INSTRET/cnt_done_o_reg' will be removed. (OPT-1207)
+Information: The register 'SCORE/COUNTER_CYCLE/cnt_done_o_reg' will be removed. (OPT-1207)
+
+  Loading target library 'ts5n28hpcphvta512x54m4f_tt1v25c'
+Information: Building the design 'ts1n28hpcphvtb32768x32m16s'. (HDL-193)
+Warning: Cannot find the design 'ts1n28hpcphvtb32768x32m16s' in the library 'WORK'. (LBR-1)
+Warning: Unable to resolve reference 'ts1n28hpcphvtb32768x32m16s' in 'scratchpad_DWidth32_Depth16384'. (LINK-5)
+Loaded alib file './alib-52/tcbn28hpcplusbwp30p140tt1v25c.db.alib'
+Loaded alib file './alib-52/ts5n28hpcphvta512x54m4f_tt1v25c.db.alib' (placeholder)
+CPU Load: 2%, Ram Free: 415 GB, Swap Free: 127 GB, Work Disk Free: 20752 GB, Tmp Disk Free: 1592 GB
+Information: State dependent leakage is now switched from on to off.
+
+  Beginning Pass 1 Mapping
+  ------------------------
+............................................................
+.............
+  Processing 'gemv_accel_DWidth32'
+ Implement Synthetic for 'gemv_accel_DWidth32'.
+Information: Added key list 'DesignWare' to design 'gemv_accel_DWidth32'. (DDB-72)
+  Processing 'REGFILE_DWidth32_NumofReg32'
+  Processing 'dma_controller_32_00200000_1fffffff_20800000_2080ffff'
+Information: Added key list 'DesignWare' to design 'dma_controller_32_00200000_1fffffff_20800000_2080ffff'. (DDB-72)
+ Implement Synthetic for 'dma_controller_32_00200000_1fffffff_20800000_2080ffff'.
+  Processing 'SCALAR_CORE_DWidth32'
+ Implement Synthetic for 'SCALAR_CORE_DWidth32'.
+  Processing 'INSTR_CACHE_DWidth32'
+Information: Added key list 'DesignWare' to design 'INSTR_CACHE_DWidth32'. (DDB-72)
+  Processing 'D_FF_64_0_0'
+  Processing 'D_FF_32_0_0'
+  Processing 'scratchpad_DWidth32_Depth16384'
+  Processing 'DATA_CACHE_DWidth32'
+Information: Added key list 'DesignWare' to design 'DATA_CACHE_DWidth32'. (DDB-72)
+ Implement Synthetic for 'DATA_CACHE_DWidth32'.
+  Processing 'CSR_DWidth32_AWidth12'
+  Processing 'MUX5TO1_DWidth32'
+  Processing 'MUX3TO1_DWidth32'
+  Processing 'CPU_TOP'
+ Implement Synthetic for 'CPU_TOP'.
+Information: Added key list 'DesignWare' to design 'CPU_TOP'. (DDB-72)
+  Processing 'COUNTER_64_0_0'
+ Implement Synthetic for 'COUNTER_64_0_0'.
+  Processing 'D_FF_32_0_1'
+  Processing 'MUX2TO1_DWidth32_2'
+  Processing 'DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12'
+  Processing 'ALU_DWidth32_OpWidth5'
+ Implement Synthetic for 'ALU_DWidth32_OpWidth5'.
+Information: Added key list 'DesignWare' to design 'ALU_DWidth32_OpWidth5'. (DDB-72)
+  Processing 'COUNTER_30_0_511'
+ Implement Synthetic for 'COUNTER_30_0_511'.
+  Processing 'MUX4TO1_DWidth32_1'
+  Processing 'ICACHE_SRAM_Depth512_DWidth54_0'
+  Processing 'D_FF_2_3'
+  Processing 'MCU_00000000_00080000_00080000_07f80000_08000000_00100000_08100000_00000010_08200000_00004000_08240000_00000010'
+Information: Added key list 'DesignWare' to design 'MCU_00000000_00080000_00080000_07f80000_08000000_00100000_08100000_00000010_08200000_00004000_08240000_00000010'. (DDB-72)
+Information: The register 'd_state_q_reg_1_' is a constant and will be removed. (OPT-1206)
+ Implement Synthetic for 'MCU_00000000_00080000_00080000_07f80000_08000000_00100000_08100000_00000010_08200000_00004000_08240000_00000010'.
+  Processing 'COUNTER_64_0_1'
+ Implement Synthetic for 'COUNTER_64_0_1'.
+  Processing 'MUX4TO1_DWidth32_0'
+  Processing 'MUX2TO1_DWidth32_1'
+  Processing 'D_FF_2_0'
+  Processing 'MUX2TO1_DWidth32_0'
+Information: Building the design 'ts1n28hpcphvtb32768x32m16s'. (HDL-193)
+Warning: Cannot find the design 'ts1n28hpcphvtb32768x32m16s' in the library 'WORK'. (LBR-1)
+Warning: Unable to resolve reference 'ts1n28hpcphvtb32768x32m16s' in 'scratchpad_DWidth32_Depth16384'. (LINK-5)
+Warning: Design 'CPU_TOP' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+CPU Load: 2%, Ram Free: 415 GB, Swap Free: 127 GB, Work Disk Free: 20752 GB, Tmp Disk Free: 1592 GB
+
+  Updating timing information
+Information: Updating design information... (UID-85)
+Information: The library cell 'TIELBWP30P140' in the library 'tcbn28hpcplusbwp30p140tt1v25c' is not characterized for internal power. (PWR-536)
+Information: The library cell 'TIEHBWP30P140' in the library 'tcbn28hpcplusbwp30p140tt1v25c' is not characterized for internal power. (PWR-536)
+Information: The target library(s) contains cell(s), other than black boxes, that are not characterized for internal power. (PWR-24)
+Information: Removing unused design 'MUX2TO1_DWidth32_0'. (OPT-1055)
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:12:26  248412.5   2253.71 73849432.0 2127515664.8                           1250173.3750
+    0:12:26  248412.5   2253.71 73849432.0 2127515664.8                           1250173.3750
+Information: The register 'SCORE/SRF/GPR_reg_0__0_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__1_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__2_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__3_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__4_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__5_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__6_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__7_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__8_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__9_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__10_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__11_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__12_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__13_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__14_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__15_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__16_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__17_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__18_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__19_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__20_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__21_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__22_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__23_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__24_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__25_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__26_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__27_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__28_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__29_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__30_' is a constant and will be removed. (OPT-1206)
+Information: The register 'SCORE/SRF/GPR_reg_0__31_' is a constant and will be removed. (OPT-1206)
+
+  Beginning Mapping Optimizations  (Ultra High effort)
+  -------------------------------
+Information: Added key list 'DesignWare' to design 'dma_controller_32_00200000_1fffffff_20800000_2080ffff_RSOP_93'. (DDB-72)
+Information: Added key list 'DesignWare' to design 'SCALAR_CORE_DWidth32'. (DDB-72)
+Information: Added key list 'DesignWare' to design 'COUNTER_30_0_511'. (DDB-72)
+Information: Added key list 'DesignWare' to design 'COUNTER_64_0_1'. (DDB-72)
+Information: Added key list 'DesignWare' to design 'COUNTER_64_0_0'. (DDB-72)
+..............
+Information: The register 'u_gemv_accel/acc_q_reg_63_' will be removed. (OPT-1207)
+Information: The register 'u_gemv_accel/acc_q_reg_62_' will be removed. (OPT-1207)
+Information: The register 'u_gemv_accel/acc_q_reg_61_' will be removed. (OPT-1207)
+Information: The register 'u_gemv_accel/acc_q_reg_60_' will be removed. (OPT-1207)
+Information: The register 'u_gemv_accel/acc_q_reg_59_' will be removed. (OPT-1207)
+Information: The register 'u_gemv_accel/acc_q_reg_58_' will be removed. (OPT-1207)
+Information: The register 'u_gemv_accel/acc_q_reg_57_' will be removed. (OPT-1207)
+Information: The register 'u_gemv_accel/acc_q_reg_56_' will be removed. (OPT-1207)
+Information: The register 'u_gemv_accel/acc_q_reg_55_' will be removed. (OPT-1207)
+Information: The register 'u_gemv_accel/acc_q_reg_54_' will be removed. (OPT-1207)
+Information: The register 'u_gemv_accel/acc_q_reg_53_' will be removed. (OPT-1207)
+Information: The register 'u_gemv_accel/acc_q_reg_52_' will be removed. (OPT-1207)
+Information: The register 'u_gemv_accel/acc_q_reg_51_' will be removed. (OPT-1207)
+Information: The register 'u_gemv_accel/acc_q_reg_50_' will be removed. (OPT-1207)
+Information: The register 'u_gemv_accel/acc_q_reg_49_' will be removed. (OPT-1207)
+Information: The register 'u_gemv_accel/acc_q_reg_48_' will be removed. (OPT-1207)
+Information: The register 'u_gemv_accel/acc_q_reg_47_' will be removed. (OPT-1207)
+Information: The register 'u_gemv_accel/acc_q_reg_46_' will be removed. (OPT-1207)
+Information: The register 'u_gemv_accel/acc_q_reg_45_' will be removed. (OPT-1207)
+Information: The register 'u_gemv_accel/acc_q_reg_44_' will be removed. (OPT-1207)
+  Mapping Optimization (Phase 1)
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:18:26  348706.7      0.00       0.0      83.7                           3093793.0000
+    0:19:31  347514.2      0.00       0.0   10017.0                           3087466.0000
+
+  Beginning Constant Register Removal
+  -----------------------------------
+    0:20:36  338388.2      0.00       0.0      83.7                           2937270.7500
+
+  Beginning Global Optimizations
+  ------------------------------
+  Numerical Synthesis (Phase 1)
+  Numerical Synthesis (Phase 2)
+  Global Optimization (Phase 1)
+  Global Optimization (Phase 2)
+  Global Optimization (Phase 3)
+  Global Optimization (Phase 4)
+  Global Optimization (Phase 5)
+  Global Optimization (Phase 6)
+  Global Optimization (Phase 7)
+  Global Optimization (Phase 8)
+  Global Optimization (Phase 9)
+  Global Optimization (Phase 10)
+  Global Optimization (Phase 11)
+  Global Optimization (Phase 12)
+  Global Optimization (Phase 13)
+  Global Optimization (Phase 14)
+  Global Optimization (Phase 15)
+  Global Optimization (Phase 16)
+  Global Optimization (Phase 17)
+  Global Optimization (Phase 18)
+  Global Optimization (Phase 19)
+  Global Optimization (Phase 20)
+  Global Optimization (Phase 21)
+  Global Optimization (Phase 22)
+  Global Optimization (Phase 23)
+  Global Optimization (Phase 24)
+  Global Optimization (Phase 25)
+  Global Optimization (Phase 26)
+  Global Optimization (Phase 27)
+  Global Optimization (Phase 28)
+  Global Optimization (Phase 29)
+  Global Optimization (Phase 30)
+
+  Beginning Isolate Ports
+  -----------------------
+
+  Beginning Delay Optimization
+  ----------------------------
+    0:23:35  314561.7      0.00       0.0      83.7                           2416037.0000
+    0:23:35  314561.7      0.00       0.0      83.7                           2416037.0000
+    0:23:35  314561.7      0.00       0.0      83.7                           2416037.0000
+    0:23:36  314497.2      0.00       0.0      83.7                           2415595.0000
+.
+    0:24:15  314481.9      0.00       0.0      83.7                           2415571.7500
+    0:24:54  314473.9      0.00       0.0      83.7                           2415533.7500
+
+  Beginning WLM Backend Optimization
+  --------------------------------------
+.
+    0:25:57  313569.8      0.00       0.0      83.7                           2400329.0000
+    0:26:06  311541.7      0.00       0.0      83.7                           2364169.0000
+    0:26:15  307574.0      0.00       0.0      83.7                           2293249.0000
+    0:26:31  299595.3      0.00       0.0      83.7                           2152231.0000
+    0:26:51  292884.1      0.00       0.0      83.7                           2034071.0000
+    0:27:12  284809.6      0.00       0.0      83.7                           1891548.5000
+    0:27:32  276715.8      0.00       0.0      83.7                           1748654.7500
+    0:27:53  268979.2      0.00       0.0      83.7                           1612434.0000
+    0:28:14  260859.2      0.00       0.0      83.7                           1469054.5000
+    0:28:36  252640.8      0.00       0.0      83.7                           1323805.6250
+    0:28:43  250610.9      0.00       0.0      83.7                           1288354.2500
+    0:28:44  250610.9      0.00       0.0      83.7                           1288354.2500
+    0:28:44  250610.9      0.00       0.0      83.7                           1288354.2500
+    0:28:44  250610.9      0.00       0.0      83.7                           1288354.2500
+    0:28:44  250610.9      0.00       0.0      83.7                           1288354.2500
+    0:29:28  249270.3      0.00       0.0      83.7                           1278762.6250
+    0:29:28  249270.3      0.00       0.0      83.7                           1278762.6250
+    0:29:28  249270.3      0.00       0.0      83.7                           1278762.6250
+    0:29:28  249270.3      0.00       0.0      83.7                           1278762.6250
+    0:29:28  249270.3      0.00       0.0      83.7                           1278762.6250
+    0:29:28  249270.3      0.00       0.0      83.7                           1278762.6250
+    0:29:28  249270.3      0.00       0.0      83.7                           1278762.6250
+    0:29:28  249270.3      0.00       0.0      83.7                           1278762.6250
+    0:29:28  249270.3      0.00       0.0      83.7                           1278762.6250
+    0:29:29  249270.3      0.00       0.0      83.7                           1278762.6250
+    0:29:29  249270.3      0.00       0.0      83.7                           1278762.6250
+    0:29:29  249270.3      0.00       0.0      83.7                           1278762.6250
+    0:29:29  249270.3      0.00       0.0      83.7                           1278762.6250
+    0:29:29  249270.3      0.00       0.0      83.7                           1278762.6250
+    0:29:29  249270.3      0.00       0.0      83.7                           1278762.6250
+    0:29:29  249270.3      0.00       0.0      83.7                           1278762.6250
+    0:29:29  249270.3      0.00       0.0      83.7                           1278762.6250
+    0:29:29  249270.3      0.00       0.0      83.7                           1278762.6250
+    0:29:29  249270.3      0.00       0.0      83.7                           1278762.6250
+
+
+  Beginning Design Rule Fixing  (min_capacitance)
+  ----------------------------
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:29:29  249270.3      0.00       0.0      83.7                           1278762.6250
+  Global Optimization (Phase 31)
+  Global Optimization (Phase 32)
+  Global Optimization (Phase 33)
+    0:29:33  249270.3      0.00       0.0      83.7                           1278762.6250
+    0:29:33  249270.3      0.00       0.0      83.7                           1278762.6250
+    0:29:37  252488.6      0.00       0.0      83.7                           1335397.7500
+    0:29:37  252488.6      0.00       0.0      83.7                           1335397.7500
+    0:29:37  252488.6      0.00       0.0      83.7                           1335397.7500
+    0:30:18  249645.4      0.00       0.0      83.7                           1266983.5000
+    0:30:19  249645.4      0.00       0.0      83.7                           1266983.5000
+    0:30:19  249645.4      0.00       0.0      83.7                           1266983.5000
+    0:30:19  249645.4      0.00       0.0      83.7                           1266983.5000
+    0:30:19  249645.4      0.00       0.0      83.7                           1266983.5000
+    0:30:19  249645.4      0.00       0.0      83.7                           1266983.5000
+    0:30:19  249645.4      0.00       0.0      83.7                           1266983.5000
+    0:30:19  249645.4      0.00       0.0      83.7                           1266983.5000
+    0:30:19  249645.4      0.00       0.0      83.7                           1266983.5000
+    0:30:19  249645.4      0.00       0.0      83.7                           1266983.5000
+    0:30:19  249645.4      0.00       0.0      83.7                           1266983.5000
+    0:30:19  249645.4      0.00       0.0      83.7                           1266983.5000
+    0:30:19  249645.4      0.00       0.0      83.7                           1266983.5000
+    0:30:19  249645.4      0.00       0.0      83.7                           1266983.5000
+    0:30:19  249645.4      0.00       0.0      83.7                           1266983.5000
+    0:30:19  249645.4      0.00       0.0      83.7                           1266983.5000
+    0:30:19  249645.4      0.00       0.0      83.7                           1266983.5000
+    0:30:19  249645.4      0.00       0.0      83.7                           1266983.5000
+    0:30:19  249645.4      0.00       0.0      83.7                           1266983.5000
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:30:30  249589.9      0.00       0.0      83.7                           1266966.3750

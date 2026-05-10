@@ -1,0 +1,579 @@
+k: RISC-V SoC Optimization — SPM, DMA, GEMV Parallelization, Inline ASM
+
+## Context
+
+This is an AS501 Final Project — a RISC-V (RV32I+M) CPU running LSTM Seq2Seq inference (German→English translation) on TSMC 28nm. The RTL is in SystemVerilog.
+
+Currently the design has: Scalar Core (RV32IM with HW multiplier), Instruction Cache, MCU (memory controller), GEMV accelerator (sequential MAC, very slow), Data Cache (2KB direct-mapped, GEMV-only), and a simple priority-MUX arbiter. **There is no SPM and no DMA.** All data accesses go to external DMEM with 40ns (4-cycle) latency every time.
+
+The current GEMV accelerator processes one MAC per cycle (sequential), which provides almost no speedup over the CPU doing the same GEMV with hardware `mul`/`mulh` instructions. It needs to be parallelized with multiple PEs.
+
+## IMPORTANT: Changelog Documentation Rule
+
+**After completing EACH part below, create a markdown changelog file in the `3_AS501_software/` root directory** named `changelog_partN.md` (e.g., `changelog_part0.md`, `changelog_part1.md`, etc.).
+
+Each changelog must contain:
+1. **Which file(s)** were created or modified (full path)
+2. **What was changed** — describe every code block added/removed/modified
+3. **Why** the change was made — the architectural or functional reasoning
+4. **How** it works — explain the mechanism (FSM states, signal flow, timing, etc.)
+5. **Verification notes** — how to confirm the change works (what to look for in simulation)
+
+Example format:
+```markdown
+# Changelog Part N: [Title]
+
+## Files Modified
+- `rtl/scalar_core/mcu.sv` — Added SPM address decode
+
+## Changes
+### 1. Added SPM address range parameters (mcu.sv, line XX)
+- **What**: Added `SPM_START_W` and `SPM_DEPTH_W` parameters
+- **Why**: MCU needs to distinguish SPM addresses from DMEM/IOMEM to route requests correctly
+- **How**: Address comparison `dmem_addr_i >= (SPM_START_W << 2)` catches SPM range
+- **Verify**: In simulation, CPU load to 0x2080_0000 should return in 1 cycle (not 4)
+
+### 2. ...
+```
+
+---
+
+## Current File Structure (only relevant files)
+
+```
+3_AS501_software/
+├── rtl/
+│   ├── cpu_top.sv                    # Top-level: instantiates all modules
+│   ├── scalar_core/
+│   │   ├── scalar_core.sv            # CPU core (DO NOT MODIFY)
+│   │   ├── mcu.sv                    # Memory Controller Unit (address decode + latency FSM)
+│   │   ├── decoder.sv                # Instruction decoder (DO NOT MODIFY)
+│   │   └── alu.sv                    # ALU with HW multiplier (DO NOT MODIFY)
+│   ├── accel/
+│   │   ├── gemv_accel.sv             # GEMV accelerator — WILL BE PARALLELIZED
+│   │   └── gemv_accel.h              # C header for GEMV MMIO
+│   └── cache/
+│       ├── instr_cache.sv            # I-cache (DO NOT MODIFY)
+│       └── data_cache.sv             # D-cache for GEMV (DO NOT MODIFY for now)
+├── sim/tb/
+│   └── lstm_tb.sv                    # Testbench
+└── program/test_code/
+    ├── eval_int_c.c                  # Main evaluation loop
+    ├── int_model_q12.c               # LSTM model inference code (Q12 fixed-point)
+    ├── int_model_q12.h               # Model weight declarations
+    └── arena.c                       # Memory arena allocator
+```
+
+---
+
+## Current Memory Map (word addresses, byte addr = word addr << 2)
+
+| Region     | Word Start    | Word Depth    | Byte Start    | Byte End       | Notes                    |
+|------------|---------------|---------------|---------------|----------------|--------------------------|
+| IMEM       | 0x0000_0000   | 0x0000_8000   | 0x0000_0000   | 0x0001_FFFF    | 128KB, instruction       |
+| DMEM       | 0x0008_0000   | 0x0040_0000   | 0x0020_0000   | 0x011F_FFFF    | 16MB, external, 40ns     |
+| IOMEM      | 0x0800_0000   | 0x0002_0000   | 0x2000_0000   | 0x2007_FFFF    | 512KB, input/output      |
+| ACCEL      | 0x0810_0000   | 0x0000_0010   | 0x2040_0000   | 0x2040_003F    | GEMV control registers   |
+
+**Add these two new regions:**
+
+| Region     | Word Start    | Word Depth    | Byte Start    | Byte End       | Notes                    |
+|------------|---------------|---------------|---------------|----------------|--------------------------|
+| **SPM**    | 0x0820_0000   | 0x0000_4000   | 0x2080_0000   | 0x2080_FFFF    | 64KB, on-chip, 1-cycle   |
+| **DMA**    | 0x0824_0000   | 0x0000_0010   | 0x2090_0000   | 0x2090_003F    | DMA control registers    |
+
+---
+
+## Part 0: Verify Inline ASM Optimization in Software
+
+**Check files: `program/test_code/int_model_q12.c` and `program/test_code/int_model_q12.h`**
+
+The ALU now has hardware `mul`/`mulh`/`mulhsu`/`mulhu` instructions (RV32IM). But the **software may still be using slow C-level multiplication** instead of inline assembly that directly emits these instructions.
+
+**What to check:**
+1. Find the Q12 fixed-point multiplication function. It might be called `q12_mul`, `fixed_mul`, `Q_MUL`, or similar. It could also be a macro.
+2. Check if it uses inline ASM with `mul` and `mulh`, or if it's pure C (e.g., `(int32_t)(((int64_t)a * b) >> 12)`).
+3. The pure C version relies on the compiler to generate `mul`/`mulh`. This often works, but **explicit inline ASM is guaranteed optimal**.
+
+**If inline ASM is NOT present**, add this optimized version:
+```c
+static inline int32_t q12_mul(int32_t a, int32_t b) {
+    int32_t hi;
+    uint32_t lo;
+    asm volatile (
+        "mul  %[lo], %[a], %[b]\n\t"
+        "mulh %[hi], %[a], %[b]\n\t"
+        : [lo] "=r"(lo), [hi] "=r"(hi)
+        : [a] "r"(a), [b] "r"(b)
+    );
+    return (hi << 20) | (lo >> 12);  // Q12: shift right by 12 bits
+}
+```
+Note: For Q12, the shift is `>> 12` (not `>> 16` as in Q16.16). The recombination is `(hi << (32-12)) | (lo >> 12)` = `(hi << 20) | (lo >> 12)`.
+
+Also check for Q12 addition — `q12_add` is just regular int32 addition, no special handling needed (unlike Q16.16 which sometimes had saturation logic).
+
+**If inline ASM IS already present**, verify the shift amount matches Q12 format.
+
+**Report:** In `changelog_part0.md`, document what you found and what (if anything) you changed.
+
+---
+
+## Part 1: Create SPM Module
+
+**Create file: `rtl/memory/scratchpad.sv`**
+
+Design spec:
+- 64KB = 16384 words of 32-bit
+- Single-port SRAM (read or write per cycle, not both simultaneously needed for now)
+- 1-cycle read latency, 1-cycle write
+- Interface: standard req/write/addr/wdata/rdata signals
+- Addr input is a byte offset relative to SPM base (cpu_top will subtract the base before passing)
+- Use behavioral SRAM for simulation (`ifdef SIM`):
+  ```systemverilog
+  logic [31:0] mem [0:16383];
+  ```
+- For synthesis (`else`), use the provided TSMC 28nm SRAM macro:
+  - `ts1n28hpcphvtb32768x32m16s` (32768x32, 128KB) — use only lower 16384 addresses
+- Read: on `req_i && !write_i`, output `rdata_o` on **next clock edge** (registered read)
+- Write: on `req_i && write_i`, write to SRAM on clock edge
+
+**Write `changelog_part1.md` after completion.**
+
+---
+
+## Part 2: Create DMA Controller
+
+**Create file: `rtl/dma/dma_controller.sv`**
+
+Design spec:
+- MMIO register interface (control port from MCU, same style as GEMV accel):
+  ```
+  Offset 0x00: SRC_ADDR  (W) — source byte address (in DMEM or SPM address space)
+  Offset 0x04: DST_ADDR  (W) — destination byte address (in DMEM or SPM address space)
+  Offset 0x08: LEN       (W) — number of 32-bit words to transfer
+  Offset 0x0C: CTRL      (W) — bit[0] = start
+  Offset 0x10: STATUS    (R) — bit[0] = done, bit[1] = busy
+  ```
+- FSM: `IDLE → READ_REQ → READ_WAIT → WRITE_REQ → WRITE_WAIT → (loop or DONE)`
+- In each transfer iteration:
+  1. Issue read request to source port
+  2. Wait for read data (1 cycle for SPM, 4 cycles for DMEM)
+  3. Issue write request to destination port
+  4. Wait for write acknowledgment
+  5. Increment src/dst addresses by 4, decrement remaining count
+  6. If count == 0, go to DONE
+- The DMA needs **two memory ports**:
+  - **DMEM port**: to read/write external DMEM (goes through arbiter in cpu_top)
+  - **SPM port**: to read/write SPM directly (direct connection in cpu_top)
+- Direction detection:
+  - If `src_addr` is in DMEM byte range (0x0020_0000 ~ 0x011F_FFFF) → DMEM-to-SPM transfer
+  - If `src_addr` is in SPM byte range (0x2080_0000 ~ 0x2080_FFFF) → SPM-to-DMEM transfer
+  - Use parameters for these ranges, don't hardcode
+- CPU polls STATUS register via MMIO to know when transfer is complete.
+- For DMEM reads: the DMA must respect the 4-cycle external memory latency. Count 4 cycles per DMEM access (same as MCU's LATENCY_CYCLES=4).
+- For SPM reads: 1 cycle.
+
+**Also create file: `rtl/dma/dma_controller.h`**
+
+```c
+#ifndef DMA_CONTROLLER_H_
+#define DMA_CONTROLLER_H_
+
+#include <stdint.h>
+
+#define DMA_BASE        0x20900000UL
+
+#define DMA_SRC_ADDR    (*(volatile uint32_t *)(DMA_BASE + 0x00))
+#define DMA_DST_ADDR    (*(volatile uint32_t *)(DMA_BASE + 0x04))
+#define DMA_LEN         (*(volatile uint32_t *)(DMA_BASE + 0x08))
+#define DMA_CTRL        (*(volatile uint32_t *)(DMA_BASE + 0x0C))
+#define DMA_STATUS      (*(volatile uint32_t *)(DMA_BASE + 0x10))
+
+#define SPM_BASE        0x20800000UL
+
+static inline void dma_to_spm(uint32_t dmem_src,
+                               uint32_t spm_offset,
+                               uint32_t n_words)
+{
+    DMA_SRC_ADDR = dmem_src;
+    DMA_DST_ADDR = SPM_BASE + spm_offset;
+    DMA_LEN      = n_words;
+    DMA_CTRL     = 1u;
+    while (!(DMA_STATUS & 1u)) { /* poll done */ }
+}
+
+static inline void dma_from_spm(uint32_t spm_offset,
+                                 uint32_t dmem_dst,
+                                 uint32_t n_words)
+{
+    DMA_SRC_ADDR = SPM_BASE + spm_offset;
+    DMA_DST_ADDR = dmem_dst;
+    DMA_LEN      = n_words;
+    DMA_CTRL     = 1u;
+    while (!(DMA_STATUS & 1u)) { /* poll done */ }
+}
+
+#endif
+```
+
+**Write `changelog_part2.md` after completion.**
+
+---
+
+## Part 3: Modify MCU — Add SPM and DMA Address Decode
+
+**Modify file: `rtl/scalar_core/mcu.sv`**
+
+Changes needed:
+
+1. **Add parameters** for SPM and DMA address ranges:
+   ```systemverilog
+   parameter SPM_START_W  = 32'h0820_0000,
+   parameter SPM_DEPTH_W  = 32'h0000_4000,   // 16384 words = 64KB
+   parameter DMA_START_W  = 32'h0824_0000,
+   parameter DMA_DEPTH_W  = 32'h0000_0010
+   ```
+
+2. **Add SPM and DMA ports** to module interface:
+   ```systemverilog
+   // SPM port (directly connected to on-chip SPM — 1-cycle access)
+   output logic                 spm_req_o,
+   output logic                 spm_write_o,
+   output logic [DWidth-1:0]    spm_addr_o,     // byte offset relative to SPM base
+   output logic [DWidth-1:0]    spm_wdata_o,
+   input  logic [DWidth-1:0]    spm_rdata_i,
+
+   // DMA control port (same pattern as ACCEL)
+   output logic                 dma_req_o,
+   output logic                 dma_write_o,
+   output logic [DWidth-1:0]    dma_addr_o,     // register word offset
+   output logic [DWidth-1:0]    dma_wdata_o,
+   input  logic [DWidth-1:0]    dma_rdata_i,
+   input  logic                 dma_ready_i
+   ```
+
+3. **Add address decode logic** (same pattern as existing `dmem_addr_is_io` and `dmem_addr_is_accel`):
+   ```systemverilog
+   logic dmem_addr_is_spm;
+   assign dmem_addr_is_spm =
+       (dmem_addr_i >= (SPM_START_W << 2)) &&
+       (dmem_addr_i <  ((SPM_START_W + SPM_DEPTH_W) << 2));
+
+   logic dmem_addr_is_dma;
+   assign dmem_addr_is_dma =
+       (dmem_addr_i >= (DMA_START_W << 2)) &&
+       (dmem_addr_i <  ((DMA_START_W + DMA_DEPTH_W) << 2));
+   ```
+
+4. **SPM access path — CRITICAL: must be faster than DMEM (1-cycle ready, not 4):**
+   - When `dmem_addr_is_spm` is true in D_IDLE state:
+     - Drive `spm_req_o=1`, route `spm_write_o`, `spm_addr_o` (= `dmem_addr_i - (SPM_START_W << 2)`), `spm_wdata_o`
+     - Transition to D_WAIT, but with a **1-cycle latency counter** (not LATENCY_CYCLES=4)
+     - Latch `is_spm_q` flag (same pattern as `is_iomem_q`, `is_accel_q`)
+     - After 1 cycle, assert `dmem_ready_o = 1` and return `spm_rdata_i`
+   - **Implementation approach:** Change the latency counter init:
+     - Current: `d_latency_cnt_d = '0;` → counts 0,1,2,3 (4 cycles)
+     - For SPM: `d_latency_cnt_d = LATENCY_CYCLES - 2;` → counts from 2, reaches 3 in 1 cycle
+     - Or: add a separate `spm_latency` parameter = 1
+
+5. **DMA access path:**
+   - Same pattern as ACCEL — DMA control registers are MMIO.
+   - Latch `is_dma_q` flag.
+   - Ready comes from `dma_ready_i`.
+   - Handle exactly like ACCEL is handled (look at existing `is_accel_q` logic and replicate).
+
+6. **Update `dmem_rdata_o` mux** — add SPM and DMA to the existing chain:
+   ```systemverilog
+   assign dmem_rdata_o = is_spm_q   ? spm_rdata_i   :
+                          is_dma_q   ? dma_rdata_q    :
+                          is_iomem_q ? iomem_rdata_i  :
+                          is_accel_q ? accel_rdata_q   :
+                                       dmem_rdata_i;
+   ```
+   Note: `dma_rdata_q` should be latched like `accel_rdata_q` is latched.
+
+7. **Update SPM/DMA address output paths:**
+   ```systemverilog
+   assign spm_addr_o  = dmem_addr_i - (SPM_START_W << 2);
+   assign spm_wdata_o = dmem_wdata_i;
+   assign spm_write_o = dmem_write_i;
+
+   assign dma_addr_o  = dmem_addr_i - (DMA_START_W << 2);
+   assign dma_wdata_o = dmem_wdata_i;
+   assign dma_write_o = dmem_write_i;
+   ```
+
+**Write `changelog_part3.md` after completion.**
+
+---
+
+## Part 4: Modify cpu_top.sv — Wire SPM, DMA, and Update Arbiter
+
+**Modify file: `rtl/cpu_top.sv`**
+
+### 4.1 Add parameters
+
+```systemverilog
+parameter SPM_START_W  = 32'h0820_0000,
+parameter SPM_DEPTH_W  = 32'h0000_4000,
+parameter DMA_START_W  = 32'h0824_0000,
+parameter DMA_DEPTH_W  = 32'h0000_0010
+```
+
+### 4.2 Declare internal signals
+
+```systemverilog
+// MCU <-> SPM (CPU access path)
+logic                 spm_cpu_req;
+logic                 spm_cpu_write;
+logic [DWidth-1:0]    spm_cpu_addr;
+logic [DWidth-1:0]    spm_cpu_wdata;
+logic [DWidth-1:0]    spm_cpu_rdata;
+
+// MCU <-> DMA control
+logic                 dma_ctrl_req;
+logic                 dma_ctrl_write;
+logic [DWidth-1:0]    dma_ctrl_addr;
+logic [DWidth-1:0]    dma_ctrl_wdata;
+logic [DWidth-1:0]    dma_ctrl_rdata;
+logic                 dma_ctrl_ready;
+
+// DMA <-> external DMEM port
+logic                 dma_mem_req;
+logic                 dma_mem_write;
+logic [DWidth-1:0]    dma_mem_addr;
+logic [DWidth-1:0]    dma_mem_wdata;
+
+// DMA <-> SPM port
+logic                 dma_spm_req;
+logic                 dma_spm_write;
+logic [DWidth-1:0]    dma_spm_addr;
+logic [DWidth-1:0]    dma_spm_wdata;
+logic [DWidth-1:0]    dma_spm_rdata;
+
+// Merged SPM port (CPU + DMA arbitrated)
+logic                 spm_req;
+logic                 spm_write;
+logic [DWidth-1:0]    spm_addr;
+logic [DWidth-1:0]    spm_wdata;
+logic [DWidth-1:0]    spm_rdata;
+```
+
+### 4.3 Update MCU instantiation
+
+Pass new parameters (`SPM_START_W`, `SPM_DEPTH_W`, `DMA_START_W`, `DMA_DEPTH_W`) and connect new ports (`spm_req_o`, `spm_write_o`, `spm_addr_o`, `spm_wdata_o`, `spm_rdata_i`, `dma_req_o`, `dma_write_o`, `dma_addr_o`, `dma_wdata_o`, `dma_rdata_i`, `dma_ready_i`).
+
+### 4.4 SPM port arbiter (CPU vs DMA)
+
+DMA has priority over CPU when accessing SPM (CPU only accesses SPM between DMA bursts):
+```systemverilog
+assign spm_req   = dma_spm_req   ? 1'b1           : spm_cpu_req;
+assign spm_write = dma_spm_req   ? dma_spm_write  : spm_cpu_write;
+assign spm_addr  = dma_spm_req   ? dma_spm_addr   : spm_cpu_addr;
+assign spm_wdata = dma_spm_req   ? dma_spm_wdata  : spm_cpu_wdata;
+assign spm_cpu_rdata = spm_rdata;
+assign dma_spm_rdata = spm_rdata;
+```
+
+### 4.5 Instantiate SPM
+
+```systemverilog
+scratchpad #(
+    .DWidth(DWidth),
+    .Depth(16384)
+) u_spm (
+    .clk_i   (clk_i),
+    .rst_ni  (rst_ni),
+    .req_i   (spm_req),
+    .write_i (spm_write),
+    .addr_i  (spm_addr),
+    .wdata_i (spm_wdata),
+    .rdata_o (spm_rdata)
+);
+```
+
+### 4.6 Instantiate DMA controller
+
+```systemverilog
+dma_controller #(
+    .DWidth(DWidth),
+    .DMEM_START_BYTE(DMEM_START_W << 2),
+    .DMEM_END_BYTE ((DMEM_START_W + DMEM_DEPTH_W) << 2),
+    .SPM_START_BYTE (SPM_START_W << 2),
+    .SPM_END_BYTE  ((SPM_START_W + SPM_DEPTH_W) << 2)
+) u_dma (
+    .clk_i          (clk_i),
+    .rst_ni         (rst_ni),
+    // Control port (from MCU)
+    .ctrl_req_i     (dma_ctrl_req),
+    .ctrl_write_i   (dma_ctrl_write),
+    .ctrl_addr_i    (dma_ctrl_addr),
+    .ctrl_wdata_i   (dma_ctrl_wdata),
+    .ctrl_rdata_o   (dma_ctrl_rdata),
+    .ctrl_ready_o   (dma_ctrl_ready),
+    // DMEM port (to external DMEM via main arbiter)
+    .mem_req_o      (dma_mem_req),
+    .mem_write_o    (dma_mem_write),
+    .mem_addr_o     (dma_mem_addr),
+    .mem_wdata_o    (dma_mem_wdata),
+    .mem_rdata_i    (dmem_rdata_i),
+    // SPM port (direct to SPM arbiter)
+    .spm_req_o      (dma_spm_req),
+    .spm_write_o    (dma_spm_write),
+    .spm_addr_o     (dma_spm_addr),
+    .spm_wdata_o    (dma_spm_wdata),
+    .spm_rdata_i    (dma_spm_rdata)
+);
+```
+
+### 4.7 Update external DMEM arbiter — NOW 3-way
+
+The old arbiter was a 2-way priority MUX (D-cache > MCU). Now it must handle 3 requestors.
+
+**Priority order: D-cache (GEMV DMA) > DMA controller > MCU (CPU)**
+
+Replace the existing arbiter assigns:
+```systemverilog
+// OLD (remove these lines):
+// assign dmem_req_o   = dcache_mem_req ? 1'b1 : mcu_ext_dmem_req;
+// assign dmem_write_o = dcache_mem_req ? dcache_mem_write : mcu_ext_dmem_write;
+// assign dmem_addr_o  = dcache_mem_req ? dcache_mem_addr  : mcu_ext_dmem_addr;
+// assign dmem_wdata_o = dcache_mem_write ? dcache_mem_wdata : mcu_ext_dmem_wdata;
+
+// NEW: 3-way priority arbiter for external DMEM bus
+assign dmem_req_o   = dcache_mem_req ? 1'b1              :
+                      dma_mem_req    ? 1'b1              :
+                                       mcu_ext_dmem_req;
+
+assign dmem_write_o = dcache_mem_req ? dcache_mem_write  :
+                      dma_mem_req    ? dma_mem_write     :
+                                       mcu_ext_dmem_write;
+
+assign dmem_addr_o  = dcache_mem_req ? dcache_mem_addr   :
+                      dma_mem_req    ? dma_mem_addr      :
+                                       mcu_ext_dmem_addr;
+
+// wdata MUX: be careful with write pre-assertion timing.
+// The existing D-cache uses dcache_mem_write (pre-asserted 1 cycle before
+// dcache_mem_req) to meet D_MEMORY hold-time constraints.
+// For DMA and MCU, use the same careful routing:
+assign dmem_wdata_o = dcache_mem_write ? dcache_mem_wdata :
+                      dma_mem_write    ? dma_mem_wdata    :
+                                         mcu_ext_dmem_wdata;
+```
+
+**Write `changelog_part4.md` after completion.**
+
+---
+
+## Part 5: Parallelize GEMV Accelerator
+
+**Modify file: `rtl/accel/gemv_accel.sv`**
+
+### Problem with current design
+
+The current GEMV does sequential MAC — one multiply-accumulate per cycle in `StCompute`. For a 256-element dot product, that's 256 cycles just for computation, plus 256 DMA reads for the vector and 256 DMA reads per row. This is no faster than the CPU doing `mul`/`mulh` directly.
+
+### Target: 8-way parallel MAC with adder tree
+
+Change the GEMV to process **8 elements per cycle** during the compute phase:
+
+1. **Add internal buffers** (already partially there as `vec_buf` and implicit row storage):
+   - `vec_buf[MAX_DIM]` — stores the full input vector (loaded once in `StLoadVec`)
+   - `row_buf[MAX_DIM]` — stores one matrix row (loaded per row in `StLoadRow`)
+   These may already exist. If not, add them.
+
+2. **Modify `StCompute`** to process 8 elements per cycle:
+   ```
+   // Instead of:  acc += row_buf[col] * vec_buf[col]; col++;
+   // Do:
+   product[0] = row_buf[col+0] * vec_buf[col+0];
+   product[1] = row_buf[col+1] * vec_buf[col+1];
+   ...
+   product[7] = row_buf[col+7] * vec_buf[col+7];
+   
+   // Adder tree (3 stages for 8 inputs):
+   sum_s1[0] = product[0] + product[1];
+   sum_s1[1] = product[2] + product[3];
+   sum_s1[2] = product[4] + product[5];
+   sum_s1[3] = product[6] + product[7];
+   sum_s2[0] = sum_s1[0] + sum_s1[1];
+   sum_s2[1] = sum_s1[2] + sum_s1[3];
+   sum_s3    = sum_s2[0] + sum_s2[1];
+   
+   acc += sum_s3;
+   col += 8;
+   ```
+
+3. **Handle non-multiple-of-8 columns:**
+   - If `cols` is not a multiple of 8, the last iteration processes fewer elements
+   - Mask out invalid products (set to 0) for the remaining slots
+   - Or: pad `cols` up to next multiple of 8 in software (simpler HW)
+
+4. **Keep the same external interface** — MMIO registers (MAT_ADDR, VEC_ADDR, OUT_ADDR, ROWS, COLS, CTRL, STATUS) remain identical. The C header `gemv_accel.h` does NOT change. Only the internal datapath changes.
+
+5. **Multiplier instantiation:**
+   - Use 8 instances of combinational multiplier
+   - For synthesis, can use DesignWare `DW_mult_pipe` or simple `*` operator (synthesizer will infer multipliers)
+   - The Q12 shift (`>> 12`) should be applied to the final accumulated result, NOT to each individual product — this preserves precision (accumulate at full 64-bit width, then shift once at the end)
+
+6. **Performance improvement:**
+   - Current: K cycles for K-element dot product
+   - New: ceil(K/8) cycles for K-element dot product → **8x speedup** on compute phase
+   - Total per-row: still dominated by K DMA reads for loading the row, but compute is now much faster
+
+### Optional enhancement (if time permits):
+- Pipeline the load and compute: while computing row N, start loading row N+1 (double-buffering)
+
+**DO NOT change `gemv_accel.h` — the MMIO register interface stays the same.**
+
+**Write `changelog_part5.md` after completion.**
+
+---
+
+## Part 6: Update Testbench
+
+**Modify file: `sim/tb/lstm_tb.sv`**
+
+- Update the `CPU_TOP` instantiation to pass new parameters: `SPM_START_W`, `SPM_DEPTH_W`, `DMA_START_W`, `DMA_DEPTH_W`
+- No new external memory modules needed — SPM is inside CPU_TOP
+- Optionally add monitoring signals for debugging:
+  ```systemverilog
+  // Monitor SPM and DMA activity
+  wire spm_active = DUT.u_spm.req_i;
+  wire dma_busy   = DUT.u_dma.ctrl_rdata_o[1]; // STATUS bit[1]
+  ```
+
+**Write `changelog_part6.md` after completion.**
+
+---
+
+## Execution Order
+
+Do the parts **in this order**:
+1. **Part 0** first (SW check — quick, no RTL changes)
+2. **Part 1** (SPM — standalone module, no dependencies)
+3. **Part 2** (DMA — standalone module, no dependencies)
+4. **Part 3** (MCU modification — needs to know SPM/DMA interfaces from Parts 1-2)
+5. **Part 4** (cpu_top wiring + arbiter update — integrates everything)
+6. **Part 5** (GEMV parallelization — independent of SPM/DMA, can be done anytime)
+7. **Part 6** (Testbench — final integration check)
+
+---
+
+## DO NOT MODIFY these files
+- `rtl/scalar_core/scalar_core.sv`
+- `rtl/scalar_core/decoder.sv`
+- `rtl/scalar_core/alu.sv`
+- `rtl/cache/instr_cache.sv`
+- `rtl/cache/data_cache.sv` (keep as-is for now)
+
+## Coding Style
+- Use SystemVerilog (`.sv`)
+- Follow existing code conventions (see `mcu.sv` and `gemv_accel.sv` for style reference)
+- Use `always_ff` for sequential, `always_comb` for combinational
+- Use `logic` not `reg`/`wire`
+- Active-low reset (`rst_ni`)
+- Include `ifdef SIM` / `else` blocks for SRAM: behavioral array for sim, TSMC macro for synthesis
+- All new modules must have a copyright header matching the existing style

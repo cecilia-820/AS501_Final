@@ -1,0 +1,219 @@
+
+There are no discarded input sections
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+INSTRAM          0x00000000         0x00020000         xrw
+DATARAM_L        0x00200000         0x01000000         xrw
+DATARAM_H        0x20000000         0x00080000         xrw
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+                [!provide]                        PROVIDE (_isramstart = ORIGIN (INSTRAM))
+                [!provide]                        PROVIDE (_dsramstart = ORIGIN (DATARAM_L))
+                0x01200000                        PROVIDE (_estack = (ORIGIN (DATARAM_L) + LENGTH (DATARAM_L)))
+
+.text           0x00000000     0x2e28
+                [!provide]                        PROVIDE (_start = .)
+                0x00000000                        . = ALIGN (0x4)
+                0x00000000                        _stext = .
+ *(.text)
+ .text          0x00000000       0x38 /tmp/ccAmsCvR.o
+                0x00000000                _start
+ .text          0x00000038     0x2d18 /tmp/ccCEbCw9.o
+                0x00002b38                main
+ .text          0x00002d50       0xd8 /tmp/ccXk54BN.o
+                0x00002d50                arena_reset
+                0x00002d74                arena_alloc
+ .text          0x00002e28        0x0 /tmp/cckQOHIr.o
+ .text          0x00002e28        0x0 /tmp/ccrXFHU5.o
+ .text          0x00002e28        0x0 /tmp/cc8k0D8Q.o
+ *(.text*)
+                0x00002e28                        . = ALIGN (0x4)
+                0x00002e28                        _etext = .
+
+.data           0x00200000        0x0
+                0x00200000                        . = ALIGN (0x4)
+                0x00200000                        _sdata = .
+                0x00200800                        PROVIDE (__global_pointer$ = (. + 0x800))
+ *(.data)
+ .data          0x00200000        0x0 /tmp/ccAmsCvR.o
+ .data          0x00200000        0x0 /tmp/ccCEbCw9.o
+ .data          0x00200000        0x0 /tmp/ccXk54BN.o
+ .data          0x00200000        0x0 /tmp/cckQOHIr.o
+ .data          0x00200000        0x0 /tmp/ccrXFHU5.o
+ .data          0x00200000        0x0 /tmp/cc8k0D8Q.o
+ *(.data*)
+ *(.sdata)
+ *(.sdata*)
+                0x00200000                        . = ALIGN (0x4)
+                0x00200000                        _edata = .
+
+.rodata         0x00200000   0xa3f598
+                0x00200000                        . = ALIGN (0x4)
+ *(.rodata)
+ .rodata        0x00200000   0xa3f598 /tmp/cc8k0D8Q.o
+                0x00200000                enc_emb_q
+                0x00692600                dec_emb_q
+                0x00910c00                pos_enc_q
+                0x00913400                out_w_q
+                0x00b91a00                out_b_q
+                0x00b9b998                enc_attn_Wq_q
+                0x00ba3998                enc_attn_Wk_q
+                0x00bab998                enc_attn_Wv_q
+                0x00bb3998                enc_attn_Wo_q
+                0x00bbb998                enc_attn_bq_q
+                0x00bbbb98                enc_attn_bk_q
+                0x00bbbd98                enc_attn_bv_q
+                0x00bbbf98                enc_attn_bo_q
+                0x00bbc198                enc_ff1_W_q
+                0x00bcc198                enc_ff1_b_q
+                0x00bcc598                enc_ff2_W_q
+                0x00bdc598                enc_ff2_b_q
+                0x00bdc798                enc_ln1_gamma_q
+                0x00bdc998                enc_ln1_beta_q
+                0x00bdcb98                enc_ln2_gamma_q
+                0x00bdcd98                enc_ln2_beta_q
+                0x00bdcf98                enc_final_ln_gamma_q
+                0x00bdd098                enc_final_ln_beta_q
+                0x00bdd198                dec_self_Wq_q
+                0x00be5198                dec_self_Wk_q
+                0x00bed198                dec_self_Wv_q
+                0x00bf5198                dec_self_Wo_q
+                0x00bfd198                dec_self_bq_q
+                0x00bfd398                dec_self_bk_q
+                0x00bfd598                dec_self_bv_q
+                0x00bfd798                dec_self_bo_q
+                0x00bfd998                dec_cross_Wq_q
+                0x00c05998                dec_cross_Wk_q
+                0x00c0d998                dec_cross_Wv_q
+                0x00c15998                dec_cross_Wo_q
+                0x00c1d998                dec_cross_bq_q
+                0x00c1db98                dec_cross_bk_q
+                0x00c1dd98                dec_cross_bv_q
+                0x00c1df98                dec_cross_bo_q
+                0x00c1e198                dec_ff1_W_q
+                0x00c2e198                dec_ff1_b_q
+                0x00c2e598                dec_ff2_W_q
+                0x00c3e598                dec_ff2_b_q
+                0x00c3e798                dec_ln1_gamma_q
+                0x00c3e998                dec_ln1_beta_q
+                0x00c3eb98                dec_ln2_gamma_q
+                0x00c3ed98                dec_ln2_beta_q
+                0x00c3ef98                dec_ln3_gamma_q
+                0x00c3f198                dec_ln3_beta_q
+                0x00c3f398                dec_final_ln_gamma_q
+                0x00c3f498                dec_final_ln_beta_q
+ *(.rodata*)
+ *(.srodata)
+ *(.srodata*)
+                0x00c3f598                        . = ALIGN (0x4)
+
+.weights        0x00c3f598        0x0
+                0x00c3f598                        . = ALIGN (0x4)
+                0x00c3f598                        _sweights = .
+ *(.weights)
+                0x00c3f598                        . = ALIGN (0x4)
+                0x00c3f598                        _eweights = .
+
+.label          0x00c3f598        0x0
+                0x00c3f598                        . = ALIGN (0x4)
+                0x00c3f598                        _slabel = .
+ *(.label)
+                0x00c3f598                        . = ALIGN (0x4)
+                0x00c3f598                        _elabel = .
+
+.arena          0x00c3f598        0x0
+                0x00c3f598                        . = ALIGN (0x4)
+ *(.arena)
+
+.bss            0x00c3f598    0x40678
+                0x00c3f598                        . = ALIGN (0x4)
+                0x00c3f598                        _sbss = .
+ *(.bss)
+ .bss           0x00c3f598        0x0 /tmp/ccAmsCvR.o
+ .bss           0x00c3f598      0x674 /tmp/ccCEbCw9.o
+ .bss           0x00c3fc0c    0x40000 /tmp/ccXk54BN.o
+                0x00c3fc0c                g_arena_buf
+ .bss           0x00c7fc0c        0x0 /tmp/cckQOHIr.o
+ .bss           0x00c7fc0c        0x0 /tmp/ccrXFHU5.o
+ .bss           0x00c7fc0c        0x0 /tmp/cc8k0D8Q.o
+ *(.bss*)
+ *(.sbss)
+ .sbss          0x00c7fc0c        0x4 /tmp/ccXk54BN.o
+                0x00c7fc0c                g_arena_off
+ *(.sbss*)
+ *(COMMON)
+                0x00c7fc10                        . = ALIGN (0x4)
+                0x00c7fc10                        _ebss = .
+
+.heap           0x00c7fc10        0x0
+                0x00c7fc10                        . = ALIGN (0x4)
+                0x00c7fc10                        _heap_start = .
+
+.input          0x20000000    0x1ff84
+                0x20000000                        . = ALIGN (0x4)
+                0x20000000                        _sinput = .
+ *(.input)
+ .input         0x20000000    0x1ff84 /tmp/ccrXFHU5.o
+                0x20000000                input_src_offsets
+                0x20000fdc                input_src_data
+                0x2000fcb0                input_ref_offsets
+                0x20010c8c                input_ref_data
+                0x2001ff84                        . = ALIGN (0x4)
+                0x2001ff84                        _einput = .
+                [!provide]                        PROVIDE (_input_base = ADDR (.input))
+
+.rela.dyn       0x2001ff84        0x0
+ .rela.text     0x2001ff84        0x0 /tmp/ccAmsCvR.o
+
+.result         0x2001ff84    0x50364
+                0x2001ff84                        . = ALIGN (0x4)
+                0x2001ff84                        _sresult = .
+ *(.result)
+ .result        0x2001ff84    0x50364 /tmp/cckQOHIr.o
+                0x2001ff84                result_status
+                0x2001ff88                result_sentence_count
+                0x2001ff8c                result_used_u32
+                0x2001ff90                result_data
+                0x200702e8                        . = ALIGN (0x4)
+                0x200702e8                        _eresult = .
+                [!provide]                        PROVIDE (_result_base = ADDR (.result))
+LOAD /tmp/ccAmsCvR.o
+LOAD /tmp/ccCEbCw9.o
+LOAD /tmp/ccXk54BN.o
+LOAD /tmp/cckQOHIr.o
+LOAD /tmp/ccrXFHU5.o
+LOAD /tmp/cc8k0D8Q.o
+LOAD /opt/riscv/lib/gcc/riscv32-unknown-elf/13.2.0/libgcc.a
+START GROUP
+LOAD /opt/riscv/lib/gcc/riscv32-unknown-elf/13.2.0/../../../../riscv32-unknown-elf/lib/libc.a
+LOAD /opt/riscv/lib/gcc/riscv32-unknown-elf/13.2.0/../../../../riscv32-unknown-elf/lib/libgloss.a
+END GROUP
+LOAD /opt/riscv/lib/gcc/riscv32-unknown-elf/13.2.0/libgcc.a
+OUTPUT(./out/eval_int_riscv.elf elf32-littleriscv)
+
+.riscv.attributes
+                0x00000000       0x2a
+ .riscv.attributes
+                0x00000000       0x28 /tmp/ccAmsCvR.o
+ .riscv.attributes
+                0x00000028       0x2a /tmp/ccCEbCw9.o
+ .riscv.attributes
+                0x00000052       0x2a /tmp/ccXk54BN.o
+ .riscv.attributes
+                0x0000007c       0x2a /tmp/cckQOHIr.o
+ .riscv.attributes
+                0x000000a6       0x2a /tmp/ccrXFHU5.o
+ .riscv.attributes
+                0x000000d0       0x2a /tmp/cc8k0D8Q.o
+
+.comment        0x00000000       0x10
+ .comment       0x00000000       0x10 /tmp/ccCEbCw9.o
+                                 0x11 (size before relaxing)
+ .comment       0x00000010       0x11 /tmp/ccXk54BN.o
+ .comment       0x00000010       0x11 /tmp/cckQOHIr.o
+ .comment       0x00000010       0x11 /tmp/ccrXFHU5.o
+ .comment       0x00000010       0x11 /tmp/cc8k0D8Q.o

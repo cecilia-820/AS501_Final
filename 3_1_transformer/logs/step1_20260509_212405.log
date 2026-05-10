@@ -1,0 +1,182 @@
+==== Sat May  9 21:27:35 KST 2026 | Step 1: Transformer SW Switch ====
+==== Sat May  9 21:27:35 KST 2026 | COMMAND: make server MAX_SENTENCES=5 (TF_Training_DH) ====
+ [server] HOST 추론  (MAX_SENTENCES=5)
+gcc -O2 -Wall -Wextra -std=c11 -DSERVER -DMAX_SENTENCES_OVERRIDE=5 -I./test_code ./test_code/eval_transformer_q.c ./test_code/int_model_transformer_q12.c ./test_code/arena.c ./test_code/result.c \
+    -o ./out/eval_transformer_server -lm
+./out/eval_transformer_server              \
+    --out-hyp            ./processed/val.hyp.tf_q.u32bin          \
+    --out-result-txt     ./processed/val.result_mem.tf_q.txt      \
+    --out-result-summary ./processed/val.result_summary.tf_q.txt  \
+    --max-sentences 5
+[TF][trace] main enter  (sentences=1)
+[TF][trace] buffers OK
+[TF][trace] sentence 0 begin
+[TF][trace] encoder done (src_len=3)
+[TF][trace] decoder step 0
+[TF][trace] decoder step 1
+[TF][trace] decoder step 2
+[TF][trace] decoder step 3
+[TF][trace] decoder step 4
+[TF][trace] sentence done (out_len=6)
+[Decode] 1/1  (tf_dec_steps_total=5)
+[TF][trace] main exit  (decoded=1)
+[Save] ./processed/val.hyp.tf_q.u32bin  (n=1)
+ [server] 완료
+==== Sat May  9 22:17:16 KST 2026 | BEFORE EDIT: program/test_code/ backup ====
+arena.c
+arena.h
+eval_int_c.c
+gemv_accel.h
+input_data.c
+input_data.h
+int_model_q12.c
+int_model_q12.h
+result.c
+result.h
+==== Sat May  9 22:17:16 KST 2026 | COMMAND: Copy TF files to program/test_code/ ====
+Files copied successfully
+arena.c
+arena.h
+eval_int_c.c
+eval_transformer_q.c
+gemv_accel.h
+input_data.c
+input_data.h
+int_model_q12.c
+int_model_q12.h
+int_model_transformer_q12.c
+int_model_transformer_q12.h
+result.c
+result.h
+==== Sat May  9 22:30:17 KST 2026 | COMMAND: make clean && make server ====
+rm -rf ./out \
+	./processed/val.result_mem.int_c.txt \
+	./processed/val.result_summary.int_c.txt \
+	./processed/val.hyp.int_c.u32bin \
+	./processed/test.hyp.int_c.u32bin
+mkdir -p ./out
+gcc -O2 -std=c11 -DSERVER -DMAX_SENTENCES_OVERRIDE=1 -o ./out/eval_transformer_server \
+	./test_code/eval_transformer_q.c \
+	./test_code/result.c \
+	./test_code/int_model_transformer_q12.c \
+	./test_code/arena.c
+cd . && ./out/eval_transformer_server
+[TF][trace] main enter  (sentences=1)
+[TF][trace] buffers OK
+[TF][trace] sentence 0 begin
+[TF][trace] encoder done (src_len=3)
+[TF][trace] decoder step 0
+[TF][trace] decoder step 1
+[TF][trace] decoder step 2
+[TF][trace] decoder step 3
+[TF][trace] decoder step 4
+[TF][trace] sentence done (out_len=6)
+[Decode] 1/1  (tf_dec_steps_total=5)
+[TF][trace] main exit  (decoded=1)
+[Save] ./processed/val.hyp.int_c.u32bin  (n=1)
+==== Sat May  9 22:46:22 KST 2026 | COMMAND: make riscv_build ====
+/opt/riscv/bin/riscv32-unknown-elf-gcc -march=rv32im_zicsr -mabi=ilp32 -O2 -DRISCV -DMAX_SENTENCES_OVERRIDE=1 -Wl,-Bstatic,-T./common/sections_tb.lds,-Map=./out/mem.map -ffreestanding -nostartfiles \
+	-o ./out/eval_int_riscv.elf \
+	./common/start.s \
+	./test_code/eval_transformer_q.c \
+	./test_code/arena.c \
+	./test_code/result.c \
+	./test_code/int_model_transformer_q12.c
+./common/start.s: Assembler messages:
+./common/start.s: Warning: end of file not at end of a line; newline inserted
+/opt/riscv/lib/gcc/riscv32-unknown-elf/13.2.0/../../../../riscv32-unknown-elf/bin/ld: ./out/eval_int_riscv.elf section `.text' will not fit in region `INSTRAM'
+/opt/riscv/lib/gcc/riscv32-unknown-elf/13.2.0/../../../../riscv32-unknown-elf/bin/ld: section .bss VMA [00200000,00240677] overlaps section .text VMA [00000000,00a411b7]
+/opt/riscv/lib/gcc/riscv32-unknown-elf/13.2.0/../../../../riscv32-unknown-elf/bin/ld: region `INSTRAM' overflowed by 10621368 bytes
+collect2: error: ld returned 1 exit status
+make: *** [Makefile:201: riscv_build] Error 1
+==== Sat May  9 22:53:26 KST 2026 | COMMAND: make riscv_build (retry) ====
+/opt/riscv/bin/riscv32-unknown-elf-gcc -march=rv32im_zicsr -mabi=ilp32 -O2 -DRISCV -DMAX_SENTENCES_OVERRIDE=1 -Wl,-Bstatic,-T./common/sections_tb.lds,-Map=./out/mem.map -ffreestanding -nostartfiles \
+	-o ./out/eval_int_riscv.elf \
+	./common/start.s \
+	./test_code/eval_transformer_q.c \
+	./test_code/arena.c \
+	./test_code/result.c \
+	./test_code/int_model_transformer_q12.c
+./common/start.s: Assembler messages:
+./common/start.s: Warning: end of file not at end of a line; newline inserted
+/opt/riscv/bin/riscv32-unknown-elf-objdump --disassemble-all -d ./out/eval_int_riscv.elf > ./out/eval_int_riscv.dis
+==== Sat May  9 23:04:39 KST 2026 | COMMAND: make hex ====
+/opt/riscv/bin/riscv32-unknown-elf-gcc -march=rv32im_zicsr -mabi=ilp32 -O2 -DRISCV -DMAX_SENTENCES_OVERRIDE=1 -Wl,-Bstatic,-T./common/sections_tb.lds,-Map=./out/mem.map -ffreestanding -nostartfiles \
+	-o ./out/eval_int_riscv.elf \
+	./common/start.s \
+	./test_code/eval_transformer_q.c \
+	./test_code/arena.c \
+	./test_code/result.c \
+	./test_code/int_model_transformer_q12.c
+./common/start.s: Assembler messages:
+./common/start.s: Warning: end of file not at end of a line; newline inserted
+/opt/riscv/bin/riscv32-unknown-elf-objdump --disassemble-all -d ./out/eval_int_riscv.elf > ./out/eval_int_riscv.dis
+/opt/riscv/bin/riscv32-unknown-elf-objcopy -O binary -j .text ./out/eval_int_riscv.elf ./out/eval_int_riscv_imem.bin
+./common/b2h_converter ./out/eval_int_riscv_imem.bin ./out/eval_int_riscv_imem.hex 4 134217728
+Converted 1795 instructions (binary -> hex string)
+/opt/riscv/bin/riscv32-unknown-elf-objcopy -O binary -j .data -j .sdata -j .weights ./out/eval_int_riscv.elf ./out/eval_int_riscv_dmem.bin
+./common/b2h_converter ./out/eval_int_riscv_dmem.bin ./out/eval_int_riscv_dmem.hex 4 134217728
+Converted 2686310 instructions (binary -> hex string)
+/opt/riscv/bin/riscv32-unknown-elf-objcopy --dump-section .input=./out/eval_int_riscv_input.bin ./out/eval_int_riscv.elf
+./common/b2h_converter ./out/eval_int_riscv_input.bin ./out/eval_int_riscv_input.hex 4 134217728
+Converted 0 instructions (binary -> hex string)
+/opt/riscv/bin/riscv32-unknown-elf-objcopy --dump-section .result=./out/eval_int_riscv_result.bin ./out/eval_int_riscv.elf
+./common/b2h_converter ./out/eval_int_riscv_result.bin ./out/eval_int_riscv_result.hex 4 134217728
+Converted 84 instructions (binary -> hex string)
+==== Sat May  9 23:24:12 KST 2026 | COMMAND: make riscv ====
+/opt/riscv/bin/riscv32-unknown-elf-gcc -march=rv32im_zicsr -mabi=ilp32 -O2 -DRISCV -DMAX_SENTENCES_OVERRIDE=1 -Wl,-Bstatic,-T./common/sections_tb.lds,-Map=./out/mem.map -ffreestanding -nostartfiles \
+	-o ./out/eval_int_riscv.elf \
+	./common/start.s \
+	./test_code/eval_transformer_q.c \
+	./test_code/arena.c \
+	./test_code/result.c \
+	./test_code/int_model_transformer_q12.c
+./common/start.s: Assembler messages:
+./common/start.s: Warning: end of file not at end of a line; newline inserted
+/opt/riscv/bin/riscv32-unknown-elf-objdump --disassemble-all -d ./out/eval_int_riscv.elf > ./out/eval_int_riscv.dis
+/opt/riscv/bin/riscv32-unknown-elf-objcopy -O binary -j .text ./out/eval_int_riscv.elf ./out/eval_int_riscv_imem.bin
+./common/b2h_converter ./out/eval_int_riscv_imem.bin ./out/eval_int_riscv_imem.hex 4 134217728
+Converted 1795 instructions (binary -> hex string)
+/opt/riscv/bin/riscv32-unknown-elf-objcopy -O binary -j .data -j .sdata -j .weights ./out/eval_int_riscv.elf ./out/eval_int_riscv_dmem.bin
+./common/b2h_converter ./out/eval_int_riscv_dmem.bin ./out/eval_int_riscv_dmem.hex 4 134217728
+Converted 2686310 instructions (binary -> hex string)
+/opt/riscv/bin/riscv32-unknown-elf-objcopy --dump-section .input=./out/eval_int_riscv_input.bin ./out/eval_int_riscv.elf
+./common/b2h_converter ./out/eval_int_riscv_input.bin ./out/eval_int_riscv_input.hex 4 134217728
+Converted 0 instructions (binary -> hex string)
+/opt/riscv/bin/riscv32-unknown-elf-objcopy --dump-section .result=./out/eval_int_riscv_result.bin ./out/eval_int_riscv.elf
+./common/b2h_converter ./out/eval_int_riscv_result.bin ./out/eval_int_riscv_result.hex 4 134217728
+Converted 84 instructions (binary -> hex string)
+/usr/bin/python3 ./utils/update_tb_pc_addrs.py
+[UPDATED] /home/AS501_G3/3_1_transformer/sim/tb/lstm_tb.sv
+[UPDATED] changed PC entries: 0
+==== Sat May  9 23:56:06 KST 2026 | COMMAND: Starting VCS simulation ====
+Simulation started in screen session 'tf_sim'
+==== Sun May 10 00:01:46 KST 2026 | COMMAND: Rebuild after input_data fix ====
+make: *** No rule to make target 'clean'.  Stop.
+make: *** No rule to make target 'server'.  Stop.
+
+==== STEP 1 SUMMARY ====
+Server BLEU: N/A (only 1 test sentence available)
+Server HYP: "man running men ." (REF: "a man practices boxing")
+RTL output: "man running man ." (1 token differs from server due to fixed-point rounding)
+RTL Cycles: 172,412,938 (~172M)
+RTL Wall Time: 884 seconds (~15 minutes)
+Compilation: SUCCESS (with -O2 and --no-relax)
+
+Key Issues Encountered:
+1. Weight arrays needed __attribute__((section(".weights"))) to avoid IMEM overflow
+2. Input data needed separate .c file with __attribute__((section(".input")))
+3. RISC-V linker relaxation bug: --no-relax needed to prevent gp register mis-initialization
+4. HANG_PC shifted by 8 bytes due to --no-relax adding full lui+addi for gp setup
+5. Result section variable ordering in IOMEM differs from TB expectations (data before header)
+
+Files Modified:
+- program/test_code/eval_transformer_q.c (NEW - copied from TF_Training_DH + ASM fix + output path fix)
+- program/test_code/int_model_transformer_q12.c (NEW - copied + PLACE_IN_MODEL attribute)
+- program/test_code/int_model_transformer_q12.h (NEW - copied)
+- program/test_code/input_data.h (MODIFIED - extern declarations)
+- program/test_code/input_data.c (MODIFIED - TF input data with .input section)
+- program/Makefile (MODIFIED - TF sources, --no-relax, -O2)
+- program/utils/update_tb_pc_addrs.py (MODIFIED - TF function names, non-fatal missing)
+- sim/tb/lstm_tb.sv (MODIFIED - TF PC addresses, HANG_PC, counters)
+- rtl/memory/D_memory.sv (restored after debugging)
