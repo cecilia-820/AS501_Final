@@ -7,3 +7,4 @@ csrc/
 *.daidir/
 .claude/
 *.dis
+2_bare_w_mul_Hardware/syn/out/CPU_TOP.mapped.sdf
