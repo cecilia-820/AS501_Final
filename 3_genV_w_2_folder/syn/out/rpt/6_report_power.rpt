@@ -1,0 +1,94 @@
+Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
+Warning: Design has unannotated primary inputs. (PWR-414)
+Warning: Design has unannotated sequential cell outputs. (PWR-415)
+Warning: Design has unannotated black box outputs. (PWR-428)
+ 
+****************************************
+Report : power
+        -analysis_effort low
+Design : CPU_TOP
+Version: V-2023.12-SP5-1
+Date   : Sun May 10 20:13:57 2026
+****************************************
+
+
+Library(s) Used:
+
+    tcbn28hpcplusbwp30p140tt1v25c (File: /technology/TSMC_28nm_HPC_RF/STD/tcbn28hpcplusbwp30p140_190a/TSMCHOME/digital/Front_End/timing_power_noise/NLDM/tcbn28hpcplusbwp30p140_180a/tcbn28hpcplusbwp30p140tt1v25c.db)
+    ts5n28hpcphvta512x54m4f_tt1v25c (File: /technology/TSMC_28nm_HPC_RF/SRAM/tsn28hpcpd127spsram_20120200_180a/TSMCHOME/sram/Output/ts5n28hpcphvta512x54m4f_tt1v25c/ts5n28hpcphvta512x54m4f_tt1v25c.db)
+
+
+Operating Conditions: tt1v25c   Library: tcbn28hpcplusbwp30p140tt1v25c
+Wire Load Model Mode: segmented
+
+Design        Wire Load Model            Library
+------------------------------------------------
+CPU_TOP                ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+INSTR_CACHE_DWidth32   ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+SCALAR_CORE_DWidth32   ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+MCU_00000000_00080000_00080000_07f80000_08000000_00100000_08100000_00000010_08200000_00004000_08240000_00000010 ZeroWireload tcbn28hpcplusbwp30p140tt1v25c
+gemv_accel_DWidth32    ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+DATA_CACHE_DWidth32    ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+scratchpad_DWidth32_Depth16384 ZeroWireload tcbn28hpcplusbwp30p140tt1v25c
+dma_controller_32_00200000_1fffffff_20800000_2080ffff ZeroWireload tcbn28hpcplusbwp30p140tt1v25c
+D_FF_32_0_3            ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+COUNTER_30_0_511       ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+D_FF_2_3               ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+ICACHE_SRAM_Depth512_DWidth54_1 ZeroWireload tcbn28hpcplusbwp30p140tt1v25c
+COUNTER_64_0_1         ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+MUX2TO1_DWidth32_2     ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12 ZeroWireload tcbn28hpcplusbwp30p140tt1v25c
+REGFILE_DWidth32_NumofReg32 ZeroWireload tcbn28hpcplusbwp30p140tt1v25c
+CSR_DWidth32_AWidth12  ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+MUX4TO1_DWidth32_2     ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+ALU_DWidth32_OpWidth5  ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+MUX2TO1_DWidth32_1     ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+MUX5TO1_DWidth32       ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+MUX3TO1_DWidth32       ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+MUX4TO1_DWidth32_0     ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+D_FF_2_0               ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+COUNTER_64_0_0         ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+D_FF_32_0_0            ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+D_FF_64_0_1            ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+D_FF_64_0_0            ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+D_FF_32_0_1            ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+D_FF_32_0_2            ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+MUX4TO1_DWidth32_1     ZeroWireload      tcbn28hpcplusbwp30p140tt1v25c
+ICACHE_SRAM_Depth512_DWidth54_0 ZeroWireload tcbn28hpcplusbwp30p140tt1v25c
+
+
+Global Operating Voltage = 1    
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000pf
+    Time Units = 1ns
+    Dynamic Power Units = 1mW    (derived from V,C,T units)
+    Leakage Power Units = 1nW
+
+
+Attributes
+----------
+i - Including register clock pin internal power
+
+
+  Cell Internal Power  =  17.3793 mW   (26%)
+  Net Switching Power  =  50.0073 mW   (74%)
+                         ---------
+Total Dynamic Power    =  67.3866 mW  (100%)
+
+Cell Leakage Power     =   1.0004 mW
+
+
+                 Internal         Switching           Leakage            Total
+Power Group      Power            Power               Power              Power   (   %    )  Attrs
+--------------------------------------------------------------------------------------------------
+io_pad             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+memory             0.8547        3.8698e-04        2.6744e+04            0.8819  (   1.29%)
+black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
+clock_network     16.5146           50.0004        6.2950e+03           66.5211  (  97.28%)  i
+register       1.9970e-03        2.5034e-04        4.0237e+05            0.4046  (   0.59%)
+sequential         0.0000            0.0000            0.0000            0.0000  (   0.00%)
+combinational  2.0398e-03        6.2298e-03        5.6496e+05            0.5732  (   0.84%)
+--------------------------------------------------------------------------------------------------
+Total             17.3734 mW        50.0073 mW     1.0004e+06 nW        68.3808 mW
+1

@@ -1,0 +1,80 @@
+Warning: Design 'CPU_TOP' has '1' unresolved references. For more detailed information, use the "link" command. (UID-341)
+ 
+****************************************
+Report : area
+Design : CPU_TOP
+Version: V-2023.12-SP5-1
+Date   : Sun May 10 20:13:42 2026
+****************************************
+
+Library(s) Used:
+
+    tcbn28hpcplusbwp30p140tt1v25c (File: /technology/TSMC_28nm_HPC_RF/STD/tcbn28hpcplusbwp30p140_190a/TSMCHOME/digital/Front_End/timing_power_noise/NLDM/tcbn28hpcplusbwp30p140_180a/tcbn28hpcplusbwp30p140tt1v25c.db)
+    ts5n28hpcphvta512x54m4f_tt1v25c (File: /technology/TSMC_28nm_HPC_RF/SRAM/tsn28hpcpd127spsram_20120200_180a/TSMCHOME/sram/Output/ts5n28hpcphvta512x54m4f_tt1v25c/ts5n28hpcphvta512x54m4f_tt1v25c.db)
+
+Number of ports:                         4675
+Number of nets:                        278676
+Number of cells:                       271506
+Number of combinational cells:         236612
+Number of sequential cells:             34859
+Number of macros/black boxes:               2
+Number of buf/inv:                       4014
+Number of references:                      24
+
+Combinational area:             155478.454399
+Buf/Inv area:                     1207.079996
+Noncombinational area:           66214.511425
+Macro/Black Box area:            22340.228516
+Net Interconnect area:      undefined  (Wire load has zero net area)
+
+Total cell area:                244033.194339
+Total area:                 undefined
+
+Information: This design contains black box (unknown) components. (RPT-8)
+
+The above information was reported from the logical library. The following are from the physical library:
+
+Hierarchical area distribution
+------------------------------
+
+                                  Global cell area                Local cell area
+                                  --------------------  ----------------------------------- 
+Hierarchical cell                 Absolute     Percent  Combi-       Noncombi-   Black-
+                                  Total        Total    national     national    boxes       Design
+--------------------------------  -----------  -------  -----------  ----------  ----------  ---------------------------------------------------------------------------------------------------------------
+CPU_TOP                           244033.1943    100.0     146.7900      0.0000      0.0000  CPU_TOP
+ICACHE                             11483.7283      4.7     110.5020      0.0000      0.0000  INSTR_CACHE_DWidth32
+ICACHE/COUNTER_ICACHE                112.6440      0.0      42.3360     70.3080      0.0000  COUNTER_30_0_511
+ICACHE/FF_CACHE_STATE                  4.7880      0.0       1.0080      3.7800      0.0000  D_FF_2_3
+ICACHE/FF_INSTR                       85.6800      0.0      25.2000     60.4800      0.0000  D_FF_32_0_3
+ICACHE/ICACHE_SRAM                 11170.1143      4.6       0.0000      0.0000  11170.1143  ICACHE_SRAM_Depth512_DWidth54_1
+MCU_INST                             366.9120      0.2     199.0800    167.8320      0.0000  MCU_00000000_00080000_00080000_07f80000_08000000_00100000_08100000_00000010_08200000_00004000_08240000_00000010
+SCORE                               7331.3099      3.0     106.8480      0.0000      0.0000  SCALAR_CORE_DWidth32
+SCORE/ALU                           2303.2800      0.9    2303.2800      0.0000      0.0000  ALU_DWidth32_OpWidth5
+SCORE/COUNTER_CYCLE                  213.1920      0.1      68.0400    145.1520      0.0000  COUNTER_64_0_1
+SCORE/CSR                            407.9880      0.2      73.3320      0.0000      0.0000  CSR_DWidth32_AWidth12
+SCORE/CSR/FF_MCYCLE                  129.0240      0.1       0.0000    129.0240      0.0000  D_FF_64_0_1
+SCORE/CSR/FF_MINSTRET                129.0240      0.1       0.0000    129.0240      0.0000  D_FF_64_0_0
+SCORE/CSR/FF_RDATA                    76.6080      0.0      16.1280     60.4800      0.0000  D_FF_32_0_0
+SCORE/DECODER                        323.8200      0.1      83.2860      0.0000      0.0000  DECODER_DWidth32_OpWidth5_NumofReg32_CWidth12
+SCORE/DECODER/COUNTER_INSTRET        235.7460      0.1      90.5940    145.1520      0.0000  COUNTER_64_0_0
+SCORE/DECODER/FF_DEC_STATE             4.7880      0.0       1.0080      3.7800      0.0000  D_FF_2_0
+SCORE/FF_IADDR                        85.6800      0.0      25.2000     60.4800      0.0000  D_FF_32_0_1
+SCORE/FF_PC                           85.6800      0.0      25.2000     60.4800      0.0000  D_FF_32_0_2
+SCORE/MUX_ALU_A                       54.1800      0.0      54.1800      0.0000      0.0000  MUX4TO1_DWidth32_2
+SCORE/MUX_ALU_B                       54.3060      0.0      54.3060      0.0000      0.0000  MUX4TO1_DWidth32_1
+SCORE/MUX_BR                          28.2240      0.0      28.2240      0.0000      0.0000  MUX2TO1_DWidth32_1
+SCORE/MUX_LD                          23.8140      0.0      23.8140      0.0000      0.0000  MUX5TO1_DWidth32
+SCORE/MUX_PC                          27.4680      0.0      27.4680      0.0000      0.0000  MUX2TO1_DWidth32_2
+SCORE/MUX_ST                          22.5540      0.0      22.5540      0.0000      0.0000  MUX3TO1_DWidth32
+SCORE/MUX_WB                          53.6760      0.0      53.6760      0.0000      0.0000  MUX4TO1_DWidth32_0
+SCORE/SRF                           3540.6000      1.5    1665.7200   1874.8800      0.0000  REGFILE_DWidth32_NumofReg32
+u_data_cache                       11566.0063      4.7     218.9880    176.9040      0.0000  DATA_CACHE_DWidth32
+u_data_cache/DCACHE_SRAM           11170.1143      4.6       0.0000      0.0000  11170.1143  ICACHE_SRAM_Depth512_DWidth54_0
+u_dma                               1017.8280      0.4     489.3840    528.4440      0.0000  dma_controller_32_00200000_1fffffff_20800000_2080ffff
+u_gemv_accel                      212120.1159     86.9  149521.8044  62598.3115      0.0000  gemv_accel_DWidth32
+u_spm                                  0.5040      0.0       0.5040      0.0000      0.0000  scratchpad_DWidth32_Depth16384
+--------------------------------  -----------  -------  -----------  ----------  ----------  ---------------------------------------------------------------------------------------------------------------
+Total                                                   155478.4544  66214.5114  22340.2285
+
+1
